@@ -3,11 +3,22 @@
 #include <sys/kprintf.h>
 #include <sys/tarfs.h>
 #include <sys/ahci.h>
+#include <sys/idt.h>
+#include <sys/pic.h>
+#include <sys/timer.h>
+#include <sys/kb.h>
 
 #define INITIAL_STACK_SIZE 4096
 uint8_t initial_stack[INITIAL_STACK_SIZE]__attribute__((aligned(16)));
 uint32_t* loader_stack;
 extern char kernmem, physbase;
+void test();
+
+void test() {
+  for(int i = 0; i < 60; i++) {
+      kprintf("I am printing now value of i: %d\n",i);
+  }
+}
 
 void start(uint32_t *modulep, void *physbase, void *physfree)
 {
@@ -23,6 +34,7 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   }
   kprintf("physfree %p\n", (uint64_t)physfree);
   kprintf("tarfs in [%p:%p]\n", &_binary_tarfs_start, &_binary_tarfs_end);
+  test();
 }
 
 void boot(void)
@@ -44,10 +56,19 @@ void boot(void)
     (uint64_t*)&physbase,
     (uint64_t*)(uint64_t)loader_stack[4]
   );
+     init_idt();
+
+     init_picirr();
+
+     init_timer(1000);
+     kb_init();
+     __asm__("sti");
+  
   for(
-    temp1 = "!!!!! start() returned !!!!!", temp2 = (char*)0xb8000;
+    temp1 = "", temp2 = (char*)0xb8000;
     *temp1;
     temp1 += 1, temp2 += 2
   ) *temp2 = *temp1;
+
   while(1);
 }
