@@ -1,0 +1,4 @@
+#!rootfs/bin/sbiush
+
+date
+echo hello
