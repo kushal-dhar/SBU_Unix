@@ -1,4 +1,7 @@
 #include <string.h>
+#include <sys/defs.h>
+
+
 char* strcpy(char *dest, char *src) {
   char *tmp = dest;
 
@@ -107,4 +110,15 @@ char* strstr(char *str, char *search) {
   }
   return 0;;
 }
+
+/*
+void* memset(void *ptr, int x, uint32_t n) {
+    char *temp = ptr;
+    while(n > 0) {
+        *temp = x;
+        temp++;
+        n --;
+    }
+    return ptr;
+} */
 

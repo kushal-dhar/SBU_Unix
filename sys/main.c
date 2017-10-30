@@ -7,34 +7,49 @@
 #include <sys/pic.h>
 #include <sys/timer.h>
 #include <sys/kb.h>
+#include <sys/paging.h>
 
 #define INITIAL_STACK_SIZE 4096
 uint8_t initial_stack[INITIAL_STACK_SIZE]__attribute__((aligned(16)));
 uint32_t* loader_stack;
 extern char kernmem, physbase;
-void test();
-
-void test() {
-  for(int i = 0; i < 60; i++) {
-      kprintf("I am printing now value of i: %d\n",i);
-  }
-}
 
 void start(uint32_t *modulep, void *physbase, void *physfree)
 {
+  uint64_t max_size = 0;
   struct smap_t {
     uint64_t base, length;
     uint32_t type;
-  }__attribute__((packed)) *smap;
+  }__attribute__((packed)) *smap, smap_max = {0};
   while(modulep[0] != 0x9001) modulep += modulep[1]+2;
   for(smap = (struct smap_t*)(modulep+2); smap < (struct smap_t*)((char*)modulep+modulep[1]+2*4); ++smap) {
     if (smap->type == 1 /* memory */ && smap->length != 0) {
-      kprintf("Available Physical Memory [%p-%p]\n", smap->base, smap->base + smap->length);
+      kprintf("Available Physical Memory [%p-%p]\n", smap->base, smap->length);
+      if (smap->length > max_size) {
+	max_size = smap->length;
+	smap_max.base = smap->base;
+	smap_max.length = smap->length;
+      }
+      //init_phys_mem((uint64_t)physbase, (uint64_t)physfree, smap->base);
     }
   }
+  init_paging((uint64_t)physbase, (uint64_t)physfree, smap_max.base, smap_max.length);
   kprintf("physfree %p\n", (uint64_t)physfree);
   kprintf("tarfs in [%p:%p]\n", &_binary_tarfs_start, &_binary_tarfs_end);
-  test();
+  
+  setup_page_tables((uint64_t)physbase, (uint64_t)physfree);
+  //set_identity_paging((uint64_t)physbase);
+  load_CR3();
+/*  init_idt();
+
+  init_picirr();
+
+  init_timer(1000);
+  kb_init();
+  __asm__ volatile("sti"); */
+
+  while(1);
+
 }
 
 void boot(void)
@@ -56,13 +71,13 @@ void boot(void)
     (uint64_t*)&physbase,
     (uint64_t*)(uint64_t)loader_stack[4]
   );
-     init_idt();
+/*     init_idt();
 
      init_picirr();
 
      init_timer(1000);
      kb_init();
-     __asm__("sti");
+     __asm__("sti"); */
   
   for(
     temp1 = "", temp2 = (char*)0xb8000;
