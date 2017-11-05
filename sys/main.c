@@ -8,6 +8,8 @@
 #include <sys/timer.h>
 #include <sys/kb.h>
 #include <sys/paging.h>
+#include <sys/paging_helper.h>
+#include <sys/process.h>
 
 #define INITIAL_STACK_SIZE 4096
 uint8_t initial_stack[INITIAL_STACK_SIZE]__attribute__((aligned(16)));
@@ -38,15 +40,20 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   kprintf("tarfs in [%p:%p]\n", &_binary_tarfs_start, &_binary_tarfs_end);
   
   setup_page_tables((uint64_t)physbase, (uint64_t)physfree);
-  //set_identity_paging((uint64_t)physbase);
+  set_identity_paging();
   load_CR3();
-/*  init_idt();
+  kprintf("Printing after CR3 called");
+  init_idt();
 
   init_picirr();
 
   init_timer(1000);
   kb_init();
-  __asm__ volatile("sti"); */
+  kprintf("Printing something\n");
+  __asm__ volatile("sti"); 
+  uint64_t *addr = (uint64_t *)kmalloc(6000);
+  kprintf("addrs: %d\n",addr);
+  create_kernel_thread();
 
   while(1);
 

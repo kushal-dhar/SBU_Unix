@@ -2,8 +2,9 @@
 #include <stdarg.h>
 #include <sys/defs.h>
 #include <sys/kb.h>
+#include <sys/paging.h>
 
-volatile char *video = ( char*)0xB8000;
+volatile char *video = ( char*)VIDEO_ADDR;
 int            colour=  7;
 
 int x_pos = 0;
