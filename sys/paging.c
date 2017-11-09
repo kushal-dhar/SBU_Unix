@@ -81,6 +81,7 @@ uint64_t* allocate_page() {
 
 /*
  * Take the address of first page and return that after allocating
+ * Dont call memset, as memset wont work on physicall address after enabling page table.
  */
 uint64_t* allocate_virt_page() {
     uint64_t      page_addr         = 0;
@@ -121,6 +122,9 @@ void pt_allocate(uint64_t* pd, uint64_t pd_index) {
     return;
 }
 
+/* 
+ * Setup page table for kernel memory, free_map and for video memory
+ */
 void setup_page_tables(uint64_t phys_base, uint64_t phys_free) {
     uint64_t  vAddress = (uint64_t)&kernmem;
     uint64_t  pml4_index = get_index(vAddress, PML4_INDEX);
@@ -131,8 +135,6 @@ void setup_page_tables(uint64_t phys_base, uint64_t phys_free) {
 
     pml4 = (uint64_t *)allocate_page();
     address_ptr = (uint64_t)pml4;
-    //address_ptr |= (PT_PR | PT_WR | PT_U);
-    //pml4 = (uint64_t *)0x270000;
     cr3 = (uint64_t)address_ptr;
     kprintf("cr3 address now: %x\n",cr3);
 
@@ -223,7 +225,11 @@ void map_virt_to_phys_addr(uint64_t vAddress, uint64_t phys) {
     return;
 }
 
-void map_virt_to_phys_addr_afterpaging(uint64_t vAddress, uint64_t phys) {
+/*
+ * Map physical address to the corresponding virtual address provided 
+ * Convert all physical addr stored in page tables to virtual addr before accessing
+ */
+void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys) {
     uint64_t  pml4_index = (vAddress >> PML4_INDEX) & 0x1FF;
     uint64_t  pdpt_index = (vAddress >> PDPT_INDEX) & 0x1FF;;
     uint64_t  pd_index = (vAddress >> PD_INDEX) & 0x1FF;;
@@ -283,7 +289,7 @@ void set_identity_paging() {
     for (; pAddr < physfree_end; pAddr += 0x1000, vAddr += 0x1000) {
 	map_virt_to_phys_addr(vAddr, pAddr);
     }
-    free_map = (uint64_t *) (0xFFFFFFFF80000000UL | (uint64_t)free_map);
+    free_map = (uint64_t *) (KERNEL_ADDR | (uint64_t)free_map);
 
     return;
 }
@@ -306,11 +312,10 @@ uint64_t* kmalloc(int size) {
     }
     ret_addr = virt_addr + 0x1000;
     
-    //pml4 = (uint64_t *)get_CR3_address();
     for (i = 0; i < num_page; i++) {
 	virt_addr += 0x1000;
 	page_addr = (uint64_t )allocate_virt_page();
-        map_virt_to_phys_addr_afterpaging((uint64_t)virt_addr, (uint64_t)page_addr);
+        map_phys_to_virt_addr((uint64_t)virt_addr, (uint64_t)page_addr);
 	memset((void*)virt_addr, 0, (uint32_t)PAGE_SIZE);
     }
    

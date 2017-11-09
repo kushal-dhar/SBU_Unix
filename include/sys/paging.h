@@ -27,7 +27,7 @@ extern void pd_allocate(uint64_t* pdpt, uint64_t pdpt_index);
 extern void pt_allocate(uint64_t* pd, uint64_t pd_index);
 extern void setup_page_tables(uint64_t physbase, uint64_t physfree);
 extern void map_virt_to_phys_addr(uint64_t virtual, uint64_t phys);
-extern void map_virt_to_phys_addr_afterpaging(uint64_t vAddress, uint64_t phys);
+extern void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys);
 extern void set_identity_paging();
 extern uint64_t* kmalloc(int size);
 

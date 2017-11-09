@@ -14,6 +14,7 @@
 
 typedef struct process_ctrl_blk pcb_t;
 typedef struct reg_struct mm_struct_t;
+typedef struct registers register_t;
 
 struct reg_struct {
     uint64_t  code_start, code_end, data_start, data_end;
@@ -24,8 +25,13 @@ struct reg_struct {
     uint64_t  vm_total, vm_locked;
 };
 
+struct registers {
+    uint64_t rax, rbx, rcx, rdx, rsi, rdi, rbp, r8, r9, r10, r11;
+};
+
 //PCB for each processes
 struct process_ctrl_blk {
+    char          kernel_stack[4096];
     int           pid;
     int           ppid;
     char          p_name[30];
@@ -36,9 +42,15 @@ struct process_ctrl_blk {
     int           state;
     pcb_t        *next_proc;
     mm_struct_t  *mm;
-    char          kernel_stack[4096];
 };
 
 
+extern int get_next_processID();
 extern void create_kernel_thread();
+extern void create_new_thread();
+extern void test_function();
+extern void scheduler();
+extern void switchTask(pcb_t *current, pcb_t *next);
+extern void initial_ret_function();
+
 #endif
