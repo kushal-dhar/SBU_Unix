@@ -175,7 +175,6 @@ void setup_page_tables(uint64_t phys_base, uint64_t phys_free) {
     vAddress = KERNEL_ADDR | (uint64_t)pt;
     map_virt_to_phys_addr((uint64_t)vAddress, (uint64_t)pt);
     
-    //set_identity_paging();
     return;
 }
 
@@ -321,3 +320,4 @@ uint64_t* kmalloc(int size) {
    
     return (uint64_t *)ret_addr; 
 }
+

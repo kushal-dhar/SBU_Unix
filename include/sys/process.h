@@ -51,6 +51,7 @@ extern void create_new_thread();
 extern void test_function();
 extern void scheduler();
 extern void switchTask(pcb_t *current, pcb_t *next);
+extern void switchBack(pcb_t *current, pcb_t *next);
 extern void initial_ret_function();
 
 #endif

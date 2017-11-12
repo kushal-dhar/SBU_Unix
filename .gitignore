@@ -1,0 +1,3 @@
+*.img
+obj/*
+sys/*.swp
