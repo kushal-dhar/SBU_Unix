@@ -13,21 +13,21 @@
 #define  TASK_ZOMBIE      6
 
 typedef struct process_ctrl_blk pcb_t;
-typedef struct reg_struct mm_struct_t;
+typedef struct vma_block mm_struct_t;
 typedef struct registers register_t;
 
-struct reg_struct {
+struct vma_block {
     uint64_t  code_start, code_end, data_start, data_end;
     uint64_t  start_brk, stack_start;
     uint64_t  arg_start, arg_end;
     uint64_t  env_start, env_end;
     uint64_t  rss;
     uint64_t  vm_total, vm_locked;
-};
+}__attribute__((packed));
 
 struct registers {
     uint64_t rax, rbx, rcx, rdx, rsi, rdi, rbp, r8, r9, r10, r11;
-};
+}__attribute__((packed));
 
 //PCB for each processes
 struct process_ctrl_blk {
@@ -42,16 +42,20 @@ struct process_ctrl_blk {
     int           state;
     pcb_t        *next_proc;
     mm_struct_t  *mm;
-};
+}__attribute__((packed));
 
 
 extern int get_next_processID();
 extern void create_kernel_thread();
 extern void create_new_thread();
+extern pcb_t* create_user_process();
 extern void test_function();
+extern void test_user_thread();
 extern void scheduler();
 extern void switchTask(pcb_t *current, pcb_t *next);
 extern void switchBack(pcb_t *current, pcb_t *next);
 extern void initial_ret_function();
+extern void switch_to_ring3(pcb_t *pcb);
+extern void set_user_space(pcb_t *user_process, uint64_t offset);
 
 #endif

@@ -31,10 +31,16 @@ void unset_bit(uint64_t *map, uint64_t val) {
 }
 
 void load_CR3() {
-    uint64_t plm4_addr= cr3;
-    __asm__ volatile("movq %0, %%cr3":: "b"(plm4_addr));
+    uint64_t pml4_addr= cr3;
+    __asm__ volatile("movq %0, %%cr3":: "b"(pml4_addr));
     pml4 = (uint64_t *)(KERNEL_ADDR | (uint64_t)pml4);
     free_map = (uint64_t *) (0xFFFFFFFF80000000UL | (uint64_t)free_map);
+}
+
+void set_CR3(uint64_t pml4_addr) {
+    __asm__ volatile("movq %0, %%cr3":: "b"(pml4_addr));
+    //pml4 = (uint64_t *)(KERNEL_ADDR | (uint64_t)pml4);
+    //free_map = (uint64_t *) (0xFFFFFFFF80000000UL | (uint64_t)free_map);
 }
 
 void* memset(void *ptr, int x, uint32_t n) {
@@ -45,6 +51,18 @@ void* memset(void *ptr, int x, uint32_t n) {
         n --;
     }
     return ptr;
+}
+
+void* memcpy( void *src, void *dest, uint32_t n) {
+    char *temp1 = (char *)src;
+    char *temp2 = (char *)dest;
+    int i = 0;
+
+    for (i = 0; i < n/2; i++) {
+     	temp2[i] = temp1[i];
+    }
+    return dest;
+
 }
 
 int get_index(uint64_t address, int offset) {

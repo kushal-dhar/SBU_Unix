@@ -53,7 +53,10 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   __asm__ volatile("sti"); 
   uint64_t *addr = (uint64_t *)kmalloc(6000);
   kprintf("addrs: %d\n",addr);
-  create_kernel_thread();
+  pcb_t *user_process = create_user_process();
+  switch_to_ring3((pcb_t *)user_process);
+
+  //create_kernel_thread();
 
   while(1);
 

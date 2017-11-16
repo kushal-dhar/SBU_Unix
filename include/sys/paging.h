@@ -2,7 +2,7 @@
 #define __PAGING_H_
 
 #define KERNEL_ADDR 0xFFFFFFFF80000000UL
-#define KERNEL_BASE 0xFFFFFFFF80600000UL
+#define KERNEL_BASE 0xFFFFFFFF80100000UL
 #define PHYS_ADDR 0x0UL
 #define VIDEO_ADDR 0xFFFFFFFF800B8000
 #define VIDEO_PHYS_ADDR 0xB8000
@@ -30,5 +30,7 @@ extern void map_virt_to_phys_addr(uint64_t virtual, uint64_t phys);
 extern void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys);
 extern void set_identity_paging();
 extern uint64_t* kmalloc(int size);
+extern uint64_t* create_user_address_space();
+extern void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_addr);
 
 #endif
