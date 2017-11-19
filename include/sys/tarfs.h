@@ -1,6 +1,13 @@
 #ifndef _TARFS_H
 #define _TARFS_H
 
+#define TARFS_HEADER 512
+
+#define FILETYPE 0
+#define DIRECTORY 5
+
+typedef struct tar_file tarfile_t;
+
 extern char _binary_tarfs_start;
 extern char _binary_tarfs_end;
 
@@ -24,4 +31,21 @@ struct posix_header_ustar {
   char pad[12];
 };
 
+struct tar_file {
+  char name[100];
+  char uid[8];
+  uint64_t size;
+  uint64_t addr;
+  uint64_t inode;
+  uint64_t p_inode;
+  uint64_t type;
+};
+
+typedef struct posix_header_ustar tarfs_t;
+
+extern uint64_t is_file_exist(char *filename);
+extern int get_parent_inode(char* file);
+extern void init_tarfs();
+extern int open(char *filename, int permission);
+extern int read(int fd, char *buf, int size);
 #endif

@@ -1,4 +1,4 @@
-cscope 15 $HOME/os_course_proj               0000184063
+cscope 15 $HOME/os_course_proj               0000193510
 	@bin/cat/cat.c
 
 1 
@@ -3404,51 +3404,51 @@ _ELF64_H
 	)
 
 6 
-Elf64_Addr
+uöt64_t
  
-	tuöt64_t
+	tElf64_Addr
 ;
 
 7 
-Elf64_HÆf
+uöt16_t
  
-	tuöt16_t
+	tElf64_HÆf
 ;
 
 8 
-Elf64_Lw‹d
+uöt64_t
  
-	tuöt64_t
+	tElf64_Lw‹d
 ;
 
 9 
-Elf64_Off
+uöt64_t
  
-	tuöt64_t
+	tElf64_Off
 ;
 
 10 
-Elf64_Sw‹d
+uöt32_t
  
-	tuöt32_t
+	tElf64_Sw‹d
 ;
 
 11 
-Elf64_Sxw‹d
+uöt64_t
  
-	tuöt64_t
-;
+	tElf64_Sxw‹d
+
 
 12 
-Elf64_W‹d
+uöt32_t
  
-	tuöt32_t
+	tElf64_W‹d
 ;
 
 13 
-Elf64_Xw‹d
+uöt64_t
  
-	tuöt64_t
+	tElf64_Xw‹d
 ;
 
 16 
@@ -3589,6 +3589,54 @@ Elf64_Xw‹d
 
 41 } 
 	tElf64_Phdr
+;
+
+	@include/sys/file.h
+
+1 #i‚de‡
+_FILE_H
+
+
+2 
+	#_FILE_H
+
+
+	)
+
+4 
+fûe_°ru˘
+ 
+	tfûe_t
+;
+
+6 
+	sfûe_°ru˘
+{
+
+7 
+	m«me
+[100];
+
+8 
+	möode
+;
+
+9 
+	mac˚ss
+;
+
+10 
+	msize
+;
+
+11 
+	mis_›í
+;
+
+12 
+uöt64_t
+ 
+	maddªss
 ;
 
 	@include/sys/gdt.h
@@ -3889,7 +3937,7 @@ __PAGING_H_
 
 5 
 	#KERNEL_BASE
- 0xFFFFFFFF80600000UL
+ 0xFFFFFFFF80100000UL
 
 	)
 
@@ -4061,6 +4109,24 @@ kmÆloc
 size
 );
 
+33 
+uöt64_t
+* 
+¸óã_u£r_addªss_•a˚
+();
+
+34 
+m≠_phys_to_u£r_vút_addr
+(
+uöt64_t
+ 
+vAddªss
+, uöt64_à
+phys
+, uöt64_t* 
+¸3_addr
+);
+
 	@include/sys/paging_helper.h
 
 1 
@@ -4095,7 +4161,15 @@ vÆ
 lﬂd_CR3
 ();
 
-7 * 
+7 
+£t_CR3
+(
+uöt64_t
+ 
+pml4_addr
+);
+
+8 * 
 mem£t
 (*
 ±r
@@ -4107,7 +4181,19 @@ uöt32_t
 n
 );
 
-8 
+9 * 
+mem˝y
+–*
+§c
+, *
+de°
+, 
+uöt32_t
+ 
+n
+);
+
+10 
 gë_ödex
 (
 uöt64_t
@@ -4117,13 +4203,13 @@ addªss
 off£t
 );
 
-9 
+11 
 uöt64_t
  
 gë_CR3_addªss
 ();
 
-10 
+12 
 uöt64_t
  
 ªmove_Êag
@@ -4536,7 +4622,7 @@ _PROCESS_H
 ;
 
 16 
-ªg_°ru˘
+vma_block
  
 	tmm_°ru˘_t
 ;
@@ -4548,7 +4634,7 @@ _PROCESS_H
 ;
 
 19 
-	sªg_°ru˘
+	svma_block
  {
 
 20 
@@ -4601,6 +4687,12 @@ uöt64_t
 	mvm_locked
 ;
 
+26 }
+__©åibuã__
+((
+∑cked
+));
+
 28 
 	sªgi°îs
  {
@@ -4630,6 +4722,12 @@ uöt64_t
 , 
 	mr11
 ;
+
+30 }
+__©åibuã__
+((
+∑cked
+));
 
 33 
 	s¥o˚ss_˘æ_blk
@@ -4691,6 +4789,12 @@ mm_°ru˘_t
 	mmm
 ;
 
+45 }
+__©åibuã__
+((
+∑cked
+));
+
 48 
 gë_√xt_¥o˚ssID
 ();
@@ -4703,15 +4807,25 @@ gë_√xt_¥o˚ssID
 ¸óã_√w_thªad
 ();
 
-51 
-ã°_fun˘i⁄
+51 
+pcb_t
+* 
+¸óã_u£r_¥o˚ss
 ();
 
 52 
-scheduÀr
+ã°_fun˘i⁄
 ();
 
 53 
+ã°_u£r_thªad
+();
+
+54 
+scheduÀr
+();
+
+55 
 swôchTask
 (
 pcb_t
@@ -4721,7 +4835,7 @@ cuºít
 √xt
 );
 
-54 
+56 
 swôchBack
 (
 pcb_t
@@ -4731,9 +4845,69 @@ cuºít
 √xt
 );
 
-55 
+57 
 öôül_ªt_fun˘i⁄
 ();
+
+58 
+swôch_to_rög3
+(
+pcb_t
+ *
+pcb
+);
+
+59 
+£t_u£r_•a˚
+(
+pcb_t
+ *
+u£r_¥o˚ss
+, 
+uöt64_t
+ 
+off£t
+);
+
+	@include/sys/string.h
+
+1 #i‚de‡
+_STRING_H
+
+
+2 
+	#_STRING_H
+
+
+	)
+
+4 
+°æí
+(*
+°r
+);
+
+5 *
+°r˝y
+(*
+§c
+, *
+d°
+);
+
+6 
+°rcmp
+(*
+°r1
+, *
+°r2
+);
+
+7 
+©oi
+(*
+°r
+);
 
 	@include/sys/tarfs.h
 
@@ -4747,85 +4921,175 @@ _TARFS_H
 
 	)
 
-4 
+4 
+	#TARFS_HEADER
+ 512
+
+	)
+
+6 
+	#FILETYPE
+ 0
+
+	)
+
+7 
+	#DIRECTORY
+ 5
+
+	)
+
+9 
+èr_fûe
+ 
+	tèrfûe_t
+;
+
+11 
 _bö¨y_èrfs_°¨t
 ;
 
-5 
+12 
 _bö¨y_èrfs_íd
 ;
 
-7 
+14 
 	sposix_hódî_u°¨
  {
 
-8 
+15 
 	m«me
 [100];
 
-9 
+16 
 	mmode
 [8];
 
-10 
+17 
 	muid
 [8];
 
-11 
+18 
 	mgid
 [8];
 
-12 
+19 
 	msize
 [12];
 
-13 
+20 
 	mmtime
 [12];
 
-14 
+21 
 	mchecksum
 [8];
 
-15 
+22 
 	mty≥Êag
 [1];
 
-16 
+23 
 	mlök«me
 [100];
 
-17 
+24 
 	mmagic
 [6];
 
-18 
+25 
 	mvîsi⁄
 [2];
 
-19 
+26 
 	mu«me
 [32];
 
-20 
+27 
 	mg«me
 [32];
 
-21 
+28 
 	mdevmaj‹
 [8];
 
-22 
+29 
 	mdevmö‹
 [8];
 
-23 
+30 
 	m¥efix
 [155];
 
-24 
+31 
 	m∑d
 [12];
+
+34 
+	sèr_fûe
+ {
+
+35 
+	m«me
+[100];
+
+36 
+	muid
+[8];
+
+37 
+uöt64_t
+ 
+	msize
+;
+
+38 
+uöt64_t
+ 
+	maddr
+;
+
+39 
+uöt64_t
+ 
+	möode
+;
+
+40 
+uöt64_t
+ 
+	mp_öode
+;
+
+41 
+uöt64_t
+ 
+	mty≥
+;
+
+44 
+posix_hódî_u°¨
+ 
+	tèrfs_t
+;
+
+46 
+uöt64_t
+ 
+is_fûe_exi°
+(*
+fûíame
+);
+
+47 
+gë_∑ª¡_öode
+(* 
+fûe
+);
+
+48 
+öô_èrfs
+();
 
 	@include/sys/timer.h
 
@@ -4861,6 +5125,32 @@ r
 öô_timî
 (
 hz
+);
+
+	@include/sys/utils.h
+
+1 #i‚de‡
+_UTILS_H
+
+
+2 
+	#_UTILS_H
+
+
+	)
+
+4 
+pow
+(
+ba£
+, 
+exp
+);
+
+5 
+o˘todec
+(
+o˘Æ_vÆ
 );
 
 	@include/unistd.h
@@ -6793,16 +7083,6 @@ W
 DPL0
 ,
 
-63 
-GDT_CS
- | 
-P
- | 
-DPL3
- | 
-L
-,
-
 64 
 GDT_DS
  | 
@@ -6813,7 +7093,17 @@ W
 DPL3
 ,
 
-67 
+65 
+GDT_CS
+ | 
+P
+ | 
+DPL3
+ | 
+L
+,
+
+68 
 gdå_t
  
 	ggdå
@@ -6823,13 +7113,13 @@ gdt
 uöt64_t
 )gdt };
 
-68 
+69 
 tss_t
  
 	gtss
 ;
 
-70 
+71 
 _x86_64_asm_lgdt
 (
 gdå_t
@@ -6843,7 +7133,7 @@ cs_idx
 ds_idx
 );
 
-71 
+72 
 _x86_64_asm_…r
 (
 uöt64_t
@@ -6851,19 +7141,19 @@ uöt64_t
 tss_idx
 );
 
-72 
+73 
 	$öô_gdt
 () {
 
-73 
+74 
 sys_£gmít_des¸ùt‹
  *
 sd
  = (sys_£gmít_des¸ùt‹*)&
 gdt
-[5];
+[6];
 
-74 
+75 
 sd
 ->
 sd_lﬁimô
@@ -6871,7 +7161,7 @@ sd_lﬁimô
 tss_t
 ) - 1;
 
-75 
+76 
 sd
 ->
 sd_loba£
@@ -6881,37 +7171,37 @@ uöt64_t
 tss
 );
 
-76 
+77 
 sd
 ->
 sd_ty≥
  = 9;
 
-77 
+78 
 sd
 ->
 sd_d∂
  = 0;
 
-78 
+79 
 sd
 ->
 sd_p
  = 1;
 
-79 
+80 
 sd
 ->
 sd_hûimô
  = 0;
 
-80 
+81 
 sd
 ->
 sd_gøn
  = 0;
 
-81 
+82 
 sd
 ->
 sd_hiba£
@@ -6921,27 +7211,27 @@ uöt64_t
 tss
 ) >> 24;
 
-83 
+84 
 	`_x86_64_asm_lgdt
 (&
 gdå
 , 8, 16);
 
-84 
-	`_x86_64_asm_…r
-(0x28);
-
 85 
+	`_x86_64_asm_…r
+(0x30);
+
+86 
 	}
 }
 
-87 
+88 
 	$£t_tss_r•
 (*
 r•
 ) {
 
-88 
+89 
 tss
 .
 r•0
@@ -6949,7 +7239,7 @@ r•0
 r•
 ;
 
-89 
+90 
 	}
 }
 
@@ -9984,50 +10274,54 @@ addr
 );
 
 56 
-	`¸óã_kî√l_thªad
+	`is_fûe_exi°
+("hello");
+
+57 
+	`öô_èrfs
 ();
 
-60 
+65 
 	}
 }
 
-62 
+67 
 	$boŸ
 ()
 
-65 *
+70 *
 ãmp1
 , *
 ãmp2
 ;
 
-67 
+72 
 ãmp2
  = (*)0xb8001;Åemp2 < (*)0xb8000+160*25;Åemp2 += 2) *temp2 = 7 ;
 
-68 
+73 
 	`__asm__
 (
 
-72 :"=g"(
+77 :"=g"(
 lﬂdî_°ack
 )
 
-73 :"r"(&
+78 :"r"(&
 öôül_°ack
 [
 INITIAL_STACK_SIZE
 ])
 
-75 
+80 
 	`öô_gdt
 ();
 
-76 
+81 
 	`°¨t
 (
 
-77 (
+82 (
 uöt32_t
 *)((*)(
 uöt64_t
@@ -10039,41 +10333,41 @@ kînmem
 physba£
 ),
 
-78 (
+83 (
 uöt64_t
 *)&
 physba£
 ,
 
-79 (
+84 (
 uöt64_t
 *)(uöt64_t)
 lﬂdî_°ack
 [4]
 
-90 
+95 
 ãmp1
  = "", 
 ãmp2
  = (*)0xb8000;
 
-91 *
+96 *
 ãmp1
 ;
 
-92 
+97 
 ãmp1
  +1, 
 ãmp2
  += 2
 
-93 Ë*
+98 Ë*
 ãmp2
  = *
 ãmp1
 ;
 
-96 
+101 
 	}
 }
 
@@ -10449,7 +10743,7 @@ PT_PR
 PT_WR
  | 
 PT_U
-);
+ );
 
 103 
 pml4
@@ -10717,9 +11011,7 @@ addªss_±r
 PT_PR
  | 
 PT_WR
- | 
-PT_U
-);
+ );
 
 150 
 ±
@@ -11123,9 +11415,7 @@ phys
 PT_PR
  | 
 PT_WR
- | 
-PT_U
-);
+ );
 
 222 
 ±
@@ -11589,7 +11879,7 @@ uöt64_t
 
 324 
 uöt64_t
- 
+* 
 	$¸óã_u£r_addªss_•a˚
 () {
 
@@ -11599,41 +11889,449 @@ uöt64_t
 pml4_addr
 ;
 
-326 
-uöt64_t
- 
-¸3_addr
-;
-
-328 
-pml4_addr
- = (
-uöt64_t
- *)
-	`Æloˇã_∑ge
-();
-
 329 
+uöt64_t
+* 
+pml4_vút_addr
+;
+
+330 
+uöt64_t
+* 
 ¸3_addr
+;
+
+332 
+vút_addr
+ += 0x1000;
+
+333 
+pml4_addr
  = (
 uöt64_t
-)
-	`gë_CR3_addªss
-();
-
-331 
-pml4_addr
-[511] = (
-uöt64_t
  *)
-¸3_addr
-;
-
-333  
-pml4_addr
-;
+	`Æloˇã_vút_∑ge
+();
 
 334 
+	`m≠_phys_to_vút_addr
+((
+uöt64_t
+)
+vút_addr
+, (uöt64_t)
+pml4_addr
+);
+
+335 
+	`mem£t
+((*)
+vút_addr
+, 0, (
+uöt32_t
+)
+PAGE_SIZE
+);
+
+336 
+__asm__
+ vﬁ©ûe("mov %%¸3, %0" : "Ù" (
+¸3_addr
+));
+
+341 
+pml4_vút_addr
+ = (
+uöt64_t
+ *)
+vút_addr
+;
+
+342 
+¸3_addr
+ = (
+uöt64_t
+ *)–
+KERNEL_ADDR
+ | (uint64_t)cr3_addr);
+
+343 
+pml4_vút_addr
+[511] = (
+uöt64_t
+)
+¸3_addr
+[511] | 
+PT_U
+;
+
+352  
+pml4_addr
+;
+
+353 
+	}
+}
+
+356 
+	$m≠_phys_to_u£r_vút_addr
+(
+uöt64_t
+ 
+vAddªss
+, uöt64_à
+phys
+, uöt64_à*
+¸3_addr
+) {
+
+358 
+	}
+}
+
+361 
+	$m≠_phys_to_u£r_vút_addr
+(
+uöt64_t
+ 
+vAddªss
+, uöt64_à
+phys
+, uöt64_t* 
+¸3_addr
+) {
+
+362 
+uöt64_t
+ 
+pml4_ödex
+ = (
+vAddªss
+ >> 
+PML4_INDEX
+) & 0x1FF;
+
+363 
+uöt64_t
+ 
+pd±_ödex
+ = (
+vAddªss
+ >> 
+PDPT_INDEX
+) & 0x1FF;;
+
+364 
+uöt64_t
+ 
+pd_ödex
+ = (
+vAddªss
+ >> 
+PD_INDEX
+) & 0x1FF;;
+
+365 
+uöt64_t
+ 
+±_ödex
+ = (
+vAddªss
+ >> 
+PT_INDEX
+) & 0x1FF;;
+
+367 
+uöt64_t
+ 
+pml4_addr
+ = 0;
+
+368 
+uöt64_t
+ 
+pd±_addr
+;
+
+369 
+uöt64_t
+ 
+pd_addr
+;
+
+371 
+uöt64_t
+* 
+∑ge_addr
+;
+
+372 
+uöt64_t
+* 
+vút_∑ge_addr
+;
+
+373 
+uöt64_t
+* 
+physiˇl
+;
+
+375 i‡(
+pml4_addr
+ & 
+PT_PR
+) {
+
+376 
+pml4_addr
+ = (
+uöt64_t
+ )
+	`ªmove_Êag
+(pml4_addr);
+
+377 
+pd±
+ = (
+uöt64_t
+ *)
+pml4_addr
+;
+
+378 
+pd±
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ |(uint64_t)pdpt);
+
+382 
+pd±
+ = (
+uöt64_t
+ *)
+	`Æloˇã_vút_∑ge
+();
+
+383 
+¸3_addr
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ |(uint64_t)cr3_addr);
+
+384 
+¸3_addr
+[
+pml4_ödex
+] = (
+uöt64_t
+)
+pd±
+ | (
+PT_PR
+ | 
+PT_WR
+ | 
+PT_U
+);
+
+385 
+pd±
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ |(uint64_t)pdpt);
+
+388 
+pd±_addr
+ = 
+pd±
+[
+pd±_ödex
+];
+
+389 i‡(
+pd±_addr
+ & 
+PT_PR
+) {
+
+390 
+pd
+ = (
+uöt64_t
+ *)
+	`ªmove_Êag
+(
+pd±_addr
+);
+
+391 
+pd
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ |(uint64_t)pd);
+
+395 
+pd
+ = (
+uöt64_t
+ *)
+	`Æloˇã_vút_∑ge
+();
+
+396 
+pd±
+[
+pd±_ödex
+] = (
+uöt64_t
+)
+pd
+ | (
+PT_PR
+ | 
+PT_WR
+ | 
+PT_U
+);
+
+397 
+pd
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ |(uint64_t )pd);
+
+399 
+pd_addr
+ = 
+pd
+[
+pd_ödex
+];
+
+400 i‡(
+pd_addr
+ & 
+PT_PR
+) {
+
+401 
+±
+ = (
+uöt64_t
+ *)
+	`ªmove_Êag
+(
+pd_addr
+);
+
+402 
+±
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ |(uint64_t)pt);
+
+406 
+±
+ = (
+uöt64_t
+ *)
+	`Æloˇã_vút_∑ge
+();
+
+407 
+pd
+[
+pd_ödex
+]=(
+uöt64_t
+)
+±
+ | (
+PT_PR
+ | 
+PT_WR
+ | 
+PT_U
+);
+
+408 
+±
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ | (uint64_t )pt);
+
+411 
+∑ge_addr
+ = (
+uöt64_t
+ *)
+	`Æloˇã_vút_∑ge
+();
+
+412 
+vút_∑ge_addr
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ | (uöt64_à)
+∑ge_addr
+);
+
+413 
+physiˇl
+ = (
+uöt64_t
+ *)((uöt64_t)
+KERNEL_ADDR
+ | (uöt64_à)
+phys
+);
+
+415 
+vút_∑ge_addr
+ = (
+uöt64_t
+ *)
+	`mem˝y
+ ((*)vút_∑ge_addr, (*)
+physiˇl
+, 
+PAGE_SIZE
+);
+
+419 
+±
+[
+±_ödex
+] = (
+uöt64_t
+)
+∑ge_addr
+ | (
+PT_PR
+ | 
+PT_WR
+ | 
+PT_U
+);
+
+422 
 	}
 }
 
@@ -11760,7 +12458,7 @@ vÆ
 34 
 uöt64_t
  
-∂m4_addr
+pml4_addr
 
 ¸3
 ;
@@ -11768,7 +12466,7 @@ uöt64_t
 35 
 __asm__
  vﬁ©ûe("movq %0, %%¸3":: "b"(
-∂m4_addr
+pml4_addr
 ));
 
 36 
@@ -11789,7 +12487,25 @@ uöt64_t
 	}
 }
 
-40 * 
+40 
+	$£t_CR3
+(
+uöt64_t
+ 
+pml4_addr
+) {
+
+41 
+__asm__
+ vﬁ©ûe("movq %0, %%¸3":: "b"(
+pml4_addr
+));
+
+44 
+	}
+}
+
+46 * 
 	$mem£t
 (*
 ±r
@@ -11801,39 +12517,89 @@ uöt32_t
 n
 ) {
 
-41 *
+47 *
 ãmp
  = (*)
 ±r
 ;
 
-42 
+48 
 n
  > 0) {
 
-43 *
+49 *
 ãmp
  = 
 x
 ;
 
-44 
+50 
 ãmp
 ++;
 
-45 
+51 
 n
  --;
 
-47  
+53  
 ±r
 ;
 
-48 
+54 
 	}
 }
 
-50 
+56 * 
+	$mem˝y
+–*
+§c
+, *
+de°
+, 
+uöt32_t
+ 
+n
+) {
+
+57 *
+ãmp1
+ = (*)
+§c
+;
+
+58 *
+ãmp2
+ = (*)
+de°
+;
+
+59 
+i
+ = 0;
+
+61 
+i
+ = 0; i < 
+n
+/2; i++) {
+
+62 
+ãmp2
+[
+i
+] = 
+ãmp1
+[i];
+
+64  
+de°
+;
+
+66 
+	}
+}
+
+68 
 	$gë_ödex
 (
 uöt64_t
@@ -11843,47 +12609,47 @@ addªss
 off£t
 ) {
 
-51 
+69 
 addªss
  = (addªs†>> 
 off£t
 ) & 0x1FF;
 
-52  
+70  
 addªss
 ;
 
-53 
+71 
 	}
 }
 
-55 
+73 
 uöt64_t
  
 	$gë_CR3_addªss
 () {
 
-56 
+74 
 uöt64_t
  
 ¸3_addr
 ;
 
-57 
+75 
 __asm__
  vﬁ©ûe("mov %%¸3, %0" : "Ù" (
 ¸3_addr
 ));
 
-58  
+76  
 ¸3_addr
 ;
 
-59 
+77 
 	}
 }
 
-62 
+80 
 uöt64_t
  
 	$ªmove_Êag
@@ -11893,13 +12659,13 @@ uöt64_t
 addr
 ) {
 
-63  (
+81  (
 uöt64_t
 )(
 addr
  & 0xFFFFFFFFFFFFF000UL);
 
-64 
+82 
 	}
 }
 
@@ -12679,7 +13445,9 @@ PAGE_SIZE
 	}
 }
 
-97 
+97 
+pcb_t
+* 
 	$¸óã_u£r_¥o˚ss
 () {
 
@@ -12691,7 +13459,19 @@ u£r_pcb
 	`kmÆloc
 (()6000);
 
+99 
+uöt64_t
+ 
+off£t
+ = 0;
+
 100 
+mm_°ru˘_t
+ *
+vma
+;
+
+102 
 u£r_pcb
 ->
 pid
@@ -12699,23 +13479,41 @@ pid
 	`gë_√xt_¥o˚ssID
 ();
 
-101 
+103 
 u£r_pcb
 ->
 µid
  = 0;
 
-102 
+104 
 u£r_pcb
 ->
 ¸3
  = (
 uöt64_t
 )
-	`gë_CR3_addªss
+	`¸óã_u£r_addªss_•a˚
 ();
 
-103 
+105 
+u£r_pcb
+->
+rù
+ = (
+uöt64_t
+)&
+ã°_u£r_thªad
+;
+
+106 
+off£t
+ = 
+u£r_pcb
+->
+rù
+ & 0xfff;
+
+108 
 u£r_pcb
 ->
 °©e
@@ -12723,39 +13521,31 @@ u£r_pcb
 TASK_READY
 ;
 
-104 
+109 
 u£r_pcb
 ->
 √xt_¥oc
  = 
-√xt_¥o˚ss
+fú°_¥o˚ss
 ;
 
-105 
+110 
+vma
+ = (
+mm_°ru˘_t
+ *)
+	`kmÆloc
+(1000);
+
+111 
 u£r_pcb
 ->
 mm
  = 
-NULL
+vma
 ;
 
-108 
-fú°_¥o˚ss
- = (
-pcb_t
- *)
-u£r_pcb
-;
-
-109 
-cuº_¥o˚ss
- = (
-pcb_t
- *)
-u£r_pcb
-;
-
-111 
+113 
 u£r_pcb
 ->
 r•
@@ -12767,109 +13557,129 @@ uöt64_t
 PAGE_SIZE
 );
 
-113 
-	`¸óã_√w_thªad
-();
+115 
+	`£t_u£r_•a˚
+(
+u£r_pcb
+, 
+off£t
+);
 
-114 
-	`scheduÀr
-();
+120  
+u£r_pcb
+;
 
-116 
-	`öôül_ªt_fun˘i⁄
-();
-
-120 
+121 
 	}
 }
 
-125 
+127 
 	$öôül_ªt_fun˘i⁄
 () {
 
-126 
+128 
 __asm__
  volatile("sti");
 
-128 
+130 
 	`öô_idt
 ();
 
-130 
+132 
 	`öô_picúr
 ();
 
-132 
+134 
 	`öô_timî
 (1000);
 
-133 
+135 
 	`kb_öô
 ();
 
-136 
+137 
+pcb_t
+ *
+u£r_¥o˚ss
+ = 
+	`¸óã_u£r_¥o˚ss
+();
+
+138 
+	`swôch_to_rög3
+((
+pcb_t
+ *)
+u£r_¥o˚ss
+);
+
+140 
 	}
 }
 
-142 
+146 
 	$ã°_fun˘i⁄
 () {
 
-144 
+148 
 	`k¥ötf
 ("Iám inÅhread 1áfter context switch\n");
 
-145 
+149 
 	`swôchBack
 (
-cuº_¥o˚ss
+√xt_¥o˚ss
 , 
 fú°_¥o˚ss
 );
 
-147 
+151 
 	}
 }
 
-149 
+154 
+	$ã°_u£r_thªad
+() {
+
+156 
+a
+ = 10;
+
+157 
+a
+ =á * 12;
+
+159 
+	}
+}
+
+162 
 	$scheduÀr
 () {
 
-150 
-fú°_¥o˚ss
- = 
-cuº_¥o˚ss
-;
-
-151 
-cuº_¥o˚ss
- = 
-√xt_¥o˚ss
-;
-
-152 
+165 
 r•_addr
  = (
 uöt64_t
  *)(
-cuº_¥o˚ss
+√xt_¥o˚ss
 ->
 öô_kî√l
  - 128);
 
-153 
+166 
 	`swôchTask
 (
-fú°_¥o˚ss
-, 
 cuº_¥o˚ss
+, 
+√xt_¥o˚ss
 );
 
-154 
+167 
 	}
 }
 
-160 
+173 
 	$swôchTask
 (
 pcb_t
@@ -12879,7 +13689,7 @@ cuºít
 √xt
 ) {
 
-163 
+176 
 __asm__
  vﬁ©ûê("movq %%r•, %0;" : "Ù"((
 cuºít
@@ -12887,13 +13697,13 @@ cuºít
 öô_kî√l
 )));
 
-164 
+177 
 cuºít
 ->
 öô_kî√l
  += 8;
 
-165 
+178 
 __asm__
  vﬁ©ûê("movq %0, %%r•;" :: "r"((
 √xt
@@ -12901,7 +13711,7 @@ __asm__
 öô_kî√l
 )));
 
-166 
+179 
 __asm__
  vﬁ©ûê("movq %0, %%øx"::"r" (
 √xt
@@ -12909,17 +13719,17 @@ __asm__
 rù
 ));
 
-167 
+180 
 __asm__
  volatile ("pushq %%rax;" :: );
 
-168 
+181 
 __asm__
  vﬁ©ûê("movq %%r•, (%0)":"Ù"(
 r•_addr
 ));
 
-170 
+183 
 √xt
 ->
 öô_kî√l
@@ -12929,21 +13739,21 @@ uöt64_t
 r•_addr
 ;
 
-171 
+184 
 	`£t_tss_r•
 ((*)
 r•_addr
 );
 
-173 
+186 
 __asm__
  volatile ("ret");
 
-175 
+188 
 	}
 }
 
-180 
+193 
 	$swôchBack
 (
 pcb_t
@@ -12953,7 +13763,7 @@ cuºít
 √xt
 ) {
 
-183 
+195 
 __asm__
  vﬁ©ûê("movq %%r•, %0;" : "Ù"((
 cuºít
@@ -12961,7 +13771,7 @@ cuºít
 öô_kî√l
 )));
 
-184 
+196 
 __asm__
  vﬁ©ûê("movq %0, %%r•;" :: "r"((
 √xt
@@ -12969,7 +13779,7 @@ __asm__
 öô_kî√l
 )));
 
-186 
+198 
 √xt
 ->
 öô_kî√l
@@ -12977,7 +13787,7 @@ __asm__
 uöt64_t
 )next->init_kernel;
 
-187 
+199 
 	`£t_tss_r•
 ((*)
 √xt
@@ -12985,13 +13795,843 @@ uöt64_t
 öô_kî√l
 );
 
-189 
+201 
 __asm__
  volatile ("ret");
 
-191 
+203 
 	}
 }
+
+206 
+	$swôch_to_rög3
+(
+pcb_t
+ *
+¥oc
+) {
+
+207 
+¥oc
+->
+°©e
+ = 
+TASK_RUNNING
+;
+
+215 
+	`£t_tss_r•
+((*Ë
+¥oc
+->
+öô_kî√l
+);
+
+217 
+__asm__
+ volatile ("cli" ::);
+
+218 
+__asm__
+ vﬁ©ûê("movq %0, %%¸3;" :: "r"(
+¥oc
+->
+¸3
+));
+
+219 
+__asm__
+ volatile ("mov $0x23, %%ax" ::);
+
+220 
+__asm__
+ volatile ("mov %%ax, %%ds;" ::);
+
+221 
+__asm__
+ volatile ("mov %%ax, %%es;" ::);
+
+222 
+__asm__
+ volatile ("mov %%ax, %%fs;" ::);
+
+223 
+__asm__
+ volatile ("mov %%ax, %%gs;" ::);
+
+224 
+__asm__
+ vﬁ©ûê("movq %0, %%øx;"::"r"(
+¥oc
+->
+r•
+));
+
+225 
+__asm__
+ volatile ("pushq $0x23" ::);
+
+227 
+__asm__
+ volatile ("pushq %%rax" ::);
+
+228 
+__asm__
+ volatile ("pushfq" ::);
+
+232 
+__asm__
+ volatile ("pushq $0x2B" ::);
+
+233 
+__asm__
+ vﬁ©ûê("pushq %0;" :: "r"(
+¥oc
+->
+rù
+));
+
+234 
+__asm__
+ volatile ("movq $0x0, %%rdi" ::);
+
+235 
+__asm__
+ volatile ("movq $0x0, %%rsi" ::);
+
+236 
+__asm__
+ volatile ("iretq" ::);
+
+240 
+	}
+}
+
+242 
+	$£t_u£r_•a˚
+(
+pcb_t
+ *
+u£r_¥o˚ss
+, 
+uöt64_t
+ 
+off£t
+) {
+
+243 
+uöt64_t
+* 
+u£r_∑ge
+ = (uöt64_à*)
+u£r_¥o˚ss
+->
+rù
+;
+
+244 
+uöt64_t
+* 
+u£r_vútuÆ_addªss
+;
+
+246 
+u£r_∑ge
+ = (
+uöt64_t
+ *)(0x000000000FFFF000UL & (uint64_t)user_page);
+
+247 
+u£r_vútuÆ_addªss
+ = (
+uöt64_t
+ *)((uöt64_t)0x88888fff80000000UL | (uöt64_t)
+u£r_∑ge
+);
+
+250 
+	`m≠_phys_to_u£r_vút_addr
+((
+uöt64_t
+)
+u£r_vútuÆ_addªss
+, (uöt64_t)
+u£r_∑ge
+, (uöt64_à*)
+u£r_¥o˚ss
+->
+¸3
+);
+
+251 
+u£r_¥o˚ss
+->
+rù
+ = (
+uöt64_t
+)
+u£r_vútuÆ_addªss
+ | 
+off£t
+;
+
+253 
+	}
+}
+
+	@sys/string.c
+
+5 
+	$°æí
+(*
+°r
+) {
+
+6 
+i
+ = 0;
+
+7 *
+°r
+ != '\0') {
+
+8 
+i
+++;
+
+9 
+°r
+++;
+
+11  
+i
+;
+
+12 
+	}
+}
+
+17 *
+	$°r˝y
+(*
+§c
+, *
+d°
+) {
+
+18 *
+ãmp
+ = (*)
+d°
+;
+
+19 *
+§c
+ != '\0') {
+
+20 *
+ãmp
+++ = *
+§c
+++;
+
+22 *
+ãmp
+ = '\0';
+
+23  
+d°
+;
+
+24 
+	}
+}
+
+29 
+	$°rcmp
+(*
+°r1
+, *
+°r2
+) {
+
+31 *
+°r1
+ !'\0' && *
+°r2
+ != '\0') {
+
+32 i‡(*
+°r1
+ !*
+°r2
+) {
+
+35 
+°r1
+++;
+
+36 
+°r2
+++;
+
+38 i‡(*
+°r1
+ !'\0' || *
+°r2
+ != '\0') {
+
+42 
+	}
+}
+
+44 
+	$©oi
+(*
+°r
+) {
+
+45 
+vÆ
+ = 0;
+
+46 *
+°r
+ != '\0') {
+
+47 
+vÆ
+ = (vÆ * 10Ë+ (*
+°r
+ - '0');
+
+48 
+°r
+++;
+
+50  
+vÆ
+;
+
+51 
+	}
+}
+
+	@sys/tarfs.c
+
+1 
+	~<sys/defs.h
+>
+
+2 
+	~<sys/gdt.h
+>
+
+3 
+	~<sys/k¥ötf.h
+>
+
+4 
+	~<sys/èrfs.h
+>
+
+5 
+	~<sys/ahci.h
+>
+
+6 
+	~<sys/idt.h
+>
+
+7 
+	~<sys/pic.h
+>
+
+8 
+	~<sys/timî.h
+>
+
+9 
+	~<sys/kb.h
+>
+
+10 
+	~<sys/∑gög.h
+>
+
+11 
+	~<sys/∑gög_hñ≥r.h
+>
+
+12 
+	~<sys/¥o˚ss.h
+>
+
+13 
+	~<sys/utûs.h
+>
+
+14 
+	~<sys/°rög.h
+>
+
+16 
+èrfûe_t
+ 
+	gglobÆ_èrfs
+[100];
+
+17 
+	gfûe_cou¡
+ = 0;
+
+18 
+	gãmp_fûíame
+[100];
+
+20 
+uöt64_t
+ 
+	$is_fûe_exi°
+(*
+fûíame
+) {
+
+21 
+èrfs_t
+ *
+èrfs_°¨t
+ = (èrfs_à*)&
+_bö¨y_èrfs_°¨t
+;
+
+22 
+off£t
+ = 0;
+
+23 
+size
+ = 0;
+
+25 
+	`°æí
+(
+èrfs_°¨t
+->
+«me
+) != 0) {
+
+26 
+	`k¥ötf
+("fûe: %†",
+èrfs_°¨t
+->
+«me
+);
+
+27 
+size
+ = 
+	`©oi
+(
+èrfs_°¨t
+->size);
+
+28 
+size
+ = 
+	`o˘todec
+(size);
+
+29 i‡(
+	`°rcmp
+(
+èrfs_°¨t
+->
+«me
+, 
+fûíame
+) == 0) {
+
+30  
+off£t
+ + 
+TARFS_HEADER
+;
+
+32 i‡–
+size
+ == 0) {
+
+33 
+off£t
+ +
+TARFS_HEADER
+;
+
+36 i‡(
+size
+ % 
+TARFS_HEADER
+ == 0) {
+
+37 
+off£t
+ +
+size
+ + 
+TARFS_HEADER
+;
+
+40 
+off£t
+ +((
+size
+ / 
+TARFS_HEADER
+) + 1) * TARFS_HEADER + TARFS_HEADER;
+
+43 
+èrfs_°¨t
+ = (
+èrfs_t
+ *)(&
+_bö¨y_èrfs_°¨t
+ + 
+off£t
+);
+
+46 
+	}
+}
+
+52 
+	$gë_∑ª¡_öode
+(* 
+fûe
+) {
+
+54 
+Àn
+ = 
+	`°æí
+(
+fûe
+);
+
+56 
+Àn
+ --;
+
+57 
+	`°r˝y
+(
+fûe
+, 
+ãmp_fûíame
+);
+
+58 
+fûe
+[
+Àn
+] != '\\') {
+
+59 
+Àn
+ --;
+
+60 i‡(
+Àn
+ == 0) {
+
+64 
+ãmp_fûíame
+[++
+Àn
+] = '\0';
+
+66 
+Àn
+ = 0;
+
+67 
+Àn
+ < 
+fûe_cou¡
+) {
+
+68 i‡(
+	`°rcmp
+(
+ãmp_fûíame
+, 
+globÆ_èrfs
+[
+Àn
+].
+«me
+) == 0) {
+
+69  
+Àn
+;
+
+71 
+Àn
+ ++;
+
+74 
+	}
+}
+
+80 
+	$öô_èrfs
+() {
+
+81 
+ödex
+ = 0;
+
+82 
+off£t
+ = 0;
+
+83 
+size
+ = 0;
+
+84 
+öt_vÆ
+ = 0;
+
+85 
+èrfs_t
+ *
+èrfs_ôî
+ = (èrfs_à*)&
+_bö¨y_èrfs_°¨t
+;
+
+87 
+	`°æí
+(
+èrfs_ôî
+->
+«me
+) != 0) {
+
+88 
+size
+ = 
+	`©oi
+(
+èrfs_ôî
+->size);
+
+89 
+size
+ = 
+	`o˘todec
+(size);
+
+91 
+	`°r˝y
+(
+èrfs_ôî
+->
+«me
+, 
+globÆ_èrfs
+[
+ödex
+].name);
+
+93 
+globÆ_èrfs
+[
+ödex
+].
+size
+ = size;
+
+94 
+öt_vÆ
+ = 
+	`©oi
+(
+èrfs_ôî
+->
+ty≥Êag
+);
+
+97 
+öt_vÆ
+ = 
+	`gë_∑ª¡_öode
+(
+globÆ_èrfs
+[
+ödex
+].
+«me
+);
+
+98 i‡(
+öt_vÆ
+ == -1) {
+
+99 
+globÆ_èrfs
+[
+ödex
+].
+p_öode
+ = 0;
+
+102 
+globÆ_èrfs
+[
+ödex
+].
+p_öode
+ = 
+öt_vÆ
+;
+
+105 
+globÆ_èrfs
+[
+ödex
+].
+ty≥
+ = 
+öt_vÆ
+;
+
+106 
+globÆ_èrfs
+[
+ödex
+].
+addr
+ = (
+uöt64_t
+)&
+_bö¨y_èrfs_°¨t
+ + 
+off£t
+ + 
+TARFS_HEADER
+;
+
+107 
+globÆ_èrfs
+[
+ödex
+].
+öode
+ = ++
+fûe_cou¡
+;
+
+109 i‡–
+size
+ == 0) {
+
+110 
+off£t
+ +
+TARFS_HEADER
+;
+
+113 i‡(
+size
+ % 
+TARFS_HEADER
+ == 0) {
+
+114 
+off£t
+ +
+size
+ + 
+TARFS_HEADER
+;
+
+117 
+off£t
+ +((
+size
+ / 
+TARFS_HEADER
+) + 1) * TARFS_HEADER + TARFS_HEADER;
+
+120 
+ödex
+ ++;
+
+121 
+èrfs_ôî
+ = (
+èrfs_t
+ *)(&
+_bö¨y_èrfs_°¨t
+ + 
+off£t
+);
+
+124 
+	}
+}
+
+126 
+	$›í
+(*
+fûíame
+, 
+≥rmissi⁄
+) {
+
+127 
+ôî©‹
+ = 0;
+
+129 
+ôî©‹
+ < 
+fûe_cou¡
+) {
+
+130 i‡(
+	`°rcmp
+ (
+fûíame
+, 
+globÆ_èrfs
+[
+ôî©‹
+]) == 0) {
+
+131  
+globÆ_èrfs
+[
+ôî©‹
+].
+öode
+;
+
+133 
+ôî©‹
+ ++;
+
+136 
+	}
+}
+
+138 
+ªad
+(
 
 	@sys/timer.c
 
@@ -13100,6 +14740,86 @@ timî_h™dÀr
 );
 
 32 
+	}
+}
+
+	@sys/utils.c
+
+5 
+	$pow
+(
+ba£
+, 
+exp
+) {
+
+6 
+vÆ
+ = 0;
+
+8 i‡(
+exp
+ == 0) {
+
+11 
+vÆ
+ = 
+ba£
+ * 
+	`pow
+(ba£, 
+exp
+ -1);
+
+13  
+vÆ
+;
+
+14 
+	}
+}
+
+19 
+	$o˘todec
+(
+o˘Æ_vÆ
+) {
+
+20 
+öt_vÆ
+ = 0;
+
+21 
+pow_eight
+ = 0;
+
+23 
+o˘Æ_vÆ
+ > 0) {
+
+24 
+öt_vÆ
+ +(
+o˘Æ_vÆ
+ % 10Ë* 
+	`pow
+(8, 
+pow_eight
+);
+
+25 
+o˘Æ_vÆ
+ /= 10;
+
+26 
+pow_eight
+ ++;
+
+28  
+öt_vÆ
+;
+
+29 
 	}
 }
 
@@ -34528,8 +36248,8 @@ __END_DECLS
 .
 1
 /usr/include
-74
-1314
+80
+1411
 bin/cat/cat.c
 bin/ls/ls.c
 bin/sbush/binaryoper.c
@@ -34555,6 +36275,7 @@ include/string.h
 include/sys/ahci.h
 include/sys/defs.h
 include/sys/elf64.h
+include/sys/file.h
 include/sys/gdt.h
 include/sys/idt.h
 include/sys/kb.h
@@ -34565,8 +36286,10 @@ include/sys/pic.h
 include/sys/picassem.h
 include/sys/picdefs.h
 include/sys/process.h
+include/sys/string.h
 include/sys/tarfs.h
 include/sys/timer.h
+include/sys/utils.h
 include/unistd.h
 libc/exit.c
 libc/libc.c
@@ -34587,7 +36310,10 @@ sys/paging_helper.c
 sys/pic.c
 sys/picassem.c
 sys/process.c
+sys/string.c
+sys/tarfs.c
 sys/timer.c
+sys/utils.c
 /usr/include/stdio.h
 /usr/include/stdlib.h
 /usr/include/string.h

@@ -15,6 +15,7 @@
 uint8_t initial_stack[INITIAL_STACK_SIZE]__attribute__((aligned(16)));
 uint32_t* loader_stack;
 extern char kernmem, physbase;
+char buffer[100];
 
 void start(uint32_t *modulep, void *physbase, void *physfree)
 {
@@ -53,8 +54,13 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   __asm__ volatile("sti"); 
   uint64_t *addr = (uint64_t *)kmalloc(6000);
   kprintf("addrs: %d\n",addr);
-  pcb_t *user_process = create_user_process();
-  switch_to_ring3((pcb_t *)user_process);
+  is_file_exist("hello");
+  init_tarfs();
+  int fd = open("bin/sbush", 2);
+  read(fd, buffer, 100);
+  kprintf("fie: %s\n",buffer);
+//  pcb_t *user_process = create_user_process();
+//  switch_to_ring3((pcb_t *)user_process);
 
   //create_kernel_thread();
 

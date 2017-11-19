@@ -202,6 +202,13 @@ void switchBack(pcb_t *current, pcb_t *next) {
 
 }
 
+/*void save_registers(pcb_t *thread) {
+    __asm__ volatile("movq %%rdi, %0;" : "=r"(thread->regs.rdi);
+    __asm__ volatile("movq %%rsi, %0;" : "=r"(thread->regs.rsi);
+    __asm__ volatile("movq %%rax, %0;" : "=r"(thread->regs.rax);
+    __asm__ volatile("movq %%rbx, %0;" : "=r"(thread->regs.rbx);
+    __asm__ volatile("movq %%rdp, %0;" : "=r"(thread->regs.rbp);
+}*/
 
 void switch_to_ring3(pcb_t *proc) {
     proc->state = TASK_RUNNING;
@@ -229,7 +236,7 @@ _asm volatile("movq %0,%%rax;\n\t"
 //    __asm__ volatile ("popq %%rax" ::);
 //    __asm__ volatile ("orq $0x200, %%rax;" ::);
 //    __asm__ volatile ("pushq %%rax" ::);
-    __asm__ volatile ("pushq $0x1B" ::);
+    __asm__ volatile ("pushq $0x2B" ::);
     __asm__ volatile ("pushq %0;" :: "r"(proc->rip));
     __asm__ volatile ("movq $0x0, %%rdi" ::);
     __asm__ volatile ("movq $0x0, %%rsi" ::);
@@ -245,7 +252,8 @@ void set_user_space(pcb_t *user_process, uint64_t offset) {
 
     user_page = (uint64_t *)(0x000000000FFFF000UL & (uint64_t)user_page);
     user_virtual_address = (uint64_t *)((uint64_t)0x88888fff80000000UL | (uint64_t)user_page);
-
+    
+    //map_phys_to_virt_addr((uint64_t)user_virtual_address, (uint64_t)user_page);
     map_phys_to_user_virt_addr((uint64_t)user_virtual_address, (uint64_t)user_page, (uint64_t *)user_process->cr3);
     user_process->rip = (uint64_t)user_virtual_address | offset;
 

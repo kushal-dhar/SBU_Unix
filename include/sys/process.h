@@ -42,6 +42,7 @@ struct process_ctrl_blk {
     int           state;
     pcb_t        *next_proc;
     mm_struct_t  *mm;
+    register_t    regs;
 }__attribute__((packed));
 
 
