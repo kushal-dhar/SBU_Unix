@@ -13,17 +13,32 @@
 #define  TASK_ZOMBIE      6
 
 typedef struct process_ctrl_blk pcb_t;
-typedef struct vma_block mm_struct_t;
+typedef struct mm_struct mm_struct_t;
+typedef struct vma vma_t;
 typedef struct registers register_t;
 
-struct vma_block {
+struct mm_struct {
     uint64_t  code_start, code_end, data_start, data_end;
     uint64_t  start_brk, stack_start;
     uint64_t  arg_start, arg_end;
     uint64_t  env_start, env_end;
     uint64_t  rss;
+    uint64_t  rip;
     uint64_t  vm_total, vm_locked;
+    vma_t    *vma;
+    uint64_t  vma_count;
 }__attribute__((packed));
+
+struct vma {
+    mm_struct_t   *vmmm;
+    uint64_t      *vm_next;
+    uint64_t       vm_start;
+    uint64_t       vm_end;
+    uint64_t       flags;
+    int            file_pt;
+    uint64_t       file_start;
+    uint64_t       file_size;
+};
 
 struct registers {
     uint64_t rax, rbx, rcx, rdx, rsi, rdi, rbp, r8, r9, r10, r11;

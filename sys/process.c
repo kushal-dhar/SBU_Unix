@@ -11,9 +11,11 @@
 #include <sys/paging_helper.h>
 #include <sys/process.h>
 
+extern uint64_t *pml4;
 uint64_t *old_rsp;
 uint64_t *rsp_addr;
 uint64_t processID = 0;
+uint64_t *user_virtual_address = (uint64_t*)0x88888fff80000000UL;
 pcb_t *first_process;
 pcb_t *curr_process;
 pcb_t *next_process;
@@ -54,12 +56,14 @@ void create_kernel_thread() {
     curr_process = (pcb_t *)k_pcb;
     
     k_pcb->rsp = k_pcb->init_kernel = ((uint64_t)k_pcb + PAGE_SIZE);
+    k_pcb->rsp -= 8;
+    *(uint64_t *)(k_pcb->rsp) = (uint64_t)&initial_ret_function;
 
     create_new_thread();
 
     /* Load the current PCB and kernel stack and disable interrupt */
-    __asm__ volatile ("cli");
-    __asm__ volatile ("movq %0, %%rsp;" :: "r"((k_pcb->init_kernel)));
+//    __asm__ volatile ("cli");
+//    __asm__ volatile ("movq %0, %%rsp;" :: "r"((k_pcb->init_kernel)));
 
     scheduler();
 
@@ -86,6 +90,10 @@ void create_new_thread() {
     child_pcb->rip = (uint64_t)&test_function;
 
     child_pcb->rsp = child_pcb->init_kernel = ((uint64_t)child_pcb + PAGE_SIZE);
+    child_pcb->rsp  -= 8;
+    *(uint64_t *)(child_pcb->rsp) = (uint64_t)&test_function;
+//    *(uint64_t *)(child_pcb->rsp) |= KERNEL_ADDR;
+    child_pcb->regs.rax = child_pcb->regs.rbx = child_pcb->regs.rdi = child_pcb->regs.rsi = child_pcb->regs.rbp = 0;
     
     return;
 }
@@ -97,11 +105,18 @@ void create_new_thread() {
 pcb_t* create_user_process() {
     pcb_t *user_pcb = (pcb_t *)kmalloc((int)6000);
     uint64_t     offset = 0;
+    uint64_t    *user_virt;
+    uint64_t    *user_stack;
     mm_struct_t *vma;
 
     user_pcb->pid = get_next_processID();
     user_pcb->ppid = 0;
     user_pcb->cr3 = (uint64_t)create_user_address_space();
+//    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | user_pcb->cr3);
+
+    user_stack = (uint64_t *)allocate_virt_page();
+    user_virt = (uint64_t *)((uint64_t)user_virtual_address | (uint64_t)user_stack);
+    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)user_stack, (uint64_t *)user_pcb->cr3);
     user_pcb->rip = (uint64_t)&test_user_thread;
     offset = user_pcb->rip & 0xfff;
 
@@ -110,7 +125,15 @@ pcb_t* create_user_process() {
     vma = (mm_struct_t *)kmalloc(1000);
     user_pcb->mm = vma;
 
-    user_pcb->rsp = user_pcb->init_kernel = ((uint64_t)user_pcb + PAGE_SIZE);
+//    uint64_t *user_page = (uint64_t *)allocate_virt_page();
+//    user_virt_addr = (uint64_t *)((uint64_t)user_virtual_address | (uint64_t)user_page);
+//    map_phys_to_user_virt_addr((uint64_t)user_virt_addr, (uint64_t)user_page, (uint64_t *)user_pcb->cr3);
+//    set_CR3((uint64_t)user_pcb->cr3);
+//    memset((void*)user_virt_addr, 0, (uint32_t)PAGE_SIZE);
+//    set_CR3((uint64_t)pml4);
+
+//    uint64_t *kstack = (uint64_t *)umalloc(4096, (uint64_t *)user_pcb->cr3);
+    user_pcb->rsp = user_pcb->init_kernel = ((uint64_t)user_stack + PAGE_SIZE);
 
     set_user_space(user_pcb, offset);
 
@@ -133,9 +156,16 @@ void initial_ret_function() {
 
     init_timer(1000);
     kb_init();
+    int  i = 0;
+    while (i < 4) {
+        kprintf("I am in kernel thread again\n");
+        switchTask(first_process, next_process);
+        i ++;
+    }
+    
 
-    pcb_t *user_process = create_user_process();
-    switch_to_ring3((pcb_t *)user_process);
+//    pcb_t *user_process = create_user_process();
+//    switch_to_ring3((pcb_t *)user_process);
     while(1);
 }
 
@@ -144,10 +174,14 @@ void initial_ret_function() {
  * Test function to check new kernel thread
  */
 void test_function() {
-    while(1) {
-	kprintf("I am in thread 1 after context switch\n");
-	switchBack(next_process, first_process);
+//	switchBack(next_process, first_process);
+    int i = 0;
+    while(i < 5) {
+	kprintf("I am in thread 1 after context switch\n");        
+	switchTask(next_process, first_process);
+	i++;
     }
+//    while(1);
 }
 
 /* Dummy function to test user thread */
@@ -155,6 +189,7 @@ void test_user_thread() {
 //    kprintf("Random\n");
     int a = 10;
     a = a * 12;
+//    kprintf("Trying to print something\n");
     while(1);
 }
 
@@ -162,7 +197,7 @@ void test_user_thread() {
 void scheduler() {
 //    first_process = curr_process;
 //    curr_process = next_process;
-    rsp_addr = (uint64_t *)(next_process->init_kernel - 128);
+//    rsp_addr = (uint64_t *)(next_process->init_kernel - 128);
     switchTask(curr_process, next_process);
 }
 
@@ -173,6 +208,7 @@ void scheduler() {
 void switchTask(pcb_t *current, pcb_t *next) {
 
 //    __asm__ volatile ("cli"); 
+/*
     __asm__ volatile ("movq %%rsp, %0;" : "=r"((current->init_kernel)));
     current->init_kernel += 8;
     __asm__ volatile ("movq %0, %%rsp;" :: "r"((next->init_kernel)));
@@ -184,6 +220,25 @@ void switchTask(pcb_t *current, pcb_t *next) {
     set_tss_rsp((void *)rsp_addr);
 
     __asm__ volatile ("ret");
+*/
+//    save_registers(current);
+
+    __asm__ volatile("movq %%rdi, %0;" : "=r"(current->regs.rdi));
+    __asm__ volatile("movq %%rsi, %0;" : "=r"(current->regs.rsi));
+    __asm__ volatile("movq %%rax, %0;" : "=r"(current->regs.rax));
+    __asm__ volatile("movq %%rbx, %0;" : "=r"(current->regs.rbx));
+    __asm__ volatile("movq %%rbp, %0;" : "=r"(current->regs.rbp));
+
+//    save_rsp(current);
+    __asm__ volatile ("movq  %%rsp, %0;":"=r"(current->rsp));
+    __asm__ volatile ("movq %0, %%rsp;"::"r"(next->rsp));
+
+    __asm__ volatile ("movq %0, %%rdi;" :: "r"(next->regs.rdi));
+    __asm__ volatile ("movq %0, %%rax;" :: "r"(next->regs.rax));
+    __asm__ volatile ("movq %0, %%rbx;" :: "r"(next->regs.rbx));
+    __asm__ volatile ("movq %0, %%rbp;" :: "r"(next->regs.rbp));
+    __asm__ volatile ("movq %0, %%rsi;" :: "r"(next->regs.rsi));
+//    update_registers(next);
 
 }
 
@@ -202,22 +257,11 @@ void switchBack(pcb_t *current, pcb_t *next) {
 
 }
 
-/*void save_registers(pcb_t *thread) {
-    __asm__ volatile("movq %%rdi, %0;" : "=r"(thread->regs.rdi);
-    __asm__ volatile("movq %%rsi, %0;" : "=r"(thread->regs.rsi);
-    __asm__ volatile("movq %%rax, %0;" : "=r"(thread->regs.rax);
-    __asm__ volatile("movq %%rbx, %0;" : "=r"(thread->regs.rbx);
-    __asm__ volatile("movq %%rdp, %0;" : "=r"(thread->regs.rbp);
-}*/
-
+/*
+ * Stub to switch ring 3
+ */
 void switch_to_ring3(pcb_t *proc) {
     proc->state = TASK_RUNNING;
-
-/*        volatile unsigned int a = 0x2B;
-
-        _sm__ volatile ("pushq %%rax" ::);
-_asm volatile("movq %0,%%rax;\n\t"
-            "ltr (%%rax);"::"r"(&a)); */
 
     set_tss_rsp((void *) proc->init_kernel);
 
@@ -248,13 +292,14 @@ _asm volatile("movq %0,%%rax;\n\t"
 
 void set_user_space(pcb_t *user_process, uint64_t offset) {
     uint64_t* user_page = (uint64_t *)user_process->rip;
-    uint64_t* user_virtual_address;
+    uint64_t* user_virtual_addr;
 
+    user_virtual_address += 0x1000UL;
     user_page = (uint64_t *)(0x000000000FFFF000UL & (uint64_t)user_page);
-    user_virtual_address = (uint64_t *)((uint64_t)0x88888fff80000000UL | (uint64_t)user_page);
+    user_virtual_addr = (uint64_t *)((uint64_t)USER_VIRT_ADDR| (uint64_t)user_page);
     
     //map_phys_to_virt_addr((uint64_t)user_virtual_address, (uint64_t)user_page);
-    map_phys_to_user_virt_addr((uint64_t)user_virtual_address, (uint64_t)user_page, (uint64_t *)user_process->cr3);
-    user_process->rip = (uint64_t)user_virtual_address | offset;
+    map_phys_to_user_virt_addr((uint64_t)user_virtual_addr, (uint64_t)user_page, (uint64_t *)user_process->cr3);
+    user_process->rip = (uint64_t)user_virtual_addr | offset;
 
 }

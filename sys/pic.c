@@ -17,6 +17,8 @@
 /* call this from the assembly */
 extern void isr0();
 extern void isr1();
+extern void isr14();
+
 /* Array of function pointers to handle custom IRQ handlers  */
 void *irq_routines[16]=
 {
@@ -80,6 +82,8 @@ void init_picirr(){
     set_idt_gate(INTR_0 ,(uint64_t)isr0, IDT_SEL , INTERRUPT_GATE);
     /*This is for keyboard interrupt */
     set_idt_gate(INTR_1 ,(uint64_t)isr1, IDT_SEL , INTERRUPT_GATE);
+    /* This if for Page Fault Handler */
+    set_idt_gate(INTR_14 ,(uint64_t)isr14, IDT_SEL , INTERRUPT_GATE);
 }
 
 void intr_handler(regis* regs){

@@ -1,5 +1,6 @@
 .global isr0
 .global isr1
+.global isr14
 .extern intr_handler
 
 isr0:
@@ -7,6 +8,9 @@ isr0:
     jmp common_handler
 isr1:
     movq $33, %rax
+    jmp common_handler
+isr14:
+    movq $14, %rax
     jmp common_handler
 
 common_handler:

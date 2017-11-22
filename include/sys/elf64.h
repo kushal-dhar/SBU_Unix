@@ -1,16 +1,46 @@
 #ifndef _ELF64_H
 #define _ELF64_H
 
+#include <sys/defs.h>
+#include <sys/process.h>
+
 #define EI_NIDENT 16
+
+#define ELFMAG0 0x7F
+#define ELFMAG1 'E'
+#define ELFMAG2 'L'
+#define ELFMAG3 'F'
+
+#define PF_R     0x4
+#define PF_W     0x2
+#define PF_X     0x1
+
+#define PT_NULL     0
+#define PT_LOAD     1
+#define PT_DYNAMIC  2
 
 typedef uint64_t Elf64_Addr;
 typedef uint16_t Elf64_Half;
 typedef uint64_t Elf64_Lword;
 typedef uint64_t Elf64_Off;
 typedef uint32_t Elf64_Sword;
-typedef uint64_t Elf64_Sxword
+typedef uint64_t Elf64_Sxword;
 typedef uint32_t Elf64_Word;
 typedef uint64_t Elf64_Xword;
+
+
+enum ELF_Ident{
+EI_MAG0        = 0,
+EI_MAG1        = 1,
+EI_MAG2        = 2,
+EI_MAG3        = 3,
+EI_CLASS       = 4,
+EI_DATA        = 5,
+EI_VERSION     = 6,
+EI_OSABI       = 7,
+EI_ABIVERSION  = 8,
+EI_PAD         = 9
+};
 
 typedef struct {
   unsigned char e_ident[EI_NIDENT];
@@ -40,4 +70,7 @@ typedef struct {
   Elf64_Xword   p_align;
 } Elf64_Phdr;
 
+
+extern int elf_check_header(Elf64_Ehdr *elfhdr);
+extern int load_binaries(int fp, mm_struct_t *mm);
 #endif

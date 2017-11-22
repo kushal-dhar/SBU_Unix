@@ -10,6 +10,7 @@
 #include <sys/paging.h>
 #include <sys/paging_helper.h>
 #include <sys/process.h>
+#include <sys/elf64.h>
 
 #define INITIAL_STACK_SIZE 4096
 uint8_t initial_stack[INITIAL_STACK_SIZE]__attribute__((aligned(16)));
@@ -54,15 +55,18 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   __asm__ volatile("sti"); 
   uint64_t *addr = (uint64_t *)kmalloc(6000);
   kprintf("addrs: %d\n",addr);
-  is_file_exist("hello");
+//  is_file_exist("hello");
   init_tarfs();
-  int fd = open("bin/sbush", 2);
-  read(fd, buffer, 100);
-  kprintf("fie: %s\n",buffer);
-//  pcb_t *user_process = create_user_process();
-//  switch_to_ring3((pcb_t *)user_process);
+//  kprintf("printing value at %p\n",*(uint64_t *)0x01201);
+//  int fd = open("bin/cat", 2);
+//  read(fd, buffer, 100);
+//  kprintf("fie: %s\n",buffer);
+//  mm_struct_t *mm = (mm_struct_t *)kmalloc(4096);
+//  load_binaries(fd, mm);
+  pcb_t *user_process = create_user_process();
+  switch_to_ring3((pcb_t *)user_process);
 
-  //create_kernel_thread();
+//  create_kernel_thread();
 
   while(1);
 

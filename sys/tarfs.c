@@ -130,7 +130,7 @@ int open(char *filename, int permission) {
     int     iterator    = 0;
 
     while (iterator < file_count) {
-	if ((global_tarfs[iterator].type == DIRECTORY) && (strcmp(filename, global_tarfs[iterator].name) == 0)) {
+	if (strcmp(filename, global_tarfs[iterator].name) == 0) {
 	    return global_tarfs[iterator].inode;
 	}
 	iterator ++;
@@ -185,3 +185,32 @@ int opendir(char *filename) {
     return -1;
 
 }
+
+/*
+ * Stub to read file contents
+ */
+int read_dir(int fd, char *buf, int size) {
+    int      length      = 0;
+    int      iterator    = 0;
+    char    *content;
+
+    while (iterator < file_count) {
+        if (global_tarfs[iterator].inode == fd) {
+            fd = iterator;
+            break;
+        }
+        iterator++;
+    }
+    length = global_tarfs[fd].size;
+    content = (char *)global_tarfs[fd].addr;
+
+    length = (length > size)?size:length;
+    memcpy((void *)content, (void *)buf, length);
+
+    return length;
+}
+
+int close_dir(int fd) {
+    return 1;
+}
+
