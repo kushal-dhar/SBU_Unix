@@ -15,13 +15,17 @@
 #include <sys/picassem.h>
 
 /* call this from the assembly */
-extern void isr0();
-extern void isr1();
+extern void isr32();
+extern void isr33();
 extern void isr14();
 
 /* Array of function pointers to handle custom IRQ handlers  */
-void *irq_routines[16]=
+void *irq_routines[48]=
 {
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
   0, 0, 0 , 0 , 0 , 0 , 0 , 0,
   0, 0, 0 , 0 , 0 , 0 , 0 , 0
  
@@ -79,9 +83,9 @@ void init_picirr(){
     PIC_remap(0x20, 0x28);
     /** Adding ISR **/
     /*This is for system timer */
-    set_idt_gate(INTR_0 ,(uint64_t)isr0, IDT_SEL , INTERRUPT_GATE);
+    set_idt_gate(INTR_32 ,(uint64_t)isr32, IDT_SEL , INTERRUPT_GATE);
     /*This is for keyboard interrupt */
-    set_idt_gate(INTR_1 ,(uint64_t)isr1, IDT_SEL , INTERRUPT_GATE);
+    set_idt_gate(INTR_33 ,(uint64_t)isr33, IDT_SEL , INTERRUPT_GATE);
     /* This if for Page Fault Handler */
     set_idt_gate(INTR_14 ,(uint64_t)isr14, IDT_SEL , INTERRUPT_GATE);
 }
@@ -96,12 +100,28 @@ void intr_handler(regis* regs){
         :
         :
 	);
-     handler = irq_routines[sys - 32];
+//     if (sys < 32) {
+	handler = irq_routines[sys];
+#if 0
+     }
+     else {
+         handler = irq_routines[sys - 32];
+     }
+#endif
      if(handler)
     { 
        handler(regs);
     }
    /* sending end of interrupt */
-    PIC_sendEOI(sys-32);  
+#if 0
+    if (sys < 32) {
+#endif
+        PIC_sendEOI(sys);
+#if 0
+    }
+    else {
+        PIC_sendEOI(sys-32);  
+    }
+#endif
 }
 

@@ -33,9 +33,9 @@ typedef struct regis {
 #define IDT_SEL 0x08
 #define INTERRUPT_GATE 0x8E
 #define INTERRUPT_LIMIT 256
-#define INTR_0 32
-#define INTR_1 33
-#define INTR_14 -18
+#define INTR_32 32
+#define INTR_33 33
+#define INTR_14 14
 void set_idt_gate(uint8_t interrupt_num,uint64_t base_addr, uint16_t sel, uint8_t gate );
 
 void init_idt();

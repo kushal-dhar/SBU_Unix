@@ -192,6 +192,6 @@ void kb_handler(struct regis *s) {
 /* Initialize keyboard handler */
 void kb_init(void) {
     outb(0x21 , 0xFC);
-    irq_set(1, kb_handler);
+    irq_set(33, kb_handler);
 }
 

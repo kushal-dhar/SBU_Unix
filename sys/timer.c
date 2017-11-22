@@ -28,6 +28,6 @@ void timer_handler(struct regis *r){
 /* Start the timer */
 void init_timer(int hz){
     timer_count(hz);
-    irq_set(0, timer_handler);
+    irq_set(32, timer_handler);
 }
 

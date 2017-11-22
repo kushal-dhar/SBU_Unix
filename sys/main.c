@@ -17,6 +17,11 @@ uint8_t initial_stack[INITIAL_STACK_SIZE]__attribute__((aligned(16)));
 uint32_t* loader_stack;
 extern char kernmem, physbase;
 char buffer[100];
+void caller(){
+for(int i =0; i <30;i++){
+kprintf("%d\n",i);
+}
+}
 
 void start(uint32_t *modulep, void *physbase, void *physfree)
 {
@@ -57,17 +62,19 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   kprintf("addrs: %d\n",addr);
 //  is_file_exist("hello");
   init_tarfs();
-//  kprintf("printing value at %p\n",*(uint64_t *)0x01201);
+  enable_page_fault();
+  //kprintf("printing value at %p\n",*(uint64_t *)0x01201);
 //  int fd = open("bin/cat", 2);
 //  read(fd, buffer, 100);
 //  kprintf("fie: %s\n",buffer);
 //  mm_struct_t *mm = (mm_struct_t *)kmalloc(4096);
 //  load_binaries(fd, mm);
-  pcb_t *user_process = create_user_process();
-  switch_to_ring3((pcb_t *)user_process);
+caller();  
+//pcb_t *user_process = create_user_process();
+//  switch_to_ring3((pcb_t *)user_process);
 
 //  create_kernel_thread();
-
+//caller();
   while(1);
 
 }

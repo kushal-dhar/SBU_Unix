@@ -16,7 +16,7 @@ uint64_t *free_map;
 uint64_t cr3;
 uint64_t physfree_start, physfree_end;
 uint64_t virt_addr = (uint64_t)KERNEL_BASE;
-uint64_t user_addr = (uint64_t)0x88888fff80000000UL;
+//uint64_t user_addr = (uint64_t)0x88888fff80000000UL;
 
 
 /*
@@ -329,7 +329,8 @@ uint64_t* umalloc(int size,uint64_t* cr3_addr) {
     int        num_page      = 0;
     int        i             = 0;
     uint64_t   page_addr     = 0;
-    uint64_t   ret_addr;
+//    uint64_t   ret_addr;
+    uint64_t  *user_virt;
 
     if (size % PAGE_SIZE == 0) {
         num_page = size / PAGE_SIZE;
@@ -337,16 +338,18 @@ uint64_t* umalloc(int size,uint64_t* cr3_addr) {
     else {
         num_page = (size / PAGE_SIZE) + 1;
     }
-    ret_addr = user_addr + 0x1000;
+    //ret_addr = user_addr + 0x1000;
+    user_virt = (uint64_t *)USER_VIRT_ADDR;
 
     for (i = 0; i < num_page; i++) {
-        user_addr += 0x1000;
+        //user_addr += 0x1000;
         page_addr = (uint64_t )allocate_virt_page();
-        map_phys_to_user_virt_addr((uint64_t)user_addr, (uint64_t)page_addr, (uint64_t *)cr3_addr);
-        memset((void*)user_addr, 0, (uint32_t)PAGE_SIZE);
+        user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR| (uint64_t)page_addr);
+        map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)page_addr, (uint64_t *)cr3_addr);
+        memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     }
 
-    return (uint64_t *)ret_addr;
+    return (uint64_t *)user_virt;
 }
 
 
@@ -452,7 +455,7 @@ void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_
 }
 
 void enable_page_fault() {
-    irq_set(-18, pagefault_handler);
+    irq_set(14, pagefault_handler);
 }
 
 void pagefault_handler() {

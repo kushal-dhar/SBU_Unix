@@ -7,10 +7,21 @@
 volatile char *video = ( char*)VIDEO_ADDR;
 int            colour=  7;
 
-int x_pos = 0;
-int y_pos = 0;
+volatile int x_pos = 0;
+volatile int y_pos = 0;
 unsigned char control;
 unsigned char shift;
+void  memcpyy( volatile void *src, volatile void *dest, uint32_t n) {
+    char *temp1 = (char *)src;
+    char *temp2 = (char *)dest;
+    int i = 0;
+
+    for (i = 0; i < n/2; i++) {
+        temp2[i] = temp1[i];
+    }   
+
+}
+
 
 void strtoint (int num, char str[])
 {
@@ -107,7 +118,7 @@ void  convertPointerAddress2String(unsigned long long n, char str[]){
     return;
 }
 
-
+/*
 void update_screen() {
     int       x       = 0;
     int       y       = 0;
@@ -119,8 +130,14 @@ void update_screen() {
              mem_loc[x + (y*160)] = mem_loc[x + ((y+1)*160)];
         }
     }
-}
+}*/
 
+void update_screen() {
+volatile     int y =0;
+     for (y = 0; y < 24; y++) {
+       memcpyy((video+ ((y+1)*160)),(video+ (y*160)), 320);   
+        }
+}
 
 void kprintf(char *string, ...)
 {
