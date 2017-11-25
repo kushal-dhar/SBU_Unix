@@ -19,7 +19,7 @@ void exec_shell(char *cmd) {
 
     pid = fork();
     if (pid == -1) {
-      printf("%s","Error executing the command\n");
+      //printf("%s","Error executing the command\n");
       return;
     } else if (pid == 0) {
       strcat(str2,cmd);
@@ -76,11 +76,11 @@ void pipe_proc(char *str) {
   }
   cmd = str2;
   if (pipe(output_pipe) == -1) {
-    printf("%s","Error creating pipe\n");
+    //printf("%s","Error creating pipe\n");
     return;
   }
 if (pipe(cmd_pipe) == -1) {
-    printf("%s","Error creating pipe\n");
+    //printf("%s","Error creating pipe\n");
     return;
   }
 
@@ -88,7 +88,7 @@ if (pipe(cmd_pipe) == -1) {
     pid = fork();
 
     if (pid == -1) {
-      printf("%s","Error executing pipe command\n");
+      //printf("%s","Error executing pipe command\n");
       return ;
     } 
     else if (pid == 0) {
@@ -114,13 +114,13 @@ if (pipe(cmd_pipe) == -1) {
       close(output_pipe[1]);
       close(output_pipe[0]); 
       if(write_char(1, cmd_pipe[1], cmd, strlen(cmd)) < 0) {
-        printf("%s","Write to pipe failed\n");
+        //printf("%s","Write to pipe failed\n");
         exit(1);
       }
       close(cmd_pipe[0]);
  //     split_string(p_cmd, ' ',arg1);
       execvp(arg1[0], arg1);
-      printf("%s","Error while executing 2nd command\n");
+      //printf("%s","Error while executing 2nd command\n");
       exit(1);
     } 
     else {
@@ -134,7 +134,7 @@ if (pipe(cmd_pipe) == -1) {
         close(output_pipe[0]);
         close(output_pipe[1]);
         if ((cmd = read_char(0, cmd_pipe[0], cmd, strlen(cmd))) == 0) {
-          printf("%s","Read from pipe failed\n");
+          //printf("%s","Read from pipe failed\n");
           exit(1);
         }
         cmd++;
@@ -155,7 +155,7 @@ if (pipe(cmd_pipe) == -1) {
         close(cmd_pipe[1]);
         split_string(p_cmd, ' ', arg2);
         execvp(arg2[0], arg2);
-        printf("%s","Error while executing 2nd command\n");
+        //printf("%s","Error while executing 2nd command\n");
         exit(1);
       }
       else {

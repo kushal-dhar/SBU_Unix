@@ -40,7 +40,7 @@ int main(int argc, char *argv[], char *envp[]) {
     n = list_dir(217,n,buf,1000);
     for (j = 0; j < n;) {
       fd = (struct f_dirent *) (buf + j);
-      printf("\n%s", fd->f_name);
+      //printf("\n%s", fd->f_name);
 
       j += fd->f_reclen;
     }

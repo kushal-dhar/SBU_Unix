@@ -1,4 +1,4 @@
-cscope 15 $HOME/os_course_proj/libc               0000110316
+cscope 15 $HOME/os_course_proj/libc               0000110654
 	@exit.c
 
 1 
@@ -598,6 +598,46 @@ globÆ_°r
 ;
 
 206 
+	}
+}
+
+208 
+uöt64_t
+ 
+	$sysˇŒ_gëpid
+(
+uöt64_t
+ 
+sysˇŒ
+) {
+
+209 
+uöt64_t
+ 
+ªt
+ = 0;
+
+211 
+__asm__
+ vﬁ©ûê("movq %0, %%rbx;"::"r"(
+sysˇŒ
+));
+
+212 
+__asm__
+ volatile ("int $0x80;");
+
+213 
+__asm__
+ vﬁ©ûê("movq %%øx, %0;":"Ù"(
+ªt
+));
+
+215  
+ªt
+;
+
+216 
 	}
 }
 
@@ -1548,6 +1588,28 @@ fd
 ;
 
 86 
+	}
+}
+
+88 
+	$gë_pid
+() {
+
+89 
+pid
+ = 0;
+
+91 
+pid
+ = 
+	`sysˇŒ_gëpid
+(39);
+
+92  
+pid
+;
+
+93 
 	}
 }
 

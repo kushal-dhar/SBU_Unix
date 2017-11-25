@@ -315,7 +315,7 @@ void switch_to_ring3(pcb_t *proc) {
     curr_process = proc;
     
 
-    set_tss_rsp((void *) proc->init_kernel);
+    set_tss_rsp((void *) first_process->init_kernel);
 
     __asm__ volatile ("cli" ::);
     __asm__ volatile ("movq %0, %%cr3;" :: "r"(proc->cr3));

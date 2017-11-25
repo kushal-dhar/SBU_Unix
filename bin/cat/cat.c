@@ -14,7 +14,7 @@ void cat(int argc, char *argv[]) {
   for (j = 0; j < argc; j++) {
     fd = open(argv[j], 2);
     text = read_char(0, fd, text, 1000);
-    printf("%s",text);
+    //printf("%s",text);
   }
 
   return;

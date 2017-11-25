@@ -116,11 +116,14 @@ uint64_t intr_handler(regis* regs){
     uint64_t (*handler) (regis *regs)= NULL;
 //    uint64_t syscall_no;
     uint64_t sys = 0;
-    uint64_t syscall_no;
+//    uint64_t syscall_no;
     uint64_t ret = 0;
+    uint64_t rbx, rcx, rdx;
 
-    __asm__ volatile("movq %%rbx, %0;" : "=r"(syscall_no));
+    __asm__ volatile("movq %%rbx, %0;" : "=r"(rbx));
     __asm__ volatile("movq %%rax, %0;" : "=r"(sys));
+    __asm__ volatile("movq %%rcx, %0;" : "=r"(rcx));
+    __asm__ volatile("movq %%rdx, %0;" : "=r"(rdx));
 /*    __asm__ volatile("movq %%rax, %0;"
                      "movq %%rbx, %1;"
                      "movq %%rcx, %2;"
@@ -128,9 +131,14 @@ uint64_t intr_handler(regis* regs){
                      :
                      : "rax", "rsi", "rcx"
                      ); */
-    kprintf("Values are : %d  %d  \n",sys, syscall_no);
     regs = (regis *)kmalloc(1000);
-    regs->int_no = syscall_no;
+    regs->rax = sys;
+    regs->rbx = rbx;
+    regs->rcx = rcx;
+    regs->rdx = rdx;
+//    kprintf("Values are : %d  %d  \n",sys, regs->rbx);
+//    regs = (regis *)kmalloc(1000);
+//    regs->int_no = syscall_no;
 
 #if 0
      __asm__ volatile(

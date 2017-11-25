@@ -38,6 +38,6 @@ extern int open(char *pathname, int flags);
 extern int pipe(int fd[]);
 extern int close(int fd) ;
 extern int dup2(int oldfd, int newfd) ;
-extern int getpid();
+extern int get_pid();
 
 #endif

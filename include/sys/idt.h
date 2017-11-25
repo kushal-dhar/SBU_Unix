@@ -24,11 +24,13 @@ typedef struct idt_ptr
 /* Show C our stack frame */
 typedef struct regis {
 //  uint64_t rax,rbx,rcx,rdx,rsi,rdi,r8,r9,r10,r11;
- uint32_t gs,fs,es,ds;
-   uint8_t edi,esi,ebp,esp,ebx,edx,ecx,eax;
-   uint64_t int_no,err_code;
-   uint8_t eip,cs,eflags,useresp,ss;
-   uint64_t buf;
+   uint64_t r11, r10, r9, r8;
+   uint64_t rbp;
+   uint64_t rdi, rsi;
+   uint64_t rdx, rcx, rbx, rax;
+// uint32_t gs,fs,es,ds;
+//   uint8_t edi,esi,ebp,esp,ebx,edx,ecx,eax;
+//   uint8_t eip,cs,eflags,useresp,ss;
 } regis ;
 
 #define IDT_SEL 0x08

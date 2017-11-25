@@ -14,8 +14,8 @@ char cmd[1024];
 //char delim = ' ';
 while(1){
        getcwd(cwd,1024);
-       printf ("%s", cwd);
-       printf("%s","<sbush>");	
+       //printf ("%s", cwd);
+       //printf("%s","<sbush>");	
        fgets(cmd,100,1);
        if(cmd[0] == 'c' && cmd [1] == 'd'){
         change_dir(cmd);
@@ -28,7 +28,7 @@ while(1){
         }  else if (strstr(cmd, "|") != NULL) {
    	   	pipe_proc(cmd);
      		getcwd(cwd,1024);
-     		printf("%s:sbush> ",cwd);
+     		//printf("%s:sbush> ",cwd);
 /*      } else if((strstr(cmd, "echo") != NULL) && (strstr(cmd,"$") != NULL)) {
         get_cmd(cmd+4);
         getcwd(cwd, 1024); */
@@ -43,7 +43,7 @@ while(1){
 	} else {
      	 exec_shell(cmd);
         getcwd(cwd,1024);
-      	printf("%s:sbush> ",cwd);
+      	//printf("%s:sbush> ",cwd);
         } 
 }
 return 0;

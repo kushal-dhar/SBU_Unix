@@ -19,4 +19,5 @@ extern long syscall_dirent(long syscall, long fd, char *buf, long count);
 extern char* read_char(long syscall, long arg1, char *arg2, long arg3);
 extern long write_char(long syscall, long arg1, char *arg2, long arg3);
 extern uint64_t syscall_getpid(uint64_t syscall);
+extern uint64_t syscall_2(uint64_t syscall, uint64_t ch);
 #endif	

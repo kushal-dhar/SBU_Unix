@@ -18,7 +18,8 @@ void init_syscalls() {
     irq_set_with_return(128, syscall_handler);
 }
 
-int syscall_handler(regis *r) {
+int syscall_handler(regis *reg) {
+#if 0
     uint64_t   syscall_no;
     uint64_t   buf;
     uint64_t   rcx;
@@ -34,6 +35,9 @@ int syscall_handler(regis *r) {
 		     : "rax", "rsi", "rcx"
 		     );
     kprintf("I am able to parse this %d  %d  %d  %d\n",syscall_no,buf,rcx,rdx);
-
+#endif
+    if (reg->rbx == 1) {
+        kprintf("%s",reg->rcx);
+    }
     return 10;
 }

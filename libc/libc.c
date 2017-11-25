@@ -166,6 +166,7 @@ inline long syscall_dirent(long syscall, long fd, char *buf, long count){
 
 }
 
+
 long write_char(long syscall, long arg1, char *arg2, long arg3) {
   long ret;
   int i = 0;
@@ -189,6 +190,7 @@ long write_char(long syscall, long arg1, char *arg2, long arg3) {
   return ret;
 }
 
+
 inline char* read_char(long syscall, long arg1, char *arg2, long arg3) {
   char *ret;
   __asm__ volatile (
@@ -206,11 +208,22 @@ inline char* read_char(long syscall, long arg1, char *arg2, long arg3) {
 }
 
 uint64_t syscall_getpid(uint64_t syscall) {
-    uint64_t ret;
+    uint64_t ret = 0;
 
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("int $0x80;");
   __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
 
     return ret;
+}
+
+uint64_t syscall_2(uint64_t syscall, uint64_t ch) {
+  uint64_t ret = 0;
+   
+  __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
+  __asm__ volatile ("movq %0, %%rcx;"::"r"(ch));
+  __asm__ volatile ("int $0x80;");
+  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
+
+  return ret;
 }
