@@ -24,5 +24,6 @@ void printf(char s[],char  str[]);
 void print(char *s, ...);
 extern void printInt(int i );
 extern long list_dir(long syscall, long fd, char  *buf ,long count);
+extern void scan(char *str, void *buf);
 #endif
 

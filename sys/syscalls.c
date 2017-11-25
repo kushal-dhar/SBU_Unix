@@ -36,8 +36,13 @@ int syscall_handler(regis *reg) {
 		     );
     kprintf("I am able to parse this %d  %d  %d  %d\n",syscall_no,buf,rcx,rdx);
 #endif
+    /* Handle user printf */
     if (reg->rbx == 1) {
         kprintf("%s",reg->rcx);
+    }
+    /* Handle user scanf */
+    else if (reg->rbx == 4) {
+	scanf((char *)reg->rcx);
     }
     return 10;
 }

@@ -111,6 +111,25 @@ void init_picirr(){
     set_idt_gate(INTR_128 ,(uint64_t)isr128, IDT_SEL , 0xEE);
 }
 
+void intr_handler1(regis* regs){
+   /*  It is for handling the custom interrupts */
+    void (*handler) (regis *regs)= NULL;
+     uint64_t sys = 0;
+     __asm__ volatile(
+       "movq %%rax , %0\n\t"
+        : "=a"(sys)
+        :
+        :
+        );
+     handler = irq_routines[sys];
+     if(handler)
+    {
+       handler(regs);
+    }
+   /* sending end of interrupt */
+    PIC_sendEOI(sys);
+}
+
 uint64_t intr_handler(regis* regs){
    /*  It is for handling the custom interrupts */
     uint64_t (*handler) (regis *regs)= NULL;
@@ -155,8 +174,8 @@ uint64_t intr_handler(regis* regs){
     { 
        ret = handler(regs);
     }
-    return ret;
    /* sending end of interrupt */
-    //PIC_sendEOI(sys);
+    PIC_sendEOI(sys);
+    return ret;
 }
 

@@ -14,8 +14,8 @@ char cmd[1024];
 //char delim = ' ';
 while(1){
        getcwd(cwd,1024);
-       //printf ("%s", cwd);
-       //printf("%s","<sbush>");	
+       print("%s", cwd);
+       print("%s","<sbush>");	
        fgets(cmd,100,1);
        if(cmd[0] == 'c' && cmd [1] == 'd'){
         change_dir(cmd);
@@ -41,9 +41,9 @@ while(1){
         checkForBinary(cmd, ' ');             	
         */ 
 	} else {
-     	 exec_shell(cmd);
+     	exec_shell(cmd);
         getcwd(cwd,1024);
-      	//printf("%s:sbush> ",cwd);
+      	print("%s:sbush> ",cwd);
         } 
 }
 return 0;

@@ -2,7 +2,8 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[], char *envp[]) {
-    print("Hello world %d",2);
+    print("Hello world %s\n","string");
+    print("Working\n");
     print("Working\n");
 /*  uint64_t syscall = 39, ret;
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));

@@ -118,22 +118,9 @@ void  convertPointerAddress2String(unsigned long long n, char str[]){
     return;
 }
 
-/*
-void update_screen() {
-    int       x       = 0;
-    int       y       = 0;
-    char     *mem_loc = (char *)0xB8000;
-
-    for (x = 0; x < 160; x++) {
-        for (y = 0; y < 24; y++) {
-             mem_loc[x + (y*160)] = mem_loc[x + ((y+1)*160)];
-             mem_loc[x + (y*160)] = mem_loc[x + ((y+1)*160)];
-        }
-    }
-}*/
 
 void update_screen() {
-volatile     int y =0;
+     volatile     int y =0;
      for (y = 0; y < 24; y++) {
        memcpyy((video+ ((y+1)*160)),(video+ (y*160)), 320);   
         }
@@ -208,6 +195,15 @@ void kprintf(char *string, ...)
                 case 's':
                     str_val = va_arg(list, char *);
                     while (*str_val != '\0') {
+	                if (*str_val== '\n') {
+            		    y_pos ++;
+	                    x_pos = 0;
+            		    str_val ++;
+	                    if (y_pos == 24) {
+                	        update_screen();
+	                        y_pos --;
+            		    }
+            		}
                         if (x_pos == 160) {
                            x_pos = 0;
                            y_pos ++;

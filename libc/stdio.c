@@ -211,14 +211,27 @@ void print(char *string, ...) {
     va_end(list);
 
     i = 0;
-//    while (result[i] != '\0') {
-//        if (i == 3) {
-//	    while(1);
-//	}
-	syscall_2((uint64_t)1, (uint64_t)result);
-//    }
+	
+    syscall_2((uint64_t)1, (uint64_t)result);
+}
 
+void scan(char *str, void *buf) {
+    char        temp_buf[200];
+    uint64_t    syscall         = 4;
 
+    syscall_2(syscall, (uint64_t)temp_buf);
+
+    if(strcmp(str, "%s") == 0) {
+        int i = 0;
+        while (temp_buf[i] != '\0') {
+            *(char *)buf = temp_buf[i++];
+            (char *)buf++;
+        }
+        *(char *)buf = '\0';
+    }
+    else if (strcmp(str, "%d") == 0) {
+        strtoint(*(int *)buf, temp_buf);
+    }
 }
 
 

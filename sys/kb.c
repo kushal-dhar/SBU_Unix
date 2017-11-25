@@ -16,7 +16,7 @@
 
 unsigned char control = 0;
 unsigned char shift   = 0;
-
+unsigned char pressed[200];
 unsigned char keyboard_map[128] =
 {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',     /* 9 */
@@ -195,3 +195,6 @@ void kb_init(void) {
     irq_set(33, kb_handler);
 }
 
+
+void scanf(char *buf) {
+}

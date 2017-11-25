@@ -54,8 +54,8 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
 
   init_picirr();
 
-//  init_timer(1000);
-//  kb_init();
+  init_timer(1000);
+  kb_init();
   kprintf("Printing something\n");
   __asm__ volatile("sti"); 
   uint64_t *addr = (uint64_t *)kmalloc(6000);

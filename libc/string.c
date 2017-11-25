@@ -112,6 +112,25 @@ char* strstr(char *str, char *search) {
 }
 
 /*
+ * Compares string str1 and str2
+ */
+int strcmp(char *str1, char *str2) {
+
+    while (*str1 != '\0' && *str2 != '\0') {
+        if (*str1 != *str2) {
+            return 1;
+        }
+        str1++;
+        str2++;
+    }
+    if (*str1 != '\0' || *str2 != '\0') {
+        return 1;
+    }
+    return 0;
+}
+
+
+/*
 void* memset(void *ptr, int x, uint32_t n) {
     char *temp = ptr;
     while(n > 0) {

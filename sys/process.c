@@ -64,8 +64,8 @@ void create_kernel_thread() {
     create_new_thread();
 
     /* Load the current PCB and kernel stack and disable interrupt */
-//    __asm__ volatile ("cli");
-//    __asm__ volatile ("movq %0, %%rsp;" :: "r"((k_pcb->init_kernel)));
+    __asm__ volatile ("cli");
+    __asm__ volatile ("movq %0, %%rsp;" :: "r"((k_pcb->init_kernel)));
 
     scheduler();
 
@@ -182,14 +182,19 @@ void initial_ret_function() {
 
     init_picirr();
 
-//    init_timer(1000);
-//    kb_init();
+    init_timer(1000);
+    kb_init();
     int  i = 0;
     while (i < 4) {
         kprintf("I am in kernel thread again\n");
         switchTask(first_process, next_process);
         i ++;
     }
+
+//    init_picirr();
+
+//    init_timer(1000);
+//    kb_init();
 
     init_syscalls();
     
@@ -329,9 +334,9 @@ void switch_to_ring3(pcb_t *proc) {
 //    __asm__ volatile ("movq %%rsp, %0;" : "=r"(proc->rsp));
     __asm__ volatile ("pushq %%rax" ::);
     __asm__ volatile ("pushfq" ::);
-//    __asm__ volatile ("popq %%rax" ::);
-//    __asm__ volatile ("orq $0x200, %%rax;" ::);
-//    __asm__ volatile ("pushq %%rax" ::);
+    __asm__ volatile ("popq %%rax" ::);
+    __asm__ volatile ("orq $0x200, %%rax;" ::);
+    __asm__ volatile ("pushq %%rax" ::); 
     __asm__ volatile ("pushq $0x2B" ::);
     __asm__ volatile ("pushq %0;" :: "r"(proc->rip));
     __asm__ volatile ("movq $0x0, %%rdi" ::);
