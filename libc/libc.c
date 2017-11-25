@@ -205,3 +205,12 @@ inline char* read_char(long syscall, long arg1, char *arg2, long arg3) {
   return ret;
 }
 
+uint64_t syscall_getpid(uint64_t syscall) {
+    uint64_t ret;
+
+  __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
+  __asm__ volatile ("int $0x80;");
+  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
+
+    return ret;
+}

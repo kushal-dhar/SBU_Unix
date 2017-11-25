@@ -1,6 +1,7 @@
 .global isr32
 .global isr33
 .global isr14
+.global isr128
 .extern intr_handler
 
 isr32:
@@ -12,9 +13,12 @@ isr33:
 isr14:
     movq $14, %rax
     jmp common_handler
+isr128:
+    movq $128, %rax
+    jmp common_handler
 
 common_handler:
-    pushq %rax
+/*    pushq %rax */
     pushq %rbx
     pushq %rcx
     pushq %rdx
@@ -36,6 +40,6 @@ common_handler:
     popq %rdx
     popq %rcx
     popq %rbx
-    popq %rax
+/*    popq %rax */
     iretq
 

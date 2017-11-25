@@ -2,6 +2,7 @@
 #define _PIC_H
 
 #include <sys/idt.h>
+#include <sys/defs.h>
 
 #define PIC1            0x20            /* IO base address for master PIC */
 #define PIC2            0xA0            /* IO base address for slave PIC */
@@ -26,10 +27,10 @@
 
 void PIC_remap(int offset1, int offset2);
 void PIC_sendEOI(uint8_t irq);
-void intr_handler(regis* regs);
+uint64_t intr_handler(regis* regs);
 void irq_set(int req, void (*handler)( regis *r));
+void irq_set_with_return(int req, int (*handler)(regis *r));
 void irq_reset(int req);
 void init_picirr();
-void intr_handler(regis* regs);
 #endif
 

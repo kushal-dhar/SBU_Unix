@@ -54,8 +54,8 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
 
   init_picirr();
 
-  init_timer(1000);
-  kb_init();
+//  init_timer(1000);
+//  kb_init();
   kprintf("Printing something\n");
   __asm__ volatile("sti"); 
   uint64_t *addr = (uint64_t *)kmalloc(6000);
@@ -63,17 +63,17 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
 //  is_file_exist("hello");
   init_tarfs();
   enable_page_fault();
-  //kprintf("printing value at %p\n",*(uint64_t *)0x01201);
-//  int fd = open("bin/cat", 2);
-//  read(fd, buffer, 100);
-//  kprintf("fie: %s\n",buffer);
-//  mm_struct_t *mm = (mm_struct_t *)kmalloc(4096);
+//  kprintf("printing value at %p\n",*(uint64_t *)0x888FF292001);
+  int fd = open("bin/hello", 2);
+  read(fd, buffer, 100);
+  kprintf("file: %s\n",buffer);
+  //mm_struct_t *mm = (mm_struct_t *)kmalloc(4096);
 //  load_binaries(fd, mm);
-caller();  
-//pcb_t *user_process = create_user_process();
+//  caller();  
+//  pcb_t *user_process = create_user_process("bin/hello");
 //  switch_to_ring3((pcb_t *)user_process);
 
-//  create_kernel_thread();
+  create_kernel_thread();
 //caller();
   while(1);
 

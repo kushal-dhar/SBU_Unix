@@ -53,16 +53,14 @@ void* memset(void *ptr, int x, uint32_t n) {
     return ptr;
 }
 
-void* memcpy( void *src, void *dest, uint32_t n) {
+void memcpy(volatile void *src, volatile void *dest, uint32_t n) {
     char *temp1 = (char *)src;
     char *temp2 = (char *)dest;
     int i = 0;
 
-    for (i = 0; i < n/2; i++) {
+    for (i = 0; i < n; i++) {
      	temp2[i] = temp1[i];
     }
-    return dest;
-
 }
 
 int get_index(uint64_t address, int offset) {
@@ -70,8 +68,8 @@ int get_index(uint64_t address, int offset) {
     return address;
 }
 
-uint64_t get_CR3_address() {
-    uint64_t cr3_addr;
+volatile uint64_t get_CR3_address() {
+    volatile uint64_t cr3_addr;
     __asm__ volatile("mov %%cr3, %0" : "=r" (cr3_addr));
     return cr3_addr;
 }

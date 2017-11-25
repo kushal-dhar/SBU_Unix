@@ -19,6 +19,12 @@
 #define PT_LOAD     1
 #define PT_DYNAMIC  2
 
+#define TEXT    0
+#define DATA    1
+#define HEAP    2
+#define STACK   3
+#define UNDEF   4
+
 typedef uint64_t Elf64_Addr;
 typedef uint16_t Elf64_Half;
 typedef uint64_t Elf64_Lword;
@@ -72,5 +78,5 @@ typedef struct {
 
 
 extern int elf_check_header(Elf64_Ehdr *elfhdr);
-extern int load_binaries(int fp, mm_struct_t *mm);
+extern int load_binaries(pcb_t *proc, uint64_t *elf_start);
 #endif

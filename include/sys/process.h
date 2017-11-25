@@ -1,6 +1,8 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 
+#include <sys/tarfs.h>
+
 #define MAX_PROCESS_COUNT      64
 #define MAX_FD_COUNT           100
 
@@ -30,12 +32,13 @@ struct mm_struct {
 }__attribute__((packed));
 
 struct vma {
-    mm_struct_t   *vmmm;
-    uint64_t      *vm_next;
+    mm_struct_t   *vm_mm;
+    vma_t         *vm_next;
     uint64_t       vm_start;
     uint64_t       vm_end;
+    uint64_t       type;
     uint64_t       flags;
-    int            file_pt;
+    tarfile_t     *file;
     uint64_t       file_start;
     uint64_t       file_size;
 };

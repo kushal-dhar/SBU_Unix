@@ -85,4 +85,9 @@ int dup2(int oldfd, int newfd) {
    return fd;
 }
 
-
+int getpid() {
+    int pid = 0;
+    
+    pid = syscall_getpid(39);
+    return pid;
+}

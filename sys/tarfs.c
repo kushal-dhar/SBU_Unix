@@ -18,10 +18,12 @@ int file_count = 0;
 char temp_filename[100];
 
 uint64_t is_file_exist(char *filename) {
-    tarfs_t *tarfs_start = (tarfs_t *)&_binary_tarfs_start;
-    int      offset    = 0;
-    int      size      = 0;
+//    tarfs_t *tarfs_start = (tarfs_t *)&_binary_tarfs_start;
+//    int      offset    = 0;
+//    int      size      = 0;
+    int      iterator  = 0;
 
+#if 0
     while (strlen(tarfs_start->name) != 0) {
 	kprintf("file: %s ",tarfs_start->name);
  	size = atoi(tarfs_start->size);
@@ -41,6 +43,14 @@ uint64_t is_file_exist(char *filename) {
 	    }
 	}
 	tarfs_start = (tarfs_t *)(&_binary_tarfs_start + offset);
+    }
+#endif
+
+    while (iterator < file_count) {
+	if (strcmp(global_tarfs[iterator].name, filename) == 0) {
+	     return global_tarfs[iterator].addr;
+	}
+	iterator ++;
     }
     return 0;
 }
@@ -143,16 +153,8 @@ int open(char *filename, int permission) {
  */
 int read(int fd, char *buf, int size) {
     int      length      = 0;
-    int      iterator    = 0;
     char    *content;
     
-    while (iterator < file_count) {
-	if (global_tarfs[iterator].inode == fd) {
-	    fd = iterator;
-	    break;
-	}
-	iterator++;
-    }
     length = global_tarfs[fd].size;
     content = (char *)global_tarfs[fd].addr;
 

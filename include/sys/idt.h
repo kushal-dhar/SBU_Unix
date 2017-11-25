@@ -26,8 +26,9 @@ typedef struct regis {
 //  uint64_t rax,rbx,rcx,rdx,rsi,rdi,r8,r9,r10,r11;
  uint32_t gs,fs,es,ds;
    uint8_t edi,esi,ebp,esp,ebx,edx,ecx,eax;
-   uint8_t int_no,err_code;
+   uint64_t int_no,err_code;
    uint8_t eip,cs,eflags,useresp,ss;
+   uint64_t buf;
 } regis ;
 
 #define IDT_SEL 0x08
@@ -36,6 +37,7 @@ typedef struct regis {
 #define INTR_32 32
 #define INTR_33 33
 #define INTR_14 14
+#define INTR_128 128
 void set_idt_gate(uint8_t interrupt_num,uint64_t base_addr, uint16_t sel, uint8_t gate );
 
 void init_idt();

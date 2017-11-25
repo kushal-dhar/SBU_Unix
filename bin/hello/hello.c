@@ -1,12 +1,8 @@
 #include <stdio.h>
+#include <unistd.h>
 
 int main(int argc, char *argv[], char *envp[]) {
-    int i = 0;
-    int j = 10;
- 
-    while ( i < j) {
-	i ++;
-    }
-    printf("I is: %s\n","hello world");
+    uint64_t a = getpid();
+    while(a);
     return 0;
 }

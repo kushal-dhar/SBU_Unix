@@ -13,28 +13,47 @@
 #include <sys/idt.h>
 #include <sys/kprintf.h>
 #include <sys/picassem.h>
+#include <sys/paging.h>
 
 /* call this from the assembly */
 extern void isr32();
 extern void isr33();
 extern void isr14();
+extern void isr128();
 
 /* Array of function pointers to handle custom IRQ handlers  */
-void *irq_routines[48]=
+void *irq_routines[129]=
 {
   0, 0, 0 , 0 , 0 , 0 , 0 , 0,
   0, 0, 0 , 0 , 0 , 0 , 0 , 0,
   0, 0, 0 , 0 , 0 , 0 , 0 , 0,
   0, 0, 0 , 0 , 0 , 0 , 0 , 0,
   0, 0, 0 , 0 , 0 , 0 , 0 , 0,
-  0, 0, 0 , 0 , 0 , 0 , 0 , 0
- 
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0, 0, 0 , 0 , 0 , 0 , 0 , 0,
+  0
 };
 
 /* To handle particular handler with a functional routines */
-void irq_set(int req, void (*handler)(struct regis *r)){
+void irq_set(int req, void (*handler)(regis *r)){
 	irq_routines[req] = handler;
 }
+
+
+/* To handle particular handler with a functional routines */
+void irq_set_with_return(int req, int (*handler)(regis *r)){
+        irq_routines[req] = handler;
+}
+
 
 /*clean function handlers */
 
@@ -88,40 +107,48 @@ void init_picirr(){
     set_idt_gate(INTR_33 ,(uint64_t)isr33, IDT_SEL , INTERRUPT_GATE);
     /* This if for Page Fault Handler */
     set_idt_gate(INTR_14 ,(uint64_t)isr14, IDT_SEL , INTERRUPT_GATE);
+    /* This is for SysCalls */
+    set_idt_gate(INTR_128 ,(uint64_t)isr128, IDT_SEL , 0xEE);
 }
 
-void intr_handler(regis* regs){
+uint64_t intr_handler(regis* regs){
    /*  It is for handling the custom interrupts */
-    void (*handler) (regis *regs)= NULL;
-     uint64_t sys = 0;
+    uint64_t (*handler) (regis *regs)= NULL;
+//    uint64_t syscall_no;
+    uint64_t sys = 0;
+    uint64_t syscall_no;
+    uint64_t ret = 0;
+
+    __asm__ volatile("movq %%rbx, %0;" : "=r"(syscall_no));
+    __asm__ volatile("movq %%rax, %0;" : "=r"(sys));
+/*    __asm__ volatile("movq %%rax, %0;"
+                     "movq %%rbx, %1;"
+                     "movq %%rcx, %2;"
+                     : "=r"(sys), "=r"(syscall_no), "=r"(buf)
+                     :
+                     : "rax", "rsi", "rcx"
+                     ); */
+    kprintf("Values are : %d  %d  \n",sys, syscall_no);
+    regs = (regis *)kmalloc(1000);
+    regs->int_no = syscall_no;
+
+#if 0
      __asm__ volatile(
        "movq %%rax , %0\n\t"
         : "=a"(sys)
         :
         :
 	);
-//     if (sys < 32) {
-	handler = irq_routines[sys];
-#if 0
-     }
-     else {
-         handler = irq_routines[sys - 32];
-     }
 #endif
-     if(handler)
+
+    handler = irq_routines[sys];
+  
+    if (handler)
     { 
-       handler(regs);
+       ret = handler(regs);
     }
+    return ret;
    /* sending end of interrupt */
-#if 0
-    if (sys < 32) {
-#endif
-        PIC_sendEOI(sys);
-#if 0
-    }
-    else {
-        PIC_sendEOI(sys-32);  
-    }
-#endif
+    //PIC_sendEOI(sys);
 }
 

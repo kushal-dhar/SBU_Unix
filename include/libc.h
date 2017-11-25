@@ -1,6 +1,8 @@
 #ifndef  _LIBC_H_
 #define  _LIBC_H_
 
+#include <sys/defs.h>
+
 char ls_str[1000];
 char global_str[1000];
 
@@ -16,4 +18,5 @@ extern long syscall_fork(long syscall, long arg1);
 extern long syscall_dirent(long syscall, long fd, char *buf, long count);
 extern char* read_char(long syscall, long arg1, char *arg2, long arg3);
 extern long write_char(long syscall, long arg1, char *arg2, long arg3);
+extern uint64_t syscall_getpid(uint64_t syscall);
 #endif	

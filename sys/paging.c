@@ -5,6 +5,7 @@
 #include <sys/kprintf.h>
 #include <sys/pic.h>
 #include <sys/idt.h>
+#include <sys/process.h>
 
 uint64_t *pml4;
 uint64_t *pdpt;
@@ -17,6 +18,8 @@ uint64_t cr3;
 uint64_t physfree_start, physfree_end;
 uint64_t virt_addr = (uint64_t)KERNEL_BASE;
 //uint64_t user_addr = (uint64_t)0x88888fff80000000UL;
+extern pcb_t *first_process;
+extern pcb_t *curr_process;
 
 
 /*
@@ -237,7 +240,10 @@ void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys) {
     uint64_t  pd_index = (vAddress >> PD_INDEX) & 0x1FF;;
     uint64_t  pt_index = (vAddress >> PT_INDEX) & 0x1FF;;
 
+
+    __asm__ volatile("mov %%cr3, %0" : "=r" (pml4));    
 //    pml4 = (uint64_t *)get_CR3_address();
+    pml4 = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t)pml4);
     uint64_t pml4_addr = pml4[pml4_index];
     uint64_t pdpt_addr;
     uint64_t pd_addr;
@@ -325,7 +331,7 @@ uint64_t* kmalloc(int size) {
     return (uint64_t *)ret_addr; 
 }
 
-uint64_t* umalloc(int size,uint64_t* cr3_addr) {
+uint64_t* umalloc(pcb_t *proc, int size) {
     int        num_page      = 0;
     int        i             = 0;
     uint64_t   page_addr     = 0;
@@ -344,8 +350,8 @@ uint64_t* umalloc(int size,uint64_t* cr3_addr) {
     for (i = 0; i < num_page; i++) {
         //user_addr += 0x1000;
         page_addr = (uint64_t )allocate_virt_page();
-        user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR| (uint64_t)page_addr);
-        map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)page_addr, (uint64_t *)cr3_addr);
+        user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)page_addr);
+        map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)page_addr, (uint64_t *)proc->cr3);
         memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     }
 
@@ -413,7 +419,7 @@ void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_
     else {
     /* If pdpt entry is not allocated yet, allocate a new entry */
         pdpt = (uint64_t *)allocate_virt_page();
-	cr3_addr = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t)cr3_addr);
+//	cr3_addr = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t)cr3_addr);
         cr3_addr[pml4_index] = (uint64_t)pdpt | (PT_PR | PT_WR | PT_U);
         pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t)pdpt);
     }
@@ -445,7 +451,7 @@ void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_
     virt_page_addr = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )page_addr);
     physical = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )phys);
 //    phys = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )phys);
-    virt_page_addr = (uint64_t *)memcpy ((void *)physical, (void *)virt_page_addr, PAGE_SIZE);
+    memcpy ((void *)physical, (void *)virt_page_addr, PAGE_SIZE);
 //    pt_addr = phys;
 //    pt_addr |= (PT_PR | PT_WR | PT_U);
 //    page_addr |= (PT_PR | PT_WR | PT_U);
@@ -458,7 +464,39 @@ void enable_page_fault() {
     irq_set(14, pagefault_handler);
 }
 
-void pagefault_handler() {
+void pagefault_handler(regis *reg) {
     kprintf("I am inside pagefault_handler\n");
-    while(1);
+    uint64_t     fault_addr;
+    uint64_t     phys_addr;
+    uint64_t     new_page;
+//    uint64_t     err_code    = 0;
+//    vma_t       *curr;
+    
+    __asm__ volatile ("mov %%cr2, %0" : "=r" (fault_addr));
+#if 0
+    if (reg != NULL) {
+        err_code = reg->err_code & 0xF;
+    }
+    //curr = curr_process->mm->vma;
+
+    if (err_code & (PT_PR | PT_WR)) {
+#endif
+	new_page = (uint64_t)umalloc((pcb_t *)curr_process, 4096);
+	fault_addr = fault_addr & (uint64_t)GET_PAGE_ADDR;
+	phys_addr = (uint64_t)new_page & 0x000000000FFFF000UL;
+	set_CR3(first_process->cr3);
+	map_phys_to_user_virt_addr((uint64_t)fault_addr, (uint64_t)phys_addr, (uint64_t *)curr_process->cr3);
+//	map_phys_to_user_virt_addr((uint64_t *)fault_addr, (uint64_t *)page_addr, curr_process->cr3);
+	set_CR3(curr_process->cr3);
+	return;
+//    }
+
+#if 0
+    while (vma) {
+	if (vma->type == HEAP && (fault_addr >= vma->start && fault_addr <= vma->end)) {
+	    uint64_t *heap = 
+	}
+    }
+#endif
+//    while(1);
 }
