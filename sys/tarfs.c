@@ -14,14 +14,14 @@
 #include <sys/string.h>
 
 tarfile_t global_tarfs[100];
-int file_count = 0;
+int file_count = 3;
 char temp_filename[100];
 
 uint64_t is_file_exist(char *filename) {
 //    tarfs_t *tarfs_start = (tarfs_t *)&_binary_tarfs_start;
 //    int      offset    = 0;
 //    int      size      = 0;
-    int      iterator  = 0;
+    int      iterator  = 3;
 
 #if 0
     while (strlen(tarfs_start->name) != 0) {
@@ -47,8 +47,8 @@ uint64_t is_file_exist(char *filename) {
 #endif
 
     while (iterator < file_count) {
-	if (strcmp(global_tarfs[iterator].name, filename) == 0) {
-	     return global_tarfs[iterator].addr;
+	if (strcmp(global_tarfs[iterator-3].name, filename) == 0) {
+	     return global_tarfs[iterator-3].addr;
 	}
 	iterator ++;
     }
@@ -65,7 +65,7 @@ int get_parent_inode(char* file) {
 
     len --;
     strcpy(file, temp_filename);
-    while (file[len] != '\\') {
+    while (file[len] != '/') {
 	len --;
 	if (len == 0) {
 	    return -1;
@@ -73,10 +73,10 @@ int get_parent_inode(char* file) {
     }
     temp_filename[++len] = '\0';
     
-    len = 0;
+    len = 3;
     while(len < file_count) {
-	if (strcmp(temp_filename, global_tarfs[len].name) == 0) {
-	    return len;
+	if (strcmp(temp_filename, global_tarfs[len-3].name) == 0) {
+	    return len+1;
 	}
 	len ++;
     }
@@ -102,6 +102,7 @@ void init_tarfs() {
 //	global_tarfs[index].mode = tarfs_iter->mode;
   	global_tarfs[index].size = size;
         int_val = atoi(tarfs_iter->typeflag);
+  	global_tarfs[index].type = int_val;
 	
 //	if (int_val == DIRECTORY) {
 	    int_val = get_parent_inode(global_tarfs[index].name);
@@ -112,7 +113,7 @@ void init_tarfs() {
 		global_tarfs[index].p_inode = int_val;
 	    }
 //	}
-	global_tarfs[index].type = int_val;
+//	global_tarfs[index].type = int_val;
    	global_tarfs[index].addr = (uint64_t)&_binary_tarfs_start + offset + TARFS_HEADER;
 	global_tarfs[index].inode = ++file_count;
 	
@@ -137,11 +138,11 @@ void init_tarfs() {
  * Stub to open file contents
  */
 int open(char *filename, int permission) {
-    int     iterator    = 0;
+    int     iterator    = 3;
 
     while (iterator < file_count) {
-	if (strcmp(filename, global_tarfs[iterator].name) == 0) {
-	    return global_tarfs[iterator].inode;
+	if (strcmp(filename, global_tarfs[iterator-3].name) == 0) {
+	    return global_tarfs[iterator-3].inode;
 	}
 	iterator ++;
     }
@@ -176,11 +177,11 @@ int close(int fd) {
  * Stub to open directory
  */
 int opendir(char *filename) {
-    int     iterator    = 0;
+    int     iterator    = 3;
 
     while (iterator < file_count) {
-        if ((global_tarfs[iterator].type == DIRECTORY) && (strcmp(filename, global_tarfs[iterator].name) == 0)) {
-            return global_tarfs[iterator].inode;
+        if ((global_tarfs[iterator-3].type == DIRECTORY) && (strcmp(filename, global_tarfs[iterator-3].name) == 0)) {
+            return global_tarfs[iterator-3].inode;
         }
         iterator ++;
     }
@@ -191,25 +192,37 @@ int opendir(char *filename) {
 /*
  * Stub to read file contents
  */
-int read_dir(int fd, char *buf, int size) {
-    int      length      = 0;
-    int      iterator    = 0;
-    char    *content;
+void read_dir(int fd) {
+//    int      length      = 0;
+    int      iterator    = 3;
+//    char    *content;
 
-    while (iterator < file_count) {
+/*    while (iterator < file_count) {
         if (global_tarfs[iterator].inode == fd) {
             fd = iterator;
             break;
         }
         iterator++;
+    } */
+
+    iterator = 3;
+    kprintf("List of files: \n");
+    while (iterator < file_count) {
+	if (global_tarfs[iterator-3].p_inode == fd) {
+	    kprintf("%s     \n",global_tarfs[iterator-3].name);
+	}
+	iterator++;
     }
+
+#if 0
     length = global_tarfs[fd].size;
     content = (char *)global_tarfs[fd].addr;
 
     length = (length > size)?size:length;
     memcpy((void *)content, (void *)buf, length);
+#endif
 
-    return length;
+    return;
 }
 
 int close_dir(int fd) {

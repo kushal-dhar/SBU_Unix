@@ -9,13 +9,16 @@
 #include <sys/picassem.h>
 #include <sys/idt.h>
 #include <sys/kb.h>
+#include <sys/string.h>
 
 
 #define KB_DATA_PORT   0x60
 #define KB_STATUS_PORT 0x64
 
-unsigned char control = 0;
-unsigned char shift   = 0;
+unsigned char control    = 0;
+unsigned char shift      = 0;
+uint64_t      count      = 0;
+volatile int  input_done = 0;
 unsigned char pressed[200];
 unsigned char keyboard_map[128] =
 {
@@ -72,8 +75,16 @@ unsigned char keyboard_upper_map[] =
   '*',
 };
 
+void clear_buffer() {
+    int i = 0;
+    while (pressed[i] != '\0') {
+	pressed[i] = '\0';
+	i++;
+    }
+}
 
-void kb_handler(struct regis *s) {
+
+void kb_handler(struct regis* s) {
     unsigned char status;
     unsigned char scancode;
 
@@ -86,6 +97,11 @@ void kb_handler(struct regis *s) {
         scancode = inb(KB_DATA_PORT);
         if (scancode < 0) {
 	    return;
+	}
+	if (scancode == 0x1C) {
+//	    pressed[count] = '\0'; 
+//	    count = 0;
+	    input_done = 0;
 	}
 	if (scancode == 0x2A || scancode == 0x36) {
 	/* Shift key has been pressed, update the global variable */
@@ -163,6 +179,7 @@ void kb_handler(struct regis *s) {
         if (shift == 1 || control == 1) {
 	    /* If shift is pressed previously, read from the upper keyboard map */
             status = keyboard_upper_map[(int)scancode];
+ 	    pressed[count++] = status;
    	    kprintf_kb(status);
 	    //shift = 0;
 #if 0
@@ -179,6 +196,7 @@ void kb_handler(struct regis *s) {
 #endif
 	} else {
 	    status = keyboard_map[(int)scancode];
+  	    pressed[count++] = status;
 /*	    if (status == 13) {
 		control = 1;
 		return;
@@ -197,4 +215,13 @@ void kb_init(void) {
 
 
 void scanf(char *buf) {
+    input_done = 1;
+
+    while (input_done == 1) ;
+   
+    pressed[count-1] = '\0';
+    count ++;
+    strcpy((char *)pressed, (char *)buf);
+    clear_buffer();
+    return;
 }

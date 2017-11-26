@@ -53,6 +53,7 @@ pid_t fork() {
   return ret;
 }
 
+#if 0
 int open(const char *path, int flag) {
   int ret;
 
@@ -60,6 +61,7 @@ int open(const char *path, int flag) {
   ret = syscall_open(2, (long)path, flag);
   return ret;
 }
+#endif
 
 int pipe(int fd[]) {
   int ret;
@@ -86,8 +88,50 @@ int dup2(int oldfd, int newfd) {
 }
 
 int get_pid() {
-    int pid = 0;
+    uint64_t   syscall = 39;
+    uint64_t   pid    = 0;
     
-    pid = syscall_getpid(39);
+    pid = syscall_2(syscall, pid);
     return pid;
 }
+
+int open_dir(char *filename) {
+    char temp_buf[100];
+    int      i       = 0;
+    uint64_t ret_val = 0;
+
+    while (*filename != '\0') {
+	temp_buf[i] = *filename++;
+	i++;
+    }
+    temp_buf[i] = '\0';
+
+    i = 89;    //Syscall number for open_dir
+    ret_val = syscall_2((uint64_t)i, (uint64_t)temp_buf); 
+
+    return ret_val;
+}
+
+void read_dir(int fd) {
+    int syscall = 90;
+
+    syscall_2((uint64_t)syscall, (uint64_t)fd);
+    return;
+}
+
+int open(char *filename, int perm) {
+    int      syscall = 0;
+    int      fd      = 0;
+    char     temp_buf[100];
+    int      i       = 0;
+
+    while (*filename != '\0') {
+        temp_buf[i] = *filename++;
+        i++;
+    }
+    temp_buf[i] = '\0';
+
+    fd = syscall_3((uint64_t)syscall, (uint64_t)temp_buf, (uint64_t)perm);
+    return fd;
+}
+

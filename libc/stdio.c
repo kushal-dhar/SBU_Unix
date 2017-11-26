@@ -216,21 +216,31 @@ void print(char *string, ...) {
 }
 
 void scan(char *str, void *buf) {
-    char        temp_buf[200];
+    char        temp_buf[10];
     uint64_t    syscall         = 4;
+    uint64_t    i               = 0;
 
-    syscall_2(syscall, (uint64_t)temp_buf);
+    while(*str != '\0') {
+ 	temp_buf[i] = *str++;
+	i++;
+    }
+    temp_buf[i] = '\0';
+    
 
-    if(strcmp(str, "%s") == 0) {
-        int i = 0;
+    syscall_2(syscall, (uint64_t)buf);
+
+    if(strcmp(temp_buf, "%s") == 0) {
+/*        int i = 0;
         while (temp_buf[i] != '\0') {
             *(char *)buf = temp_buf[i++];
             (char *)buf++;
         }
-        *(char *)buf = '\0';
+        *(char *)buf = '\0'; */
     }
-    else if (strcmp(str, "%d") == 0) {
-        strtoint(*(int *)buf, temp_buf);
+    else if (strcmp(temp_buf, "%d") == 0) {
+	int val = 0;
+        strtoint(val, buf);
+	*(int *)buf = val;
     }
 }
 

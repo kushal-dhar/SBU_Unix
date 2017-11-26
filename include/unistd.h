@@ -39,5 +39,7 @@ extern int pipe(int fd[]);
 extern int close(int fd) ;
 extern int dup2(int oldfd, int newfd) ;
 extern int get_pid();
+extern int open_dir(char *filename);
+extern void read_dir(int fd);
 
 #endif

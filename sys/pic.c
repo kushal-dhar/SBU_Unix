@@ -44,13 +44,13 @@ void *irq_routines[129]=
 };
 
 /* To handle particular handler with a functional routines */
-void irq_set(int req, void (*handler)(regis *r)){
+void irq_set(int req, void (*handler)(regis* r)){
 	irq_routines[req] = handler;
 }
 
 
 /* To handle particular handler with a functional routines */
-void irq_set_with_return(int req, int (*handler)(regis *r)){
+void irq_set_with_return(int req, int (*handler)(regis* r)){
         irq_routines[req] = handler;
 }
 
@@ -113,7 +113,7 @@ void init_picirr(){
 
 void intr_handler1(regis* regs){
    /*  It is for handling the custom interrupts */
-    void (*handler) (regis *regs)= NULL;
+    void (*handler) (regis* regs)= NULL;
      uint64_t sys = 0;
      __asm__ volatile(
        "movq %%rax , %0\n\t"
@@ -132,17 +132,18 @@ void intr_handler1(regis* regs){
 
 uint64_t intr_handler(regis* regs){
    /*  It is for handling the custom interrupts */
-    uint64_t (*handler) (regis *regs)= NULL;
+    uint64_t (*handler) (regis* regs)= NULL;
 //    uint64_t syscall_no;
     uint64_t sys = 0;
 //    uint64_t syscall_no;
     uint64_t ret = 0;
-    uint64_t rbx, rcx, rdx;
+    uint64_t rbx, rcx, rdx, rdi;
 
     __asm__ volatile("movq %%rbx, %0;" : "=r"(rbx));
     __asm__ volatile("movq %%rax, %0;" : "=r"(sys));
     __asm__ volatile("movq %%rcx, %0;" : "=r"(rcx));
     __asm__ volatile("movq %%rdx, %0;" : "=r"(rdx));
+    __asm__ volatile("movq %%rdi, %0;" : "=r"(rdi));
 /*    __asm__ volatile("movq %%rax, %0;"
                      "movq %%rbx, %1;"
                      "movq %%rcx, %2;"
@@ -150,7 +151,7 @@ uint64_t intr_handler(regis* regs){
                      :
                      : "rax", "rsi", "rcx"
                      ); */
-    regs = (regis *)kmalloc(1000);
+    regs = (regis *)kmalloc(1000); 
     regs->rax = sys;
     regs->rbx = rbx;
     regs->rcx = rcx;
@@ -167,7 +168,7 @@ uint64_t intr_handler(regis* regs){
         :
 	);
 #endif
-
+//    sys = regs.rax;
     handler = irq_routines[sys];
   
     if (handler)

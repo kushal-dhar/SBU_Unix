@@ -107,6 +107,8 @@ void create_new_thread() {
 pcb_t* create_user_process(char *filename) {
     pcb_t *user_pcb = (pcb_t *)kmalloc((int)6000);
 //    uint64_t     offset       = 0;
+    uint64_t     pAddr;
+    uint64_t     vAddr;
     uint64_t    *user_virt;
     uint64_t    *user_stack;
     uint64_t    *file_pt;
@@ -125,6 +127,12 @@ pcb_t* create_user_process(char *filename) {
     set_CR3((uint64_t)user_pcb->cr3);
     memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     set_CR3((uint64_t)first_process->cr3);
+
+    vAddr = 0;
+    pAddr = 0;
+    for (; pAddr < 0xF4240; pAddr += 0x1000, vAddr += 0x1000) {
+        map_phys_to_user_virt_addr((uint64_t)vAddr, (uint64_t)pAddr, (uint64_t *)user_pcb->cr3);
+    }
 
 //    mm = (mm_struct_t *)kmalloc(1000);
     mm = (mm_struct_t *)allocate_virt_page();

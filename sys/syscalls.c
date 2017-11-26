@@ -11,6 +11,7 @@
 #include <sys/paging_helper.h>
 #include <sys/process.h>
 #include <sys/elf64.h>
+#include <sys/tarfs.h>
 #include <sys/syscalls.h>
 
 /* Start syscall handler */
@@ -18,7 +19,7 @@ void init_syscalls() {
     irq_set_with_return(128, syscall_handler);
 }
 
-int syscall_handler(regis *reg) {
+int syscall_handler(regis* reg) {
 #if 0
     uint64_t   syscall_no;
     uint64_t   buf;
@@ -39,10 +40,41 @@ int syscall_handler(regis *reg) {
     /* Handle user printf */
     if (reg->rbx == 1) {
         kprintf("%s",reg->rcx);
+	return 0;
     }
     /* Handle user scanf */
     else if (reg->rbx == 4) {
+	__asm__ volatile("sti");
 	scanf((char *)reg->rcx);
+	return 0;
+    }
+    /* Handle read_dir */
+    else if (reg->rbx == 39) {
+	read_dir((int)reg->rcx);
+	return 0;
+    }
+    /* Handle open dir */
+    else if (reg->rbx == 89) {
+	int ret_val = opendir((char *)reg->rcx);
+	return ret_val;
+    }
+    /* Handle read dir */
+    else if (reg->rbx == 90) {
+	read_dir((int)reg->rcx);
+	return 0;
+    }
+    /* Handle open file */
+    else if (reg->rbx == 2) {
+	int ret_val;
+	ret_val = open((char *)reg->rcx, (int)reg->rdx);
+	return ret_val;
+    }
+    /* Handle read files */
+    else if (reg->rbx == 0) {
+	int ret_val;
+	ret_val =read((int)reg->rcx, (char *)reg->rdx, (int) reg->rdi);
+	return ret_val;
+	
     }
     return 10;
 }

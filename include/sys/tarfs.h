@@ -48,4 +48,6 @@ extern int get_parent_inode(char* file);
 extern void init_tarfs();
 extern int open(char *filename, int permission);
 extern int read(int fd, char *buf, int size);
+extern void read_dir(int fd);
+extern int opendir(char *filename);
 #endif
