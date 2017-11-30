@@ -24,15 +24,16 @@ int main(int argc, char *argv[], char *envp[]) {
     }
     print("File number: %d\n",fd);
 #endif
-    char temp[100];
-    read(11, temp, 100);
-    printf("Contents: %s\n",temp); 
+//    char temp[100];
+//    read(11, temp, 100);
+//    printf("Contents: %s\n",temp); 
 
 /*  uint64_t syscall = 39, ret;
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("int $0x80;");
   __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
    return ret; */
+    chdir("bin");
     while(1);
     return 0;
 }
