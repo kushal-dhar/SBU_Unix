@@ -156,8 +156,8 @@ int read(int fd, char *buf, int size) {
     int      length      = 0;
     char    *content;
     
-    length = global_tarfs[fd].size;
-    content = (char *)global_tarfs[fd].addr;
+    length = global_tarfs[fd-4].size;
+    content = (char *)global_tarfs[fd-4].addr;
 
     length = (length > size)?size:length;
     memcpy((void *)content, (void *)buf, length);

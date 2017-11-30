@@ -15,7 +15,7 @@ isr14:
     movq $14, %rax
     jmp common_handler
 isr128:
-    movq $128, %rax
+/*    movq $128, %rax */
     jmp common_handler
 
 interrupt_handler:

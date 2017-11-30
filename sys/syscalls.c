@@ -64,17 +64,16 @@ int syscall_handler(regis* reg) {
 	return 0;
     }
     /* Handle open file */
-    else if (reg->rbx == 2) {
+    else if (reg->rbx == 0) {
 	int ret_val;
 	ret_val = open((char *)reg->rcx, (int)reg->rdx);
 	return ret_val;
     }
     /* Handle read files */
-    else if (reg->rbx == 0) {
-	int ret_val;
-	ret_val =read((int)reg->rcx, (char *)reg->rdx, (int) reg->rdi);
-	return ret_val;
-	
+    else if (reg->rbx == 2) {
+	read((int)reg->rcx, (char *)reg->rdx, (int) reg->rdi);
+	kprintf("%s\n",(char*)reg->rdx);
+	return 0;
     }
     return 10;
 }

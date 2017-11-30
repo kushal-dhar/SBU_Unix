@@ -243,10 +243,10 @@ uint64_t syscall_3(uint64_t syscall, uint64_t ch, uint64_t buf) {
 uint64_t syscall_4(uint64_t syscall, uint64_t ch, uint64_t buf, uint64_t size) {
   uint64_t ret = 0;
 
+  __asm__ volatile ("movq %0, %%rax;"::"r"(size));
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("movq %0, %%rcx;"::"r"(ch));
   __asm__ volatile ("movq %0, %%rdx;"::"r"(buf));
-  __asm__ volatile ("movq %0, %%rdi;"::"r"(size));
   __asm__ volatile ("int $0x80;");
   __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
 

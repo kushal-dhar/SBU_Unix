@@ -41,5 +41,6 @@ extern int dup2(int oldfd, int newfd) ;
 extern int get_pid();
 extern int open_dir(char *filename);
 extern void read_dir(int fd);
+extern void read(int fd, char *buf, int size);
 
 #endif

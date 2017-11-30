@@ -137,13 +137,13 @@ uint64_t intr_handler(regis* regs){
     uint64_t sys = 0;
 //    uint64_t syscall_no;
     uint64_t ret = 0;
-    uint64_t rbx, rcx, rdx, rdi;
+    uint64_t rbx, rcx, rdx; // rdi;
 
     __asm__ volatile("movq %%rbx, %0;" : "=r"(rbx));
     __asm__ volatile("movq %%rax, %0;" : "=r"(sys));
     __asm__ volatile("movq %%rcx, %0;" : "=r"(rcx));
     __asm__ volatile("movq %%rdx, %0;" : "=r"(rdx));
-    __asm__ volatile("movq %%rdi, %0;" : "=r"(rdi));
+//    __asm__ volatile("movq %%r8, %0;" : "=r"(rdi));
 /*    __asm__ volatile("movq %%rax, %0;"
                      "movq %%rbx, %1;"
                      "movq %%rcx, %2;"
@@ -156,6 +156,7 @@ uint64_t intr_handler(regis* regs){
     regs->rbx = rbx;
     regs->rcx = rcx;
     regs->rdx = rdx;
+//    regs->rdi = rdi;
 //    kprintf("Values are : %d  %d  \n",sys, regs->rbx);
 //    regs = (regis *)kmalloc(1000);
 //    regs->int_no = syscall_no;
@@ -169,6 +170,10 @@ uint64_t intr_handler(regis* regs){
 	);
 #endif
 //    sys = regs.rax;
+    if (sys != 14) {
+	regs->rdi = sys;
+	sys = 128;
+    }
     handler = irq_routines[sys];
   
     if (handler)

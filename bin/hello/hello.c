@@ -8,14 +8,26 @@ int main(int argc, char *argv[], char *envp[]) {
     scan("%S",(void *)str);
     print("%s\n",str); */
     
-    int fd = open_dir("lib/");
+#if 0
+    int fd = open_dir("bin/");
     if (fd == -1) {
 	print("Not a valid directory\n");
     }
     print("Working %d\n",fd);
     read_dir(fd);
-    fd = open("bin/hello",3);
+#endif
+
+#if 0
+    int fd = open("bin/sbush",3);
+    if (fd == -1) {	
+	print("Not a valid file\n");
+    }
     print("File number: %d\n",fd);
+#endif
+    char temp[100];
+    read(11, temp, 100);
+    printf("Contents: %s\n",temp); 
+
 /*  uint64_t syscall = 39, ret;
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("int $0x80;");

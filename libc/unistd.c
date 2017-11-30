@@ -135,3 +135,9 @@ int open(char *filename, int perm) {
     return fd;
 }
 
+void read(int fd, char *buf, int size) {
+    int syscall = 2;
+
+    syscall_4((uint64_t)syscall, (uint64_t)fd, (uint64_t)buf, (uint64_t)size);
+    return;
+}
