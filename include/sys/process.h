@@ -29,6 +29,8 @@ struct mm_struct {
     uint64_t  vm_total, vm_locked;
     vma_t    *vma;
     uint64_t  vma_count;
+    uint64_t  mmap_start_addr;
+    uint64_t  mmap_end_addr;
 }__attribute__((packed));
 
 struct vma {

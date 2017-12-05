@@ -20,10 +20,12 @@ void cat(int argc, char *argv[]);
 void  convertPointerAddress2String(unsigned long long n, char str[]);
 void  convertHex2String(unsigned long n, char str[]);
 void strtoint (int num, char str[]);
-void printf(char s[],char  str[]);
-void print(char *s, ...);
+//void printf(char s[],char  str[]);
+void printf(char *s, ...);
 extern void printInt(int i );
 extern long list_dir(long syscall, long fd, char  *buf ,long count);
 extern void scan(char *str, void *buf);
+extern void clear();
+
 #endif
 

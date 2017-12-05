@@ -19,7 +19,7 @@ void init_syscalls() {
     irq_set_with_return(128, syscall_handler);
 }
 
-int syscall_handler(regis* reg) {
+uint64_t syscall_handler(regis* reg) {
 #if 0
     uint64_t   syscall_no;
     uint64_t   buf;
@@ -38,6 +38,7 @@ int syscall_handler(regis* reg) {
     kprintf("I am able to parse this %d  %d  %d  %d\n",syscall_no,buf,rcx,rdx);
 #endif
     /* Handle user printf */
+    uint64_t  retV =0;
     if (reg->rbx == 1) {
         kprintf("%s",reg->rcx);
 	return 0;
@@ -72,8 +73,29 @@ int syscall_handler(regis* reg) {
     /* Handle read files */
     else if (reg->rbx == 2) {
 	read((int)reg->rcx, (char *)reg->rdx, (int) reg->rdi);
-	kprintf("%s\n",(char*)reg->rdx);
+	//kprintf("%s\n",(char*)reg->rdx);
 	return 0;
     }
-    return 10;
+    /* Handle chdir syscall */
+    else if (reg->rbx == 80){
+       int ret_val = 0;
+       ret_val = changedir((char*)reg->rcx);
+       return ret_val;
+    }
+    /* Handle getcwd syscall */
+    else if (reg->rbx == 79){
+       int ret_val = 0;
+       ret_val =  getcwd((char*)reg->rcx);
+       return ret_val;
+    }
+    /* Handle clear console */
+    else if (reg->rbx == 91) {
+	clear_console();
+    }
+    /* Handle mmap call*/
+     else if (reg->rbx == 9){
+        retV = mmap((int) reg->rcx);
+        return retV;
+    }
+    return 0;
 }

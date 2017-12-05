@@ -9,13 +9,13 @@
 #include "exec_sh.h"
 #include  <get_cmd.h>
 int main(int argc, char *argv[], char *envp[]) {
-char cwd[1024];
+char cwd[100];
 char cmd[1024];
 //char delim = ' ';
 while(1){
-       getcwd(cwd,1024);
-       print("%s", cwd);
-       print("%s","<sbush>");	
+       getcwd(cwd,100);
+       printf("%s", cwd);
+       printf("%s","<sbush>");	
        fgets(cmd,100,1);
        if(cmd[0] == 'c' && cmd [1] == 'd'){
         change_dir(cmd);
@@ -43,7 +43,7 @@ while(1){
 	} else {
      	exec_shell(cmd);
         getcwd(cwd,1024);
-      	print("%s:sbush> ",cwd);
+      	printf("%s:sbush> ",cwd);
         } 
 }
 return 0;

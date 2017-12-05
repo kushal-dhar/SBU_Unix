@@ -50,7 +50,7 @@ void irq_set(int req, void (*handler)(regis* r)){
 
 
 /* To handle particular handler with a functional routines */
-void irq_set_with_return(int req, int (*handler)(regis* r)){
+void irq_set_with_return(int req, uint64_t (*handler)(regis* r)){
         irq_routines[req] = handler;
 }
 
@@ -130,19 +130,21 @@ void intr_handler1(regis* regs){
     PIC_sendEOI(sys);
 }
 
-uint64_t intr_handler(regis* regs){
+void intr_handler(regis* regs){
    /*  It is for handling the custom interrupts */
     uint64_t (*handler) (regis* regs)= NULL;
 //    uint64_t syscall_no;
     uint64_t sys = 0;
 //    uint64_t syscall_no;
     uint64_t ret = 0;
-    uint64_t rbx, rcx, rdx; // rdi;
+    uint64_t rbx, rcx, rdx, val; // rdi;
+    int      *ptr;
 
     __asm__ volatile("movq %%rbx, %0;" : "=r"(rbx));
     __asm__ volatile("movq %%rax, %0;" : "=r"(sys));
     __asm__ volatile("movq %%rcx, %0;" : "=r"(rcx));
     __asm__ volatile("movq %%rdx, %0;" : "=r"(rdx));
+    __asm__ volatile("movq %%r10, %0;" : "=r"(val));
 //    __asm__ volatile("movq %%r8, %0;" : "=r"(rdi));
 /*    __asm__ volatile("movq %%rax, %0;"
                      "movq %%rbx, %1;"
@@ -156,6 +158,7 @@ uint64_t intr_handler(regis* regs){
     regs->rbx = rbx;
     regs->rcx = rcx;
     regs->rdx = rdx;
+    ptr = (int *)val;
 //    regs->rdi = rdi;
 //    kprintf("Values are : %d  %d  \n",sys, regs->rbx);
 //    regs = (regis *)kmalloc(1000);
@@ -180,8 +183,11 @@ uint64_t intr_handler(regis* regs){
     { 
        ret = handler(regs);
     }
-   /* sending end of interrupt */
+    /* sending end of interrupt */
     PIC_sendEOI(sys);
-    return ret;
+    __asm__ volatile("movq %0, %%rax;" :: "r"(ret));
+    kprintf("\nval returned is %d",ret);
+    *ptr = (int)ret;
+//    return ret;
 }
 

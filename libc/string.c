@@ -1,50 +1,56 @@
 #include <string.h>
 #include <sys/defs.h>
-
+#include <stdio.h>
 
 char* strcpy(char *dest, char *src) {
   char *tmp = dest;
-
-  while(*src != '\0') {
-    *dest++ = *src++;
+  char *temp2 = src;
+  while(*temp2 != '\0') {
+    *tmp++ = *temp2++;
   }
-  *dest = '\0';
-  return tmp;
+  *tmp++ = '\0';
+  *tmp ='\0';
+  return (char*)dest;
 }
 
 
 char* strncpy(char *dest, char *src, int n) {
   char *tmp = dest;
+  char *temp2 = src;
   int   i   = 0;
 
-  while(*src != '\0' && i++ < n) {
-    *dest++ = *src++;
+  while(*temp2 != '\0' && i++ < n) {
+    *tmp++ = *temp2++;
   }
-  *dest = '\0';
-  return tmp;
+  *tmp = '\0';
+  return dest;
 }
 
 
 int strlen(char *str) {
   int len = 0;
-
-  while(*str++ != '\0') {
+   char *temp = str;
+  while(*temp++ != '\0') {
     len++;
   }
+  *temp++ = '\0';
+   *temp = '\0';
   return len;
 }
 
 
 char *strcat(char *dst, char *src) {
   char *tmp = dst;
-  while(*dst != '\0') {
-      dst++;
+  char *sr = src;
+  while(*tmp != '\0') {
+      tmp++;
   }
-  while(*src != '\0') {
-      *dst++ = *src++;
+  while(*sr != '\0') {
+      *tmp++ = *sr++;
   }
-  *dst = '\0';
-  return tmp;
+  *tmp++ = '\0';
+  *tmp = '\0';
+  return dst;
 }
 
 char ** split_string(char str[], char delim, char **s){
@@ -114,8 +120,9 @@ char* strstr(char *str, char *search) {
 /*
  * Compares string str1 and str2
  */
-int strcmp(char *str1, char *str2) {
-
+int strcmp(char *temp1, char *temp2) {
+   char * str1 = temp1;
+   char * str2 = temp2;
     while (*str1 != '\0' && *str2 != '\0') {
         if (*str1 != *str2) {
             return 1;
@@ -129,6 +136,15 @@ int strcmp(char *str1, char *str2) {
     return 0;
 }
 
+void* memset(void *ptr, int x, uint32_t n) {
+    char *temp = (char*)ptr;
+    while(n > 0) {
+        *temp = x;
+        temp++;
+        n --;
+    }
+    return ptr;
+}
 
 /*
 void* memset(void *ptr, int x, uint32_t n) {
@@ -140,4 +156,23 @@ void* memset(void *ptr, int x, uint32_t n) {
     }
     return ptr;
 } */
+
+int  substr_tillchar(char *s, char c){
+    char *temp = s;
+    int len = strlen(temp);
+    int i = len;
+    int count = 0;
+    while(count < 2  && i >= 0 ){
+        if(*(temp+i) == c){ count++;}
+        i--;
+    }
+    if (i < 0){
+    s[0]='\0';
+    return -1;
+    }
+    i = i+2;
+    *(temp+i) =  '\0';
+    *(temp+i+1) =  '\0';
+    return 0;
+}
 

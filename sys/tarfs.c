@@ -12,11 +12,24 @@
 #include <sys/process.h>
 #include <sys/utils.h>
 #include <sys/string.h>
-
+#define ROOT "rootfs/" 
+ 
 tarfile_t global_tarfs[100];
 int file_count = 3;
 char temp_filename[100];
-
+char current_dir[100] = ROOT;
+/*
+char * extract_parent_name(uint64_t parent_num){
+  int      iterator  = 3;
+  while(iterator <= file_count){
+    if (global_tarfs[iterator-3].inode ==  parent_num){
+     return global_tarfs[iterator-3].name;
+    }
+   iterator++;
+  }
+ return "#null#";
+}
+*/
 uint64_t is_file_exist(char *filename) {
 //    tarfs_t *tarfs_start = (tarfs_t *)&_binary_tarfs_start;
 //    int      offset    = 0;
@@ -99,6 +112,7 @@ void init_tarfs() {
 	size = octtodec(size);
 
 	strcpy(tarfs_iter->name, global_tarfs[index].name);
+//	kprintf("file: %s\n",tarfs_iter->name);
 //	global_tarfs[index].mode = tarfs_iter->mode;
   	global_tarfs[index].size = size;
         int_val = atoi(tarfs_iter->typeflag);
@@ -108,7 +122,7 @@ void init_tarfs() {
 	    int_val = get_parent_inode(global_tarfs[index].name);
 	    if (int_val == -1) {
 		global_tarfs[index].p_inode = 0;
-	    }
+            }
 	    else {
 		global_tarfs[index].p_inode = int_val;
 	    }
@@ -140,8 +154,10 @@ void init_tarfs() {
 int open(char *filename, int permission) {
     int     iterator    = 3;
 
+    kprintf("file count: %d\n", file_count);
     while (iterator < file_count) {
 	if (strcmp(filename, global_tarfs[iterator-3].name) == 0) {
+	    kprintf("iterator: %d\n",global_tarfs[iterator-3].inode);
 	    return global_tarfs[iterator-3].inode;
 	}
 	iterator ++;
@@ -227,5 +243,52 @@ void read_dir(int fd) {
 
 int close_dir(int fd) {
     return 1;
+}
+
+int  changedir( char* filename){
+   int      iterator  = 3;
+  int len = strlen(filename); 
+   int ret =0;
+   if(filename[0] == '/'){
+      strcpy(ROOT,current_dir);
+       if (len == 1){        
+              return 0;
+          }
+        else if(len >1){
+           strcpy(filename+1,filename);
+        }
+   }
+   if (len >= 3 && filename[len-2] == '*' ){
+    filename[len-2] = '/';
+    filename[len-1] = '\0';
+    filename[len] = '\0';
+    ret = substr_tillchar(current_dir, '/');
+    if ( ret == -1){
+     strcpy(ROOT, current_dir);
+    }
+   }  
+   while (iterator <= file_count) {
+     if(global_tarfs[iterator-3].type == DIRECTORY){
+       if (strcmp(global_tarfs[iterator-3].name, filename) == 0) {
+            char parent_name[100];
+            char parent_name2[100]= ROOT;
+             strcpy(global_tarfs[iterator-3].name,parent_name);    
+              ret = substr_tillchar(parent_name, '/');
+             strcat(parent_name2, parent_name);
+             if(((strcmp(ROOT, current_dir) == 0) && (ret == -1)) ||
+                        (strcmp(parent_name2, current_dir) == 0) ){
+                strcpy(ROOT, current_dir);
+                strcat(current_dir,filename);
+                return 1;
+             }
+         }
+       }
+       iterator ++;
+    }
+  return 999;
+}
+int  getcwd( char * buff){
+  strcpy(current_dir, buff);
+  return  0;
 }
 

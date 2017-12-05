@@ -64,9 +64,9 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   init_tarfs();
   enable_page_fault();
 //  kprintf("printing value at %p\n",*(uint64_t *)0x888FF292001);
-  int fd = open("bin/hello", 2);
-  read(fd, buffer, 100);
-  kprintf("file: %s\n",buffer);
+  //int fd = open("bin/hello", 2);
+  //read(fd, buffer, 100);
+  //kprintf("file: %s\n",buffer);
   //mm_struct_t *mm = (mm_struct_t *)kmalloc(4096);
 //  load_binaries(fd, mm);
 //  caller();  

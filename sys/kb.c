@@ -220,8 +220,9 @@ void scanf(char *buf) {
     while (input_done == 1) ;
    
     pressed[count-1] = '\0';
-    count ++;
+    count = 0;
     strcpy((char *)pressed, (char *)buf);
     clear_buffer();
     return;
 }
+

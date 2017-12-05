@@ -27,10 +27,10 @@
 
 void PIC_remap(int offset1, int offset2);
 void PIC_sendEOI(uint8_t irq);
-uint64_t intr_handler(regis *regs);
+void intr_handler(regis *regs);
 void intr_handler1(regis *regs);
 void irq_set(int req, void (*handler)( regis* r));
-void irq_set_with_return(int req, int (*handler)(regis* r));
+void irq_set_with_return(int req, uint64_t (*handler)(regis* r));
 void irq_reset(int req);
 void init_picirr();
 #endif

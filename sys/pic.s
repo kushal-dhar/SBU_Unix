@@ -15,7 +15,6 @@ isr14:
     movq $14, %rax
     jmp common_handler
 isr128:
-/*    movq $128, %rax */
     jmp common_handler
 
 interrupt_handler:
@@ -45,7 +44,6 @@ interrupt_handler:
     iretq
 
 common_handler:
-/*    pushq %rax */
     pushq %rbx
     pushq %rcx
     pushq %rdx
@@ -67,6 +65,5 @@ common_handler:
     popq %rdx
     popq %rcx
     popq %rbx
-/*    popq %rax */
     iretq
 

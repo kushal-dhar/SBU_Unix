@@ -7,7 +7,7 @@
 #include <sys/idt.h>
 #include <sys/process.h>
 
-uint64_t *pml4;
+uint64_t *pml4;	
 uint64_t *pdpt;
 uint64_t *pd;
 uint64_t *pt;
@@ -20,8 +20,12 @@ uint64_t virt_addr = (uint64_t)KERNEL_BASE;
 //uint64_t user_addr = (uint64_t)0x88888fff80000000UL;
 extern pcb_t *first_process;
 extern pcb_t *curr_process;
-
-
+/* These three  are for mmap function **/
+uint64_t virtual_mmap = (uint64_t) 0x88888000000UL;
+vma_t *vma_mmap;
+mm_struct_t * mm_struct_mmap;
+#define HEAP    2
+/**********/
 /*
  * Initializing the free pages and pagelist entries
  */
@@ -473,6 +477,9 @@ void pagefault_handler(regis *reg) {
 //    vma_t       *curr;
     
     __asm__ volatile ("mov %%cr2, %0" : "=r" (fault_addr));
+    
+    kprintf("%d\n",fault_addr);
+    while(1);
 #if 0
     if (reg != NULL) {
         err_code = reg->err_code & 0xF;
@@ -499,4 +506,30 @@ void pagefault_handler(regis *reg) {
     }
 #endif
 //    while(1);
+}
+
+void  init_mmap(){
+ uint64_t* phy_addr =  (uint64_t *)allocate_virt_page();
+ uint64_t virt_addr =0;
+
+ virt_addr = (uint64_t)(virtual_mmap | (uint64_t)phy_addr);
+ map_phys_to_user_virt_addr((uint64_t)virt_addr, (uint64_t)phy_addr, (uint64_t *)curr_process->cr3); 
+ vma_mmap  =(vma_t*) curr_process->mm->vma;
+ while(vma_mmap->type != HEAP){
+  vma_mmap = (vma_t*)vma_mmap->vm_next;
+ }
+ vma_mmap->vm_start = (uint64_t) 0x810000000;
+ vma_mmap->vm_end = (uint64_t) 0x810001000; 
+ mm_struct_mmap->mmap_start_addr = (uint64_t) 0x810000000;
+ mm_struct_mmap->mmap_end_addr =  (uint64_t) 0x810001000;
+}
+
+uint64_t mmap(int  size){
+    uint64_t ending_addr = mm_struct_mmap->mmap_end_addr;
+    uint64_t starting_addr = mm_struct_mmap->mmap_start_addr;
+    if( (ending_addr - starting_addr) >= size){
+        memset((void*)starting_addr, 0, (uint32_t)size); 
+        mm_struct_mmap->mmap_start_addr += size;
+    }
+    return starting_addr;
 }

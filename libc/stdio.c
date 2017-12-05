@@ -8,32 +8,11 @@
 
 typedef  __builtin_va_list va_list;
 
+char          result[1000];
+
 char* fgets(char *dst, int max, long fp) {
  read_sys(0, fp, (long)dst, max);
   return dst;
-}
-
-void printf(char s[],char  str[]){
-    int i =0;
-    int j =0;
-    int k =0;
-    char p [100];
-    while(s[i] != '\0'){
-        if (s[i] == '%'){
-            i+=2;
-            while(str[j] != '\0'){
-                p[k] = str[j];
-                k++;
-                j++;
-            }
-        }
-        p[k] = s[i];
-        k++;
-        i++;
-   }
-    p[k] = '\0';
-    k = strlen(p);
-    write_sys(1,1,(long)&p,k);
 }
 
 void  convertPointerAddress2String(unsigned long long n, char str[]){
@@ -102,6 +81,7 @@ void strtoint (int num, char str[])
 {
     int i = 0;
 
+        while (str[i] != '\0')
     if (num > 9)
     {
         i = 0;
@@ -131,23 +111,22 @@ void strtoint (int num, char str[])
 }
 
 
-void print(char *string, ...) {
+void printf(char *string, ...) {
     va_list       list;
     va_start(list, string);
     char          char_val;
     int           int_val   = 0;
     char         *str_val   = NULL;
     char          str[100];
-    char          result[500];  
     int           i         = 0;
     unsigned long long_val  = 0;
     int           count     = 0;
 
 
-    while (i < 500) {
+/*    while (i < 500) {
 	result[i] = '\0';
 	i++;
-    }
+    }*/
     while( *string != '\0')
     {
         while (*string != '%' && *string != '\0') {
@@ -219,13 +198,18 @@ void scan(char *str, void *buf) {
     char        temp_buf[10];
     uint64_t    syscall         = 4;
     uint64_t    i               = 0;
+    char       *ptr;
 
+    ptr = buf;
+    while(*ptr != '\0') {
+   	*ptr = '\0';
+	ptr++;
+    }
     while(*str != '\0') {
- 	temp_buf[i] = *str++;
-	i++;
+        temp_buf[i] = *str++;
+        i++;
     }
     temp_buf[i] = '\0';
-    
 
     syscall_2(syscall, (uint64_t)buf);
 
@@ -243,7 +227,6 @@ void scan(char *str, void *buf) {
 	*(int *)buf = val;
     }
 }
-
 
 void printInt(int i ){
     char str [500];
@@ -267,4 +250,11 @@ void printInt(int i ){
     }
     strCopy[k] = '\0';
     write_sys(1,1,(long)&strCopy,k);
+}
+
+void clear() {
+    uint64_t syscall = 91;
+
+    syscall_1((uint64_t)syscall);
+    return;
 }

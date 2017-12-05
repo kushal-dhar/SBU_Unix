@@ -121,7 +121,7 @@ void  convertPointerAddress2String(unsigned long long n, char str[]){
 
 void update_screen() {
      volatile     int y =0;
-     for (y = 0; y < 24; y++) {
+     for (y = 0; y < 23; y++) {
        memcpyy((video+ ((y+1)*160)),(video+ (y*160)), 320);   
         }
 }
@@ -143,7 +143,7 @@ void kprintf(char *string, ...)
                 y_pos ++;
                 x_pos = 0;
                 string ++;
-                if (y_pos == 24) {
+                if (y_pos == 23) {
                     update_screen();
                     y_pos --;
                 }
@@ -156,7 +156,7 @@ void kprintf(char *string, ...)
                     x_pos = 0;
                     y_pos ++;
                 }
-                if (y_pos == 24) {
+                if (y_pos == 23) {
                     update_screen();
                     y_pos --;
                 }
@@ -172,7 +172,7 @@ void kprintf(char *string, ...)
                     if (x_pos == 160) {
                         x_pos = 0;
                         y_pos ++;
-                        if (y_pos == 24) {
+                        if (y_pos == 23) {
                             update_screen();
                             y_pos --;
                         }
@@ -186,7 +186,7 @@ void kprintf(char *string, ...)
  		    } else {
 	                y_pos ++;
         	        x_pos = 0;
-	                if (y_pos == 24) {
+	                if (y_pos == 23) {
         	            update_screen();
                 	    y_pos --;
 	                }
@@ -199,7 +199,7 @@ void kprintf(char *string, ...)
             		    y_pos ++;
 	                    x_pos = 0;
             		    str_val ++;
-	                    if (y_pos == 24) {
+	                    if (y_pos == 23) {
                 	        update_screen();
 	                        y_pos --;
             		    }
@@ -208,7 +208,7 @@ void kprintf(char *string, ...)
                            x_pos = 0;
                            y_pos ++;
                         }
-                        if (y_pos == 24) {
+                        if (y_pos == 23) {
                             update_screen();
                             y_pos --;
                         }
@@ -229,7 +229,7 @@ void kprintf(char *string, ...)
                             x_pos = 0;
                             y_pos ++;
                         }
-                        if (y_pos == 24) {
+                        if (y_pos == 23) {
                             update_screen();
                             y_pos --;
                         }
@@ -246,7 +246,7 @@ void kprintf(char *string, ...)
                             x_pos = 0;
                             y_pos ++;
                         }
-                        if (y_pos == 24) {
+                        if (y_pos == 23) {
                             update_screen();
                             y_pos --;
                         }
@@ -263,7 +263,7 @@ void kprintf(char *string, ...)
                             x_pos = 0;
                             y_pos ++;
                         }
-                        if (y_pos == 24) {
+                        if (y_pos == 23) {
                             update_screen();
                             y_pos --;
                         }
@@ -458,4 +458,15 @@ void kprintf_timer(int time) {
 
 }
 
+void clear_console() {
+    int count = 0;
+
+    while (count < 80 * 24 *24) {
+	*(video + count++) = ' ';
+	*(video + count++) = colour;
+    }
+
+    x_pos = 0;
+    y_pos = 0;
+}
 

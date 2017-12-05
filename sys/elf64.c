@@ -131,6 +131,8 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
     heap_vma->vm_start = (uint64_t)page;
     heap_vma->vm_end = (uint64_t)page + PAGE_SIZE;
     ret_val = add_mmstruct(proc->mm, heap_vma);
+    // initialize mmap 
+    init_mmap();
 
     if (ret_val == -1) {
         kprintf("Unable to add to mmstruct\n");

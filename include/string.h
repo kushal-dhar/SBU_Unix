@@ -10,5 +10,6 @@ extern   char*   strcat(char *dst, char *src);
 extern   char*   strstr(char *str, char *search);
 extern   char ** split_string(char str[], char delim, char **s);
 extern   int     strcmp(char *str1, char *str2);
-//extern   void*  memset(void *ptr, int x, uint32_t n);
+extern   void*  memset(void *ptr, int x, uint32_t n);
+extern int  substr_tillchar(char *s, char c);
 #endif
