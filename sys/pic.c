@@ -14,6 +14,7 @@
 #include <sys/kprintf.h>
 #include <sys/picassem.h>
 #include <sys/paging.h>
+#include <libc.h>
 
 /* call this from the assembly */
 extern void isr32();
@@ -138,7 +139,7 @@ void intr_handler(regis* regs){
 //    uint64_t syscall_no;
     uint64_t ret = 0;
     uint64_t rbx, rcx, rdx, val; // rdi;
-    int      *ptr;
+    uint64_t      *ptr;
 
     __asm__ volatile("movq %%rbx, %0;" : "=r"(rbx));
     __asm__ volatile("movq %%rax, %0;" : "=r"(sys));
@@ -154,11 +155,13 @@ void intr_handler(regis* regs){
                      : "rax", "rsi", "rcx"
                      ); */
     regs = (regis *)kmalloc(1000); 
+   // regs = (regis *)kmalloc(1000);
+#include <sys/pic.h>
     regs->rax = sys;
     regs->rbx = rbx;
     regs->rcx = rcx;
     regs->rdx = rdx;
-    ptr = (int *)val;
+    ptr = (uint64_t *)val;
 //    regs->rdi = rdi;
 //    kprintf("Values are : %d  %d  \n",sys, regs->rbx);
 //    regs = (regis *)kmalloc(1000);
@@ -185,9 +188,9 @@ void intr_handler(regis* regs){
     }
     /* sending end of interrupt */
     PIC_sendEOI(sys);
-    __asm__ volatile("movq %0, %%rax;" :: "r"(ret));
-    kprintf("\nval returned is %d",ret);
-    *ptr = (int)ret;
+//    __asm__ volatile("movq %0, %%rax;" :: "r"(ret));
+    *ptr = (uint64_t)ret;
+    temp_val = (int)ret;
 //    return ret;
 }
 

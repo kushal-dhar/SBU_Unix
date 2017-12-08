@@ -51,5 +51,6 @@ extern int read(int fd, char *buf, int size);
 extern void read_dir(int fd);
 extern int opendir(char *filename);
 extern int  changedir( char* filename);
-extern int getcwd(char *buff);
+extern void getcwd();
+extern void chdir(char * dir);
 #endif

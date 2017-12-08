@@ -5,7 +5,9 @@
 
 char ls_str[1000];
 char global_str[1000];
-
+uint64_t global_val;
+int temp_val;
+char sys_temp[100];
 extern char*  read_sys(long syscall, long arg1, long arg2, long arg3);
 extern long  write_sys(long syscall, long arg1, long arg2, long arg3);
 extern long syscall_wait(long syscall, long arg1, int *arg2, long arg3);
@@ -19,9 +21,11 @@ extern long syscall_dirent(long syscall, long fd, char *buf, long count);
 extern char* read_char(long syscall, long arg1, char *arg2, long arg3);
 extern long write_char(long syscall, long arg1, char *arg2, long arg3);
 extern uint64_t syscall_getpid(uint64_t syscall);
-extern uint64_t syscall_1(uint64_t syscall);
-extern uint64_t syscall_2(uint64_t syscall, uint64_t ch);
-extern uint64_t syscalls_3(uint64_t syscall, uint64_t ch, uint64_t buf);
-extern uint64_t syscall_4(uint64_t syscall, uint64_t ch, uint64_t buf, uint64_t size);
-
+extern void syscall_1(uint64_t syscall);
+extern void syscall_2(uint64_t syscall, uint64_t ch);
+extern void syscall_3(uint64_t syscall, uint64_t ch, uint64_t buf);
+extern void syscall_4(uint64_t syscall, uint64_t ch, uint64_t buf, uint64_t size);
+extern void syscall_2next(uint64_t syscall);
+extern void syscall_2_1(uint64_t syscall, uint64_t ch);
+extern void syscall_2_char(uint64_t syscall);
 #endif	

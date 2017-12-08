@@ -23,7 +23,6 @@ extern pcb_t *curr_process;
 /* These three  are for mmap function **/
 uint64_t virtual_mmap = (uint64_t) 0x88888000000UL;
 vma_t *vma_mmap;
-mm_struct_t * mm_struct_mmap;
 #define HEAP    2
 /**********/
 /*
@@ -508,28 +507,28 @@ void pagefault_handler(regis *reg) {
 //    while(1);
 }
 
-void  init_mmap(){
+void  init_mmap(pcb_t *process){
  uint64_t* phy_addr =  (uint64_t *)allocate_virt_page();
  uint64_t virt_addr =0;
 
  virt_addr = (uint64_t)(virtual_mmap | (uint64_t)phy_addr);
- map_phys_to_user_virt_addr((uint64_t)virt_addr, (uint64_t)phy_addr, (uint64_t *)curr_process->cr3); 
- vma_mmap  =(vma_t*) curr_process->mm->vma;
- while(vma_mmap->type != HEAP){
+ map_phys_to_user_virt_addr((uint64_t)virt_addr, (uint64_t)phy_addr, (uint64_t *)process->cr3); 
+ vma_mmap  =(vma_t*) process->mm->vma;
+while(vma_mmap->type != HEAP){
   vma_mmap = (vma_t*)vma_mmap->vm_next;
  }
- vma_mmap->vm_start = (uint64_t) 0x810000000;
- vma_mmap->vm_end = (uint64_t) 0x810001000; 
- mm_struct_mmap->mmap_start_addr = (uint64_t) 0x810000000;
- mm_struct_mmap->mmap_end_addr =  (uint64_t) 0x810001000;
+ vma_mmap->vm_start = (uint64_t) virt_addr;
+ vma_mmap->vm_end = (uint64_t) virt_addr+PAGE_SIZE; 
+ process->mm->mmap_start_addr = (uint64_t) virt_addr;
+ process->mm->mmap_end_addr =  (uint64_t) virt_addr+PAGE_SIZE;
 }
 
 uint64_t mmap(int  size){
-    uint64_t ending_addr = mm_struct_mmap->mmap_end_addr;
-    uint64_t starting_addr = mm_struct_mmap->mmap_start_addr;
+    uint64_t ending_addr = curr_process->mm->mmap_end_addr;
+    uint64_t starting_addr = curr_process->mm->mmap_start_addr;
     if( (ending_addr - starting_addr) >= size){
         memset((void*)starting_addr, 0, (uint32_t)size); 
-        mm_struct_mmap->mmap_start_addr += size;
+        curr_process->mm->mmap_start_addr += size;
     }
     return starting_addr;
 }

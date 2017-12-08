@@ -1,4 +1,19 @@
 #include <sys/kprintf.h>
+
+char *strcat(char *dst, char *src) {
+  char *tmp = dst;
+  char *sr = src;
+  while(*tmp != '\0') {
+      tmp++;
+  }
+  while(*sr != '\0') {
+      *tmp++ = *sr++;
+  }
+  *tmp++ = '\0';
+  *tmp = '\0';
+   return dst;
+}
+
 /* 
  * Finds the length of string
  */
@@ -9,7 +24,7 @@ int strlen(char *str) {
 	i++;
 	temp++;
     }
-    *temp++ = '\0';
+    strcat(temp,"\0");
     return i;
 }
 
@@ -22,8 +37,8 @@ char *strcpy(char *src, char *dst) {
     while (*sr != '\0') {
 	*temp++ = *sr++;
     }
-    *temp++ = '\0';
     *temp = '\0';
+    strcat(temp, "\0");
     return dst;
 }
 
@@ -53,20 +68,6 @@ int atoi(char *str) {
 	str++;
     }
     return val;
-}
-
-char *strcat(char *dst, char *src) {
-  char *tmp = dst;
-  char *sr = src;
-  while(*tmp != '\0') {
-      tmp++;
-  }
-  while(*sr != '\0') {
-      *tmp++ = *sr++;
-  }
-  *tmp++ = '\0';
-  *tmp = '\0';
-   return dst;
 }
 
 int  substr_tillchar(char *s, char c){

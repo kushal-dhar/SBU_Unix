@@ -81,7 +81,12 @@ void strtoint (int num, char str[])
 {
     int i = 0;
 
-        while (str[i] != '\0')
+    while (str[i] != '\0') {
+        str[i] = '\0';
+        i++;
+    }
+    i = 0;
+
     if (num > 9)
     {
         i = 0;
@@ -127,6 +132,11 @@ void printf(char *string, ...) {
 	result[i] = '\0';
 	i++;
     }*/
+    i = 0;
+    while(result[i] != '\0') {
+	result[i++] = '\0';
+    }
+
     while( *string != '\0')
     {
         while (*string != '%' && *string != '\0') {
@@ -191,7 +201,7 @@ void printf(char *string, ...) {
 
     i = 0;
 	
-    syscall_2((uint64_t)1, (uint64_t)result);
+    syscall_2_1((uint64_t)1, (uint64_t)result);
 }
 
 void scan(char *str, void *buf) {

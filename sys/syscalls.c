@@ -1,10 +1,10 @@
 #include <sys/defs.h>
+#include <sys/pic.h>
 #include <sys/gdt.h>
 #include <sys/kprintf.h>
 #include <sys/tarfs.h>
 #include <sys/ahci.h>
 #include <sys/idt.h>
-#include <sys/pic.h>
 #include <sys/timer.h>
 #include <sys/kb.h>
 #include <sys/paging.h>
@@ -19,7 +19,7 @@ void init_syscalls() {
     irq_set_with_return(128, syscall_handler);
 }
 
-uint64_t syscall_handler(regis* reg) {
+uint64_t syscall_handler (regis * reg) {
 #if 0
     uint64_t   syscall_no;
     uint64_t   buf;
@@ -50,10 +50,10 @@ uint64_t syscall_handler(regis* reg) {
 	return 0;
     }
     /* Handle read_dir */
-    else if (reg->rbx == 39) {
-	read_dir((int)reg->rcx);
-	return 0;
-    }
+//    else if (reg->rbx == 39) {
+//	read_dir((int)reg->rcx);
+//	return 0;
+ //   }
     /* Handle open dir */
     else if (reg->rbx == 89) {
 	int ret_val = opendir((char *)reg->rcx);
@@ -79,14 +79,13 @@ uint64_t syscall_handler(regis* reg) {
     /* Handle chdir syscall */
     else if (reg->rbx == 80){
        int ret_val = 0;
-       ret_val = changedir((char*)reg->rcx);
+       chdir((char*)reg->rcx);
        return ret_val;
     }
     /* Handle getcwd syscall */
     else if (reg->rbx == 79){
-       int ret_val = 0;
-       ret_val =  getcwd((char*)reg->rcx);
-       return ret_val;
+       getcwd();
+       return 0;
     }
     /* Handle clear console */
     else if (reg->rbx == 91) {
@@ -96,6 +95,11 @@ uint64_t syscall_handler(regis* reg) {
      else if (reg->rbx == 9){
         retV = mmap((int) reg->rcx);
         return retV;
+    }
+    /* Handle getPid calls*/
+    else if (reg->rbx == 39){
+       retV = get_pid();
+       return retV;
     }
     return 0;
 }

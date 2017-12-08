@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <libc.h>
 
-char global_var[1000];
-uint64_t global_val;
-
 char* read_sys(long syscall, long arg1, long arg2, long arg3) {
  long ret;
   __asm__ volatile (
@@ -219,51 +216,87 @@ uint64_t syscall_getpid(uint64_t syscall) {
     return ret;
 }
 
-uint64_t syscall_1(uint64_t syscall) {
+void syscall_1(uint64_t syscall) {
   uint64_t  ret = 0;
 
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("int $0x80;");
   __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
-  return ret;
+//  ret = global_val;
+//  return ret;
 }
 
-uint64_t syscall_2(uint64_t syscall, uint64_t ch) {
-  uint64_t  ret = 0;
+void syscall_2(uint64_t syscall, uint64_t ch) {
+//  uint64_t  ret = 0;
    
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("movq %0, %%rcx;"::"r"(ch));
   __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
   __asm__ volatile ("int $0x80;");
-  __asm__ volatile ("movq %%rax, %0;":"=r"(ret)); 
-  ret = global_val;
-  return ret;
+//  __asm__ volatile ("movq %%rax, %0;":"=r"(ret)); 
+//  ret = global_val;
+//  return ret;
+}
+
+void syscall_2_1(uint64_t syscall, uint64_t ch) {
+
+  __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
+  __asm__ volatile ("movq %0, %%rcx;"::"r"(ch));
+  __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
+  __asm__ volatile ("int $0x80;");
 }
 
 
-uint64_t syscalls_3(uint64_t syscall, uint64_t ch, uint64_t buf) {
-  uint64_t ret = 0;
+void syscall_3(uint64_t syscall, uint64_t ch, uint64_t buf) {
+//  uint64_t ret = 0;
 
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("movq %0, %%rcx;"::"r"(ch));
   __asm__ volatile ("movq %0, %%rdx;"::"r"(buf));
   __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
   __asm__ volatile ("int $0x80;");
-  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
-  ret = global_val;
+//  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
+//  ret = global_val;
 
-  return ret;
+//  return ret;
 }
 
-uint64_t syscall_4(uint64_t syscall, uint64_t ch, uint64_t buf, uint64_t size) {
-  uint64_t ret = 0;
+void syscall_4(uint64_t syscall, uint64_t ch, uint64_t buf, uint64_t size) {
+//  uint64_t ret = 0;
 
   __asm__ volatile ("movq %0, %%rax;"::"r"(size));
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
   __asm__ volatile ("movq %0, %%rcx;"::"r"(ch));
   __asm__ volatile ("movq %0, %%rdx;"::"r"(buf));
   __asm__ volatile ("int $0x80;");
-  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
+//  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
 
-  return ret;
+//  return ret;
 }
+
+void syscall_2next(uint64_t syscall) {
+  uint64_t  ret = 0;
+  char * temp = sys_temp;
+  uint64_t* ch = (uint64_t *) temp;
+  __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
+  __asm__ volatile ("movq %0, %%rcx;"::"r"(ch));
+  __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
+  __asm__ volatile ("int $0x80;");
+  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
+//  ret = global_val;
+//  return ret;
+}
+
+void syscall_2_char(uint64_t syscall) {
+//  uint64_t  ret = 0;
+
+  __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
+  __asm__ volatile ("movq %0, %%rcx;"::"r"(global_str));
+  __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
+  __asm__ volatile ("int $0x80;");
+//  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
+//  ret = global_val;
+//  return ret;
+}
+
+

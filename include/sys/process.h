@@ -56,6 +56,7 @@ struct process_ctrl_blk {
     int           ppid;
     char          p_name[30];
     uint64_t      init_kernel;
+    uint64_t      user_stack;
     uint64_t      rsp;
     uint64_t      rip;
     uint64_t      cr3;
@@ -78,5 +79,5 @@ extern void switchBack(pcb_t *current, pcb_t *next);
 extern void initial_ret_function();
 extern void switch_to_ring3(pcb_t *pcb);
 extern void set_user_space(pcb_t *user_process, uint64_t offset);
-
+extern uint64_t get_pid();
 #endif

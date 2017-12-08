@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+/*
 void change_dir(char *cmd) {
   char gwd[1024];
   int i = 0;
@@ -18,3 +19,4 @@ void change_dir(char *cmd) {
   printf("%s", "Wrong address :Directory is not changed");
   }
 }
+*/

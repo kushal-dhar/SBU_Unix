@@ -55,8 +55,8 @@ void strtoint (int num, char str[])
     return;
 }
 
-void  convertHex2String(unsigned long n, char str[]){
-    char * string = NULL;
+void  convertHex2String(unsigned long n, char *str){
+    char string[100];
     int i = 0;
     int j = 0;
 
@@ -73,9 +73,7 @@ void  convertHex2String(unsigned long n, char str[]){
         i++;
     }
     i--;
-    j = 2;
-    str[0] = '0';
-    str[1] = 'x';
+    j = 0;
     while(i >= 0  ){
         str[j++] = string[i--];
     }
@@ -84,8 +82,8 @@ void  convertHex2String(unsigned long n, char str[]){
 }
 
 
-void  convertPointerAddress2String(unsigned long long n, char str[]){
-    char *string2 = NULL;
+void  convertPointerAddress2String(unsigned long long n, char * str){
+    char string2[100];
     int i =0;
     while (n >0){
         int rem1 = n %16;
@@ -133,6 +131,7 @@ void kprintf(char *string, ...)
     char          char_val;
     int           int_val   = 0;
     char         *str_val   = NULL;
+    char * temp_str= NULL;
     char          str[50];
     int           i         = 0;
     unsigned long long_val = 0;
@@ -240,7 +239,8 @@ void kprintf(char *string, ...)
                 case 'x' :
                     int_val = va_arg(list, int);
                     i = 0;
-                    convertHex2String(int_val, str);
+                    temp_str = str;
+                    convertHex2String(int_val, temp_str);
                     while(str[i] != '\0') {
                         if (x_pos == 160) {
                             x_pos = 0;
@@ -256,7 +256,8 @@ void kprintf(char *string, ...)
                     break;
                 case 'p' :
                     long_val = (unsigned long)va_arg(list, unsigned long);
-                    convertPointerAddress2String(long_val, str);
+                    temp_str = str;
+                    convertPointerAddress2String(long_val, temp_str);
 		    i = 0;
                     while(str[i] != '\0') {
                         if (x_pos == 160) {
@@ -280,10 +281,113 @@ void kprintf(char *string, ...)
     }
     return;
 }
-        
 
+
+ void kprintf_kb(char ch) {
+    if (y_pos == 23) {
+                    update_screen();
+                    y_pos --;
+    }
+    if (x_pos == 160) {
+                           x_pos = 0;
+                           y_pos ++;
+    }
+    if (ch == '\n') {
+        video[x_pos++ + (y_pos * 160)] = '^';
+  // int x= 80;
+
+        video[x_pos++ + (y_pos * 160)] = colour;
+        video[x_pos++ + (y_pos * 160)] = 'M';
+        video[x_pos++ + (y_pos * 160)] = colour;
+    }
+    else if (control == 1) {
+	if (ch == 0x48 && shift == 1) {
+	/* Up arrow has been pressed, display '^[[A' */
+            video[x_pos++ + (y_pos * 160)] = '^';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = 'A';
+            video[x_pos++ + (y_pos * 160)] = colour;
+	}
+	else if(ch == 0x4B && shift == 1) {
+	   /* Left arrow has been pressed, display '^[[D' */
+            video[x_pos++ + (y_pos * 160)] = '^';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = 'D';
+            video[x_pos++ + (y_pos * 160)] = colour;
+	}
+	else if (ch == 0x4D && shift == 1) {
+	    /* Right arrow has been pressed, display '^[[C' */
+            video[x_pos++ + (y_pos * 160)] = '^';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = 'C';
+            video[x_pos++ + (y_pos * 160)] = colour;
+	}
+	else if (ch == 0x50 && shift == 1) {
+	    /* Down arrow has been pressed, display '^[[B' */
+            video[x_pos++ + (y_pos * 160)] = '^';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = '[';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = 'B';
+            video[x_pos++ + (y_pos * 160)] = colour;
+	}
+	else if (ch == 0x68) {
+	    /* Backspace has been pressed, display ^H */
+            x_pos =x_pos-2;
+            video[x_pos++ + (y_pos * 160)] = ' ';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            x_pos =x_pos-2; 
+       }
+	else {
+	    /* For all other control characters, display their Ctrl-characters */
+            video[x_pos++ + (y_pos * 160)] = '^';
+            video[x_pos++ + (y_pos * 160)] = colour;
+            video[x_pos++ + (y_pos * 160)] = ch;
+            video[x_pos++ + (y_pos * 160)] = colour;	
+	}
+    }
+#if 0
+    else if (ch == 30) {
+        video[x++ + (24 * 160)] = '^';
+        video[x++ + (24 * 160)] = colour;
+        video[x++ + (24 * 160)] = 'C';
+        video[x++ + (24 * 160)] = colour;
+    } 
+    else if (ch == 31) {
+        video[x++ + (24 * 160)] = '^';
+        video[x++ + (24 * 160)] = colour;
+        video[x++ + (24 * 160)] = 'Z';
+        video[x++ + (24 * 160)] = colour;
+    }
+#endif
+    else {
+        video[x_pos++ + (y_pos * 160)] = ch;
+        video[x_pos++ + (y_pos * 160)] = colour;
+    }
+
+    return;
+}
+
+       
+#if 0
 void kprintf_kb(char ch) {
-    int  x = 80;
+   volatile  int  x = x_pos;
+   volatile  int  y = y_pos;
+  // int x= 80;
 
     if (ch == '\n') {
         video[x++ + (24 * 160)] = '^';
@@ -390,6 +494,8 @@ void kprintf_kb(char ch) {
 
     return;
 }
+
+#endif
 
 
 void kprintf_timer(int time) {

@@ -77,7 +77,8 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
 		kprintf("Memory Allocation failed\n");
 		return ret_val;
 	    } */
-	    vma_t *vma = (vma_t *)umalloc(proc, 100 );
+//	    vma_t *vma = (vma_t *)umalloc(proc, 100 );
+            vma_t *vma = (vma_t *)kmalloc(PAGE_SIZE);
             vma->vm_start = elf_phdr->p_vaddr;
             vma->vm_end = phdr_end;
 
@@ -91,7 +92,7 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
 	    //size = (phdr->end - phdr->start);
 	    //size = ((size % PAGE_SIZE) == 0) ? size : ((size / PAGE_SIZE) + 1) * PAGE_SIZE;
 	    while (phdr_start <= phdr_end) {
-	uint64_t *page = (uint64_t *)allocate_virt_page();
+  	        uint64_t *page = (uint64_t *)allocate_virt_page();
 		map_phys_to_user_virt_addr((uint64_t)phdr_start, (uint64_t)page, (uint64_t *)proc->cr3);
 // 	        map_phys_to_virt_addr((uint64_t)phdr_start, (uint64_t)page);
 		phdr_start += PAGE_SIZE;
@@ -102,7 +103,7 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
    	    if ((elf_phdr->p_flags == (PF_R | PF_X)) || (elf_phdr->p_flags == (PF_R | PF_W))) {
 	    	proc->mm->code_start = phdr_start;
 		proc->mm->code_end = phdr_end;
-		vma->file = (tarfile_t *)umalloc(proc, 100);
+		vma->file = (tarfile_t *)kmalloc(PAGE_SIZE);
 	        vma->file_start = elf_phdr->p_offset;
 	        vma->file_size = elf_phdr->p_filesz;
 //		set_CR3((uint64_t)proc->cr3);
@@ -124,15 +125,13 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
     }
     
     /* Heap allocation */
-    uint64_t *page = (uint64_t *)allocate_virt_page();
-    vma_t *heap_vma = (vma_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)page);
-    map_phys_to_user_virt_addr((uint64_t)heap_vma, (uint64_t)page, (uint64_t *)proc->cr3);
-//    vma_t *heap_vma = (vma_t *)umalloc(proc, 4096);
-    heap_vma->vm_start = (uint64_t)page;
-    heap_vma->vm_end = (uint64_t)page + PAGE_SIZE;
+//    uint64_t *page = (uint64_t *)allocate_virt_page();
+//    vma_t *heap_vma = (vma_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)page);
+//    map_phys_to_user_virt_addr((uint64_t)heap_vma, (uint64_t)page, (uint64_t *)proc->cr3);
+    vma_t *heap_vma = (vma_t *)kmalloc(PAGE_SIZE);
+    heap_vma->vm_start = (uint64_t)heap_vma;
+    heap_vma->vm_end = (uint64_t)heap_vma->vm_start + PAGE_SIZE;
     ret_val = add_mmstruct(proc->mm, heap_vma);
-    // initialize mmap 
-    init_mmap();
 
     if (ret_val == -1) {
         kprintf("Unable to add to mmstruct\n");
@@ -146,6 +145,7 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
     /* Stack allocation */
 /*    vma_t *stack_vma = (vma_t *)umalloc(proc, 4096);
     stack_vma->start = */
-
+   // initialize mmap 
+    init_mmap(proc);
     return 0;
 }

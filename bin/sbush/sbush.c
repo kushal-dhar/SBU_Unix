@@ -18,7 +18,7 @@ while(1){
        printf("%s","<sbush>");	
        fgets(cmd,100,1);
        if(cmd[0] == 'c' && cmd [1] == 'd'){
-        change_dir(cmd);
+//        change_dir(cmd);
 //       } else if((strstr(cmd, "export") != NULL) && (strlen(cmd) > 4)) {
 //        set_cmd(cmd);
 

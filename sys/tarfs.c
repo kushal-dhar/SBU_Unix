@@ -18,6 +18,7 @@ tarfile_t global_tarfs[100];
 int file_count = 3;
 char temp_filename[100];
 char current_dir[100] = ROOT;
+char temp_curr_dir[100] = ROOT;
 /*
 char * extract_parent_name(uint64_t parent_num){
   int      iterator  = 3;
@@ -245,40 +246,83 @@ int close_dir(int fd) {
     return 1;
 }
 
-int  changedir( char* filename){
-   int      iterator  = 3;
-  int len = strlen(filename); 
-   int ret =0;
-   if(filename[0] == '/'){
-      strcpy(ROOT,current_dir);
-       if (len == 1){        
-              return 0;
-          }
-        else if(len >1){
-           strcpy(filename+1,filename);
+
+void chdir(char *dir){
+char dirname[100];
+for(int i =0; i <100; i++) dirname[i] = '\0';
+int len = strlen(dir);
+int flag = 0;
+if(len > 0){
+	if (len >= 1 && *dir == '/'){
+   	     // case cd /  
+             if (len == 1){
+   	   	 strcpy(ROOT,current_dir);  
+   	         flag = 1;	
+               }
+               //case cd /bin
+                 else{
+       	   	    strcpy(ROOT, temp_curr_dir);
+               	    strcpy(dir+1, dirname);
+         	}
+         }
+        else if ( len >= 2 && *dir == '.' && *(dir+1) == '.'){
+        	int rr = substr_tillchar(temp_curr_dir, '/');
+                if(rr == -1){
+                  strcpy(ROOT, temp_curr_dir);
+                }
+                // case cd ..
+                if (len == 2){
+                   strcpy(temp_curr_dir, current_dir);
+                   flag =1;
+                }
+                // Case cd ../bin 
+                else{
+                     strcpy(temp_curr_dir+7,dirname);
+                     strcat(dirname,dir+3);
+                }
+        } else {
+               // Case cd ./bin
+              strcpy(current_dir+7, dirname); 
+              if (len > 2 && *dir=='.' && *(dir+1) == '/'){
+                   strcat(dirname,dir+2);
+               }
+              // Case cd bin
+               else{
+                  strcat(dirname, dir);
+               }
         }
+       strcat(dirname, "\0"); 
+	if (flag != 1){
+   		len = strlen(dirname);
+   	if(dirname[len-1] != '/'){
+      		strcat(dirname, "/");
+   	}
+        int ret = changedir(dirname);
+        if(ret == 999){
+   		kprintf("\n%s","Wrong directory");
+        }
+        }
+
    }
-   if (len >= 3 && filename[len-2] == '*' ){
-    filename[len-2] = '/';
-    filename[len-1] = '\0';
-    filename[len] = '\0';
-    ret = substr_tillchar(current_dir, '/');
-    if ( ret == -1){
-     strcpy(ROOT, current_dir);
-    }
-   }  
-   while (iterator <= file_count) {
+}
+
+
+int  changedir( char* filename){
+  int      iterator  = 3;
+   int ret =0;
+      while (iterator <= file_count) {
      if(global_tarfs[iterator-3].type == DIRECTORY){
        if (strcmp(global_tarfs[iterator-3].name, filename) == 0) {
             char parent_name[100];
             char parent_name2[100]= ROOT;
-             strcpy(global_tarfs[iterator-3].name,parent_name);    
+             strcpy(global_tarfs[iterator-3].name,parent_name); 
               ret = substr_tillchar(parent_name, '/');
-             strcat(parent_name2, parent_name);
-             if(((strcmp(ROOT, current_dir) == 0) && (ret == -1)) ||
-                        (strcmp(parent_name2, current_dir) == 0) ){
+             strcat(parent_name2, parent_name);  
+              if(((strcmp(ROOT, current_dir) == 0) && (ret == -1)) ||
+                        (strcmp(parent_name2, temp_curr_dir) == 0) ){
                 strcpy(ROOT, current_dir);
                 strcat(current_dir,filename);
+                strcpy(current_dir, temp_curr_dir);
                 return 1;
              }
          }
@@ -287,8 +331,7 @@ int  changedir( char* filename){
     }
   return 999;
 }
-int  getcwd( char * buff){
-  strcpy(current_dir, buff);
-  return  0;
+void  getcwd(){
+  kprintf("\n%s",current_dir);
 }
 

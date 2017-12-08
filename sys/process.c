@@ -107,8 +107,8 @@ void create_new_thread() {
 pcb_t* create_user_process(char *filename) {
     pcb_t *user_pcb = (pcb_t *)kmalloc((int)6000);
 //    uint64_t     offset       = 0;
-    uint64_t     pAddr;
-    uint64_t     vAddr;
+//    uint64_t     pAddr;
+//    uint64_t     vAddr;
     uint64_t    *user_virt;
     uint64_t    *user_stack;
     uint64_t    *file_pt;
@@ -128,11 +128,11 @@ pcb_t* create_user_process(char *filename) {
     memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     set_CR3((uint64_t)first_process->cr3);
 
-    vAddr = 0;
+/*    vAddr = 0;
     pAddr = 0;
     for (; pAddr < 0xF4240; pAddr += 0x1000, vAddr += 0x1000) {
         map_phys_to_user_virt_addr((uint64_t)vAddr, (uint64_t)pAddr, (uint64_t *)user_pcb->cr3);
-    }
+    }*/
 
 //    mm = (mm_struct_t *)kmalloc(1000);
     mm = (mm_struct_t *)allocate_virt_page();
@@ -169,7 +169,8 @@ pcb_t* create_user_process(char *filename) {
 #endif
 
 //    uint64_t *kstack = (uint64_t *)umalloc(4096, (uint64_t *)user_pcb->cr3);
-    user_pcb->rsp = user_pcb->init_kernel = ((uint64_t)user_virt + PAGE_SIZE - 8);
+    user_pcb->rsp = user_pcb->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
+    user_pcb->init_kernel = ((uint64_t) user_pcb + PAGE_SIZE - 8);
 
 //    set_user_space(user_pcb, offset);
 
@@ -197,7 +198,7 @@ void initial_ret_function() {
         kprintf("I am in kernel thread again\n");
         switchTask(first_process, next_process);
         i ++;
-    }
+    } 
 
 //    init_picirr();
 
@@ -207,6 +208,8 @@ void initial_ret_function() {
     init_syscalls();
     
     pcb_t *user_process = create_user_process("bin/hello");
+    enable_page_fault();
+//    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);
 
 //    pcb_t *user_process = create_user_process();
@@ -328,7 +331,7 @@ void switch_to_ring3(pcb_t *proc) {
     curr_process = proc;
     
 
-    set_tss_rsp((void *) first_process->init_kernel);
+    set_tss_rsp((void *) proc->init_kernel);
 
     __asm__ volatile ("cli" ::);
     __asm__ volatile ("movq %0, %%cr3;" :: "r"(proc->cr3));
@@ -368,3 +371,7 @@ void set_user_space(pcb_t *user_process, uint64_t offset) {
     user_process->rip = (uint64_t)user_virtual_addr | offset;
 
 }
+uint64_t get_pid(){
+  return (uint64_t) curr_process->pid;
+}
+

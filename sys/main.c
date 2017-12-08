@@ -11,7 +11,7 @@
 #include <sys/paging_helper.h>
 #include <sys/process.h>
 #include <sys/elf64.h>
-
+#include <sys/string.h>
 #define INITIAL_STACK_SIZE 4096
 uint8_t initial_stack[INITIAL_STACK_SIZE]__attribute__((aligned(16)));
 uint32_t* loader_stack;
@@ -42,27 +42,40 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
       //init_phys_mem((uint64_t)physbase, (uint64_t)physfree, smap->base);
     }
   }
+
   init_paging((uint64_t)physbase, (uint64_t)physfree, smap_max.base, smap_max.length);
   kprintf("physfree %p\n", (uint64_t)physfree);
   kprintf("tarfs in [%p:%p]\n", &_binary_tarfs_start, &_binary_tarfs_end);
-  
+//  uint64_t p = 8888;
+ // char s[100]="sahil";
+ // char *ss = s;
+  //strcpy(ss, s);
+  kprintf("pointer = %x", 1234);
+
+
   setup_page_tables((uint64_t)physbase, (uint64_t)physfree);
   set_identity_paging();
   load_CR3();
-  kprintf("Printing after CR3 called");
-  init_idt();
+   kprintf("pointer = %x", 1234);
+//  kprintf("Printing after CR3 called");
+
+ // uint64_t *p = (uint64_t*)0x8888123;
+//  kprintf("pointer = %p", p);
+
+ init_idt();
 
   init_picirr();
 
   init_timer(1000);
   kb_init();
+
   kprintf("Printing something\n");
   __asm__ volatile("sti"); 
+
   uint64_t *addr = (uint64_t *)kmalloc(6000);
   kprintf("addrs: %d\n",addr);
 //  is_file_exist("hello");
   init_tarfs();
-  enable_page_fault();
 //  kprintf("printing value at %p\n",*(uint64_t *)0x888FF292001);
   //int fd = open("bin/hello", 2);
   //read(fd, buffer, 100);
@@ -72,7 +85,6 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
 //  caller();  
 //  pcb_t *user_process = create_user_process("bin/hello");
 //  switch_to_ring3((pcb_t *)user_process);
-
   create_kernel_thread();
 //caller();
   while(1);
