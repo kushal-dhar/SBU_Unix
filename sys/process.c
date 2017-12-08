@@ -12,11 +12,14 @@
 #include <sys/process.h>
 #include <sys/elf64.h>
 #include <sys/syscalls.h>
+#include <sys/vma.h>
+#include <sys/picassem.h>
 
 extern uint64_t *pml4;
 uint64_t *old_rsp;
 uint64_t *rsp_addr;
 uint64_t processID = 0;
+uint64_t rsp_pointer = 0;
 //uint64_t *user_virtual_address = (uint64_t*)0x88888fff80000000UL;
 pcb_t *first_process;
 pcb_t *curr_process;
@@ -56,6 +59,7 @@ void create_kernel_thread() {
 
     first_process = (pcb_t *)k_pcb;
     curr_process = (pcb_t *)k_pcb;
+    curr_process->next_proc = NULL;
     
     k_pcb->rsp = k_pcb->init_kernel = ((uint64_t)k_pcb + PAGE_SIZE);
     k_pcb->rsp -= 8;
@@ -96,6 +100,9 @@ void create_new_thread() {
     *(uint64_t *)(child_pcb->rsp) = (uint64_t)&test_function;
 //    *(uint64_t *)(child_pcb->rsp) |= KERNEL_ADDR;
     child_pcb->regs.rax = child_pcb->regs.rbx = child_pcb->regs.rdi = child_pcb->regs.rsi = child_pcb->regs.rbp = 0;
+    curr_process->next_proc = child_pcb;
+    child_pcb->next_proc = curr_process;
+    curr_process = child_pcb;
     
     return;
 }
@@ -170,12 +177,16 @@ pcb_t* create_user_process(char *filename) {
 
 //    uint64_t *kstack = (uint64_t *)umalloc(4096, (uint64_t *)user_pcb->cr3);
     user_pcb->rsp = user_pcb->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
-    user_pcb->init_kernel = ((uint64_t) user_pcb + PAGE_SIZE - 8);
+    user_pcb->init_kernel = (uint64_t)(user_pcb + PAGE_SIZE - 8);
 
 //    set_user_space(user_pcb, offset);
 
 //    set_CR3((uint64_t)user_pcb);
 //    kprintf("I just loaded new CR3\n");
+
+      curr_process->next_proc = user_pcb;
+      user_pcb->next_proc = curr_process;
+      curr_process = user_pcb; 
 
     return user_pcb;
 }
@@ -264,6 +275,9 @@ void scheduler() {
 //    first_process = curr_process;
 //    curr_process = next_process;
 //    rsp_addr = (uint64_t *)(next_process->init_kernel - 128);
+    curr_process = curr_process->next_proc;
+    next_process = curr_process->next_proc;
+
     switchTask(curr_process, next_process);
 }
 
@@ -287,7 +301,6 @@ void switchTask(pcb_t *current, pcb_t *next) {
 
     __asm__ volatile ("ret");
 */
-//    save_registers(current);
 
     __asm__ volatile("movq %%rdi, %0;" : "=r"(current->regs.rdi));
     __asm__ volatile("movq %%rsi, %0;" : "=r"(current->regs.rsi));
@@ -295,7 +308,6 @@ void switchTask(pcb_t *current, pcb_t *next) {
     __asm__ volatile("movq %%rbx, %0;" : "=r"(current->regs.rbx));
     __asm__ volatile("movq %%rbp, %0;" : "=r"(current->regs.rbp));
 
-//    save_rsp(current);
     __asm__ volatile ("movq  %%rsp, %0;":"=r"(current->rsp));
     __asm__ volatile ("movq %0, %%rsp;"::"r"(next->rsp));
 
@@ -304,7 +316,6 @@ void switchTask(pcb_t *current, pcb_t *next) {
     __asm__ volatile ("movq %0, %%rbx;" :: "r"(next->regs.rbx));
     __asm__ volatile ("movq %0, %%rbp;" :: "r"(next->regs.rbp));
     __asm__ volatile ("movq %0, %%rsi;" :: "r"(next->regs.rsi));
-//    update_registers(next);
 
 }
 
@@ -327,11 +338,15 @@ void switchBack(pcb_t *current, pcb_t *next) {
  * Stub to switch ring 3
  */
 void switch_to_ring3(pcb_t *proc) {
+    curr_process = curr_process->next_proc;
+    next_process = curr_process->next_proc;
+    kprintf("process: %d",curr_process);
+
     proc->state = TASK_RUNNING;
     curr_process = proc;
     
 
-    set_tss_rsp((void *) proc->init_kernel);
+    set_tss_rsp((void *)proc->init_kernel);
 
     __asm__ volatile ("cli" ::);
     __asm__ volatile ("movq %0, %%cr3;" :: "r"(proc->cr3));
@@ -342,7 +357,6 @@ void switch_to_ring3(pcb_t *proc) {
     __asm__ volatile ("mov %%ax, %%gs;" ::);
     __asm__ volatile ("movq %0, %%rax;"::"r"(proc->rsp));
     __asm__ volatile ("pushq $0x23" ::);
-//    __asm__ volatile ("movq %%rsp, %0;" : "=r"(proc->rsp));
     __asm__ volatile ("pushq %%rax" ::);
     __asm__ volatile ("pushfq" ::);
     __asm__ volatile ("popq %%rax" ::);
@@ -353,8 +367,6 @@ void switch_to_ring3(pcb_t *proc) {
     __asm__ volatile ("movq $0x0, %%rdi" ::);
     __asm__ volatile ("movq $0x0, %%rsi" ::);
     __asm__ volatile ("iretq" ::);
-//    __asm__ volatile ("sti" ::);
-
 
 }
 
@@ -371,7 +383,93 @@ void set_user_space(pcb_t *user_process, uint64_t offset) {
     user_process->rip = (uint64_t)user_virtual_addr | offset;
 
 }
+
+pid_t fork_child() {
+    pcb_t *c_pcb;
+//    pcb_t *next;
+
+    /* Copy parents structure to child's structure */
+    c_pcb = (pcb_t *)copy_parent_structure((pcb_t *)curr_process);
+
+//    next = curr_process->next_proc;
+    curr_process->next_proc = c_pcb;
+    c_pcb->next_proc = curr_process;
+    return c_pcb->pid;
+}
+
+
+pcb_t* copy_parent_structure(pcb_t *parent_proc) {
+    uint64_t  *user_virt;
+    uint64_t  *user_stack;
+    //uint64_t   current_rsp;
+    volatile vma_t     *parent_vma     = NULL;
+    vma_t     *child_vma      = NULL;
+    uint64_t   count          = 0;
+    pcb_t     *child_pcb      = (pcb_t *)kmalloc(6000);
+
+    child_pcb->pid = get_next_processID();
+    child_pcb->ppid = curr_process->pid;
+    child_pcb->next_proc = NULL;
+    child_pcb->mm = NULL;
+    
+    curr_process->n_child += 1;
+    child_pcb->n_child = 0;
+
+    child_pcb->cr3 = (uint64_t)allocate_virt_page();
+    user_virt = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)child_pcb->cr3);
+    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3);
+//    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3, (uint64_t *)child_pcb->cr3);
+//    create_child_pagetables((uint64_t *)child_pcb->cr3);
+    copy_parent_tables((uint64_t *)child_pcb->cr3);
+
+    user_stack = (uint64_t *)allocate_virt_page();
+    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)user_stack);
+    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)user_stack);
+    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3, (uint64_t *)child_pcb->cr3);
+    kprintf("addr: %d  ",user_virt);
+    set_CR3((uint64_t)child_pcb->cr3);
+    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
+    set_CR3((uint64_t)curr_process->cr3);
+    child_pcb->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
+    memcpy((void *)parent_proc->user_stack + 8 - PAGE_SIZE, (void *)child_pcb->user_stack + 8 - PAGE_SIZE, PAGE_SIZE);
+    
+    child_pcb->init_kernel = (uint64_t)(child_pcb + PAGE_SIZE - 8);
+
+//    set_CR3((uint64_t)child_pcb->cr3);
+
+    child_pcb->mm = (mm_struct_t *)kmalloc(PAGE_SIZE);
+    memcpy(parent_proc->mm, child_pcb->mm, sizeof(mm_struct_t));
+
+    parent_vma = parent_proc->mm->vma;
+    
+   while (parent_vma != NULL) {
+        if (child_vma == NULL) {
+            count = 1;
+        }
+        child_vma = (vma_t *)kmalloc(PAGE_SIZE);
+        memcpy(parent_vma, child_vma, sizeof(vma_t));
+        child_vma->vm_next = NULL;
+        child_vma->vm_mm = child_pcb->mm;
+
+        if (parent_vma->file != NULL) {
+            child_vma->file = (tarfile_t *)kmalloc(PAGE_SIZE);
+            memcpy(parent_vma->file, child_vma->file, sizeof(tarfile_t));
+        }
+        if (count == 1) {
+            child_pcb->mm->vma = child_vma;
+            count = 0;
+        }
+        else {
+            add_mmstruct(child_pcb->mm, child_vma);
+        }
+        parent_vma = parent_vma->vm_next;
+    }
+//    set_CR3((uint64_t)child_pcb->cr3);
+//    child_pcb->rsp = (uint64_t)(child_pcb->user_stack - (parent_proc->user_stack - rsp_pointer));
+                                                                                            
+    return child_pcb;
+}
+
 uint64_t get_pid(){
   return (uint64_t) curr_process->pid;
 }
-

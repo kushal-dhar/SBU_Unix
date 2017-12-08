@@ -101,5 +101,12 @@ uint64_t syscall_handler (regis * reg) {
        retV = get_pid();
        return retV;
     }
+    /* Handles fork child syscall */
+    else if (reg->rbx == 57) {
+        int pid;
+        pid = fork_child();
+        return pid;
+    }
+
     return 0;
 }

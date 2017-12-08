@@ -217,11 +217,12 @@ uint64_t syscall_getpid(uint64_t syscall) {
 }
 
 void syscall_1(uint64_t syscall) {
-  uint64_t  ret = 0;
+//  uint64_t  ret = 0;
 
   __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
+  __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
   __asm__ volatile ("int $0x80;");
-  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
+//  __asm__ volatile ("movq %%rax, %0;":"=r"(ret));
 //  ret = global_val;
 //  return ret;
 }

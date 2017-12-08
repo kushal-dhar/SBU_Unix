@@ -61,6 +61,7 @@ struct process_ctrl_blk {
     uint64_t      rip;
     uint64_t      cr3;
     int           state;
+    int           n_child;
     pcb_t        *next_proc;
     mm_struct_t  *mm;
     register_t    regs;
@@ -79,5 +80,7 @@ extern void switchBack(pcb_t *current, pcb_t *next);
 extern void initial_ret_function();
 extern void switch_to_ring3(pcb_t *pcb);
 extern void set_user_space(pcb_t *user_process, uint64_t offset);
+extern pid_t fork_child();
+extern pcb_t* copy_parent_structure(pcb_t *parent_proc);
 extern uint64_t get_pid();
 #endif

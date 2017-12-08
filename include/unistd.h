@@ -32,7 +32,7 @@ int pipe(int pipefd[2]);
 char *getcwd(char *buf, long  size);
 extern int waitpid(int pid, int *wstatus, int options);
 extern int execvp(char *file, char *argv[]);
-extern pid_t fork();
+//extern pid_t fork();
 extern void chdir( char *path);
 extern int open(char *pathname, int flags);
 extern int pipe(int fd[]);
@@ -46,4 +46,5 @@ extern void  cwd();
 extern void  mallocc(int size);
 extern uint64_t getpid();
 extern void catt(char *filename, int perm);
+extern int fork();
 #endif

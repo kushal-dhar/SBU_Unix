@@ -69,6 +69,9 @@ int main(int argc, char *argv[], char *envp[]) {
      char t[100];
      strcpy(t,"extra/\0");
      chdir(t);
+     int a = getpid();
+     printf("PID: %d\n",a);
+
 //     chdir(s);
 
 /*    strcpy(s,"extra/");
@@ -101,11 +104,13 @@ int main(int argc, char *argv[], char *envp[]) {
     printf("Hello world\n");
     printf("Hello world\n");
     printf("Hello world\n");
-    int a = test(10);
+    a = test(10);
     printf("Value: %d\n",a);
     test(20);
-    a = getpid();
-    printf("PID: %d\n",a);
+    int b = getpid();
+    printf("PID again %d\n",b);
+    int pid = fork();
+    printf("process id: %d",pid);
 /*    char s[100];
     scan("%s",s);
     printf("string: %s",s); */

@@ -52,6 +52,7 @@ int execvp(char *file, char *argv[]) {
    return ret;
 }
 
+#if 0
 pid_t fork() {
   pid_t ret = 0;
 
@@ -59,6 +60,7 @@ pid_t fork() {
   ret = syscall_fork(57, ret);
   return ret;
 }
+#endif
 
 #if 0
 int open(const char *path, int flag) {
@@ -181,3 +183,14 @@ uint64_t getpid(){
  pid = global_val;
  return pid;
 }
+
+int fork() {
+    int syscall = 57;
+    int ret_val = 0;
+
+    syscall_1((uint64_t)syscall);
+    ret_val =  global_val;
+//    printf("Hello");
+    return ret_val;
+}
+

@@ -41,4 +41,6 @@ extern void enable_page_fault();
 extern void pagefault_handler();
 extern void  init_mmap(pcb_t *process);
 extern uint64_t mmap(int  size);
+extern void copy_parent_tables(uint64_t* cr3_addr);
+
 #endif

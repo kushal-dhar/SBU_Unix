@@ -532,3 +532,76 @@ uint64_t mmap(int  size){
     }
     return starting_addr;
 }
+
+void copy_parent_tables(uint64_t* cr3_addr) {
+    uint64_t        pml4_index       = 0;
+    uint64_t        pdpt_index       = 0;
+    uint64_t        pd_index         = 0;
+    uint64_t        pt_index         = 0;
+    uint64_t       *pdpt;
+    uint64_t       *c_pdpt;
+    uint64_t        table_entry      = 0;
+    uint64_t        phys_addr        = 0;
+    uint64_t       *pd;
+    uint64_t       *c_pd;
+    uint64_t       *c_pt;
+
+    cr3_addr = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)cr3_addr);
+    __asm__ volatile("mov %%cr3, %0" : "=r" (pml4));
+    pml4 = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)pml4);
+
+    for (pml4_index = 0; pml4_index < 511; pml4_index++) {
+        table_entry = pml4[pml4_index];
+        if (table_entry & PT_PR) {
+            table_entry = (uint64_t )remove_flag(table_entry);
+            pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+            kprintf("Address: %d     %d\n",table_entry,pml4_index);
+            c_pdpt = (uint64_t *)allocate_virt_page();
+            phys_addr = (uint64_t)c_pdpt | (PT_PR | PT_U);
+            cr3_addr[pml4_index] = phys_addr;
+            c_pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)c_pdpt);
+
+            for (pdpt_index = 0; pdpt_index < 512; pdpt_index ++) {
+                table_entry = pdpt[pdpt_index];
+                if (table_entry & PT_PR) {
+                    kprintf("Table: %d   %d\n",table_entry, pdpt_index);
+                    kprintf("Child: %d   \n",cr3_addr[pml4_index]);
+                    table_entry = (uint64_t )remove_flag(table_entry);
+                    pd = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+                    c_pd = (uint64_t *)allocate_virt_page();
+                    phys_addr =  (uint64_t)c_pd | (PT_PR | PT_U);
+                    c_pdpt[pdpt_index] = phys_addr;
+                    c_pd = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)c_pd);
+
+                    for (pd_index = 0; pd_index < 512; pd_index++) {
+                        table_entry = pd[pd_index];
+                        if (table_entry & PT_PR) {
+                            kprintf("PD Table %d     %d",table_entry, pd_index);
+                            kprintf("     Child pd %d\n",c_pdpt[pdpt_index]);
+                            table_entry = (uint64_t )remove_flag(table_entry);
+                            pt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+                            c_pt = (uint64_t *)allocate_virt_page();
+                            phys_addr = (uint64_t)c_pt | (PT_PR | PT_U);
+                            c_pd[pd_index] = phys_addr;
+                            c_pt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)c_pt);
+
+                            for (pt_index = 0; pt_index < 512; pt_index ++) {
+                                table_entry = pt[pt_index];
+                                if (table_entry & PT_PR) {
+                                    kprintf("page_table: %d     %d",table_entry, pt_index);
+                                    kprintf("    child %d\n",c_pd[pd_index]);
+                                    table_entry = (uint64_t )remove_flag(table_entry);
+                                    table_entry = (uint64_t)table_entry | (PT_PR | PT_WR | PT_U);
+                                    c_pt[pt_index] = table_entry;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    cr3_addr[511] = pml4[511];
+    return;
+}
