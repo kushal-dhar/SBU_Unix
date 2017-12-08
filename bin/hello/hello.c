@@ -110,7 +110,13 @@ int main(int argc, char *argv[], char *envp[]) {
     int b = getpid();
     printf("PID again %d\n",b);
     int pid = fork();
-    printf("process id: %d",pid);
+//    printf("process id: %d",pid);
+    if (pid != 0) {
+	wait_pid(pid);
+    }
+    else {
+	while(1);
+    }
 /*    char s[100];
     scan("%s",s);
     printf("string: %s",s); */

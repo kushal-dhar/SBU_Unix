@@ -83,4 +83,5 @@ extern void set_user_space(pcb_t *user_process, uint64_t offset);
 extern pid_t fork_child();
 extern pcb_t* copy_parent_structure(pcb_t *parent_proc);
 extern uint64_t get_pid();
+extern void wait(uint64_t pid);
 #endif

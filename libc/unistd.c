@@ -37,6 +37,7 @@ __asm__ volatile (
 return  (int)ret;
 }
 */
+
 int waitpid(int pid, int *wstatus, int options) {
 
    /* System call for wait is 61*/
@@ -192,5 +193,12 @@ int fork() {
     ret_val =  global_val;
 //    printf("Hello");
     return ret_val;
+}
+
+void wait_pid(uint64_t pid) {
+    int syscall = 247;
+
+    syscall_2((uint64_t)syscall, (uint64_t)pid);
+    return;
 }
 

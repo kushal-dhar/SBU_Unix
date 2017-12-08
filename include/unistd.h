@@ -47,4 +47,5 @@ extern void  mallocc(int size);
 extern uint64_t getpid();
 extern void catt(char *filename, int perm);
 extern int fork();
+extern void wait_pid(uint64_t pid);
 #endif

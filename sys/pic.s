@@ -4,6 +4,7 @@
 .global isr128
 .extern intr_handler
 .extern intr_handler1
+.extern rsp_pointer
 
 isr32:
     movq $32, %rax
@@ -44,6 +45,7 @@ interrupt_handler:
     iretq
 
 common_handler:
+    movq %rsp, rsp_pointer
     pushq %rbx
     pushq %rcx
     pushq %rdx

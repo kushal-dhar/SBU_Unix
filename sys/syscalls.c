@@ -107,6 +107,10 @@ uint64_t syscall_handler (regis * reg) {
         pid = fork_child();
         return pid;
     }
+    /* Handle wait syscall */
+    else if (reg->rbx == 247) {
+    	wait((uint64_t)reg->rcx);
+    }
 
     return 0;
 }

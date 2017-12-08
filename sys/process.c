@@ -400,7 +400,7 @@ pid_t fork_child() {
 
 pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     uint64_t  *user_virt;
-    uint64_t  *user_stack;
+    //uint64_t  *user_stack;
     //uint64_t   current_rsp;
     volatile vma_t     *parent_vma     = NULL;
     vma_t     *child_vma      = NULL;
@@ -422,7 +422,7 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
 //    create_child_pagetables((uint64_t *)child_pcb->cr3);
     copy_parent_tables((uint64_t *)child_pcb->cr3);
 
-    user_stack = (uint64_t *)allocate_virt_page();
+/*    user_stack = (uint64_t *)allocate_virt_page();
     user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)user_stack);
     map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)user_stack);
     map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3, (uint64_t *)child_pcb->cr3);
@@ -431,7 +431,7 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     set_CR3((uint64_t)curr_process->cr3);
     child_pcb->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
-    memcpy((void *)parent_proc->user_stack + 8 - PAGE_SIZE, (void *)child_pcb->user_stack + 8 - PAGE_SIZE, PAGE_SIZE);
+    memcpy((void *)parent_proc->user_stack + 8 - PAGE_SIZE, (void *)child_pcb->user_stack + 8 - PAGE_SIZE, PAGE_SIZE); */
     
     child_pcb->init_kernel = (uint64_t)(child_pcb + PAGE_SIZE - 8);
 
@@ -465,9 +465,26 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
         parent_vma = parent_vma->vm_next;
     }
 //    set_CR3((uint64_t)child_pcb->cr3);
-//    child_pcb->rsp = (uint64_t)(child_pcb->user_stack - (parent_proc->user_stack - rsp_pointer));
+    memcpy((void *)parent_proc->init_kernel + 8 - PAGE_SIZE, (void *)child_pcb->init_kernel + 8 - PAGE_SIZE, PAGE_SIZE);
+    child_pcb->user_stack = (uint64_t)parent_proc->user_stack;
+    child_pcb->rsp = (uint64_t)(child_pcb->init_kernel - (parent_proc->init_kernel - rsp_pointer));
                                                                                             
     return child_pcb;
+}
+
+void wait(uint64_t pid) {
+//    uint64_t     val = 0;
+    curr_process->state = TASK_READY;
+    curr_process = curr_process->next_proc;
+    next_process = curr_process->next_proc;
+
+    curr_process->state = TASK_RUNNING;
+    if (curr_process->pid == pid) {
+    __asm__ volatile ("movq %0, %%cr3;" :: "r"(curr_process->cr3));
+    __asm__ volatile ("movq %0, %%rsp;" :: "r"(curr_process->rsp));
+//    __asm__ volatile ("movq %0, %%rax;" :: "r"(val));
+    __asm__ volatile ("iretq");
+    }
 }
 
 uint64_t get_pid(){
