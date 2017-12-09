@@ -32,13 +32,13 @@ void unset_bit(uint64_t *map, uint64_t val) {
 
 void load_CR3() {
     uint64_t pml4_addr= cr3;
-    __asm__ volatile("movq %0, %%cr3":: "b"(pml4_addr));
+    __asm__ volatile("movq %0, %%cr3":: "a"(pml4_addr));
     pml4 = (uint64_t *)(KERNEL_ADDR | (uint64_t)pml4);
     free_map = (uint64_t *) (0xFFFFFFFF80000000UL | (uint64_t)free_map);
 }
 
 void set_CR3(uint64_t pml4_addr) {
-    __asm__ volatile("movq %0, %%cr3":: "b"(pml4_addr));
+    __asm__ volatile("movq %0, %%cr3":: "a"(pml4_addr));
     //pml4 = (uint64_t *)(KERNEL_ADDR | (uint64_t)pml4);
     //free_map = (uint64_t *) (0xFFFFFFFF80000000UL | (uint64_t)free_map);
 }
@@ -70,7 +70,7 @@ int get_index(uint64_t address, int offset) {
 
 volatile uint64_t get_CR3_address() {
     volatile uint64_t cr3_addr;
-    __asm__ volatile("mov %%cr3, %0" : "=r" (cr3_addr));
+    __asm__ volatile("mov %%cr3, %0" : "=a" (cr3_addr));
     return cr3_addr;
 }
 

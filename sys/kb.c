@@ -84,7 +84,7 @@ void clear_buffer() {
 }
 
 
-void kb_handler(struct regis* s) {
+void kb_handler() {
     unsigned char status;
     unsigned char scancode;
 

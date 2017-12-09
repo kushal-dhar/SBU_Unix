@@ -201,16 +201,17 @@ void printf(char *string, ...) {
 
     i = 0;
 	
-    syscall_2_1((uint64_t)1, (uint64_t)result);
+    i = syscall_2((uint64_t)1, (uint64_t)result);
+    if (i != 0) {
+	return;
+    }
 }
 
 void scan(char *str, void *buf) {
-    char        temp_buf[10];
+    char        temp_buf[100];
     uint64_t    syscall         = 4;
     uint64_t    i               = 0;
-    char       *ptr;
-
-    ptr = buf;
+    char       *ptr =(char *) buf;
     while(*ptr != '\0') {
    	*ptr = '\0';
 	ptr++;
@@ -221,7 +222,11 @@ void scan(char *str, void *buf) {
     }
     temp_buf[i] = '\0';
 
-    syscall_2(syscall, (uint64_t)buf);
+    i = syscall_2(syscall, (uint64_t)buf);
+    if (i != 0) {
+ 	printf("Error in reading from stdin\n");
+	return;
+    }
 
     if(strcmp(temp_buf, "%s") == 0) {
 /*        int i = 0;

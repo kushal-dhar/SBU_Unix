@@ -10,6 +10,9 @@
 #define VIDEO_ADDR       0xFFFFFFFF800B8000
 #define VIDEO_PHYS_ADDR  0xB8000
 #define GET_PAGE_ADDR    0xFFFFFFFFFFFFF000UL
+#define STACK_ADDR       0x444ff000000UL
+#define STACK_END        0x444ff010000UL
+#define HEAP_ADDR        0x400ee000000UL
 
 #define PAGE_SIZE 4096
 
@@ -42,5 +45,6 @@ extern void pagefault_handler();
 extern void  init_mmap(pcb_t *process);
 extern uint64_t mmap(int  size);
 extern void copy_parent_tables(uint64_t* cr3_addr);
+extern uint64_t virt_to_phys(uint64_t vAddr);
 
 #endif

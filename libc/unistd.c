@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <libc.h>
 #define ROOT 'rootfs/'
 extern uint64_t global_val;
 extern int temp_val;
@@ -164,11 +163,18 @@ void chdir(char * dir) {
 }
 void cwd() {
   /* System call for pipe is 79 */
-   syscall_1(79);
+  uint64_t ret =0;
+  ret =  syscall_1(79);
+  if(ret != 0){
+  printf("%s","Error");
+  }
 }
 
-void mallocc(int size){
-  syscall_2(9,(uint64_t) size);
+void* mallocc(int size){
+  uint64_t  ch;
+  ch = syscall_2(9,(uint64_t) size);
+ // ptr = global_val;
+  return (void *)ch;
 }
 
 void catt(char *filename, int perm){
@@ -180,8 +186,9 @@ void catt(char *filename, int perm){
 
 uint64_t getpid(){
  uint64_t pid=0;
- syscall_1(39);
- pid = global_val;
+  pid = syscall_pid(39);
+// syscall_1(39);
+// pid = global_val;
  return pid;
 }
 
@@ -200,5 +207,9 @@ void wait_pid(uint64_t pid) {
 
     syscall_2((uint64_t)syscall, (uint64_t)pid);
     return;
+}
+void sleep(int val){
+   /* System call for nano sleep is 35 */
+   syscall_2(35,(uint64_t) val);
 }
 

@@ -141,11 +141,11 @@ void intr_handler(regis* regs){
     uint64_t rbx, rcx, rdx, val; // rdi;
     uint64_t      *ptr;
 
-    __asm__ volatile("movq %%rbx, %0;" : "=r"(rbx));
-    __asm__ volatile("movq %%rax, %0;" : "=r"(sys));
-    __asm__ volatile("movq %%rcx, %0;" : "=r"(rcx));
-    __asm__ volatile("movq %%rdx, %0;" : "=r"(rdx));
-    __asm__ volatile("movq %%r10, %0;" : "=r"(val));
+    __asm__ volatile("movq %%rbx, %0;" : "=a"(rbx));
+    __asm__ volatile("movq %%rax, %0;" : "=a"(sys));
+    __asm__ volatile("movq %%rcx, %0;" : "=a"(rcx));
+    __asm__ volatile("movq %%rdx, %0;" : "=a"(rdx));
+    __asm__ volatile("movq %%r10, %0;" : "=a"(val));
 //    __asm__ volatile("movq %%r8, %0;" : "=r"(rdi));
 /*    __asm__ volatile("movq %%rax, %0;"
                      "movq %%rbx, %1;"

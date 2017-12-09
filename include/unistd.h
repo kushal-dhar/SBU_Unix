@@ -43,9 +43,10 @@ extern int open_dir(char *filename);
 extern void read_dir(int fd);
 extern void read(int fd, char *buf, int size);
 extern void  cwd();
-extern void  mallocc(int size);
+extern void*  mallocc(int size);
 extern uint64_t getpid();
 extern void catt(char *filename, int perm);
 extern int fork();
 extern void wait_pid(uint64_t pid);
+extern void sleep(int val);
 #endif

@@ -4,7 +4,7 @@
 #include <sys/idt.h>
 
 void timer_count(int hz);
-void timer_handler(struct regis *r);
+void timer_handler();
 void init_timer(int hz);
-
+void sleep(int val);
 #endif

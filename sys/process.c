@@ -69,7 +69,7 @@ void create_kernel_thread() {
 
     /* Load the current PCB and kernel stack and disable interrupt */
     __asm__ volatile ("cli");
-    __asm__ volatile ("movq %0, %%rsp;" :: "r"((k_pcb->init_kernel)));
+    __asm__ volatile ("movq %0, %%rsp;" :: "a"((k_pcb->init_kernel)));
 
     scheduler();
 
@@ -128,7 +128,7 @@ pcb_t* create_user_process(char *filename) {
 //    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | user_pcb->cr3);
 
     user_stack = (uint64_t *)allocate_virt_page();
-    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)user_stack);
+    user_virt = (uint64_t *)((uint64_t)STACK_END - PAGE_SIZE);
     map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)user_stack);
     map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)user_stack, (uint64_t *)user_pcb->cr3);
     set_CR3((uint64_t)user_pcb->cr3);
@@ -142,13 +142,16 @@ pcb_t* create_user_process(char *filename) {
     }*/
 
 //    mm = (mm_struct_t *)kmalloc(1000);
-    mm = (mm_struct_t *)allocate_virt_page();
+/*    mm = (mm_struct_t *)allocate_virt_page();
     user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)mm);
     map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)mm); 
     map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)mm, (uint64_t *)user_pcb->cr3);
     set_CR3((uint64_t)user_pcb->cr3);
     memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
-    user_pcb->mm = (mm_struct_t *)user_virt;
+    user_pcb->mm = (mm_struct_t *)user_virt; */
+    mm = (mm_struct_t *)kmalloc(PAGE_SIZE);
+    user_pcb->mm = (mm_struct_t *)mm;
+    set_CR3((uint64_t)user_pcb->cr3);
 
     file_pt = (uint64_t *)is_file_exist(filename);
     ret_val = load_binaries(user_pcb, (uint64_t *)file_pt);
@@ -166,27 +169,16 @@ pcb_t* create_user_process(char *filename) {
     user_pcb->state = TASK_READY;
     user_pcb->next_proc = first_process;
 
-#if 0
-    uint64_t *user_page = (uint64_t *)allocate_virt_page();
-    user_virt_addr = (uint64_t *)((uint64_t)user_virtual_address | (uint64_t)user_page);
-    map_phys_to_user_virt_addr((uint64_t)user_virt_addr, (uint64_t)user_page, (uint64_t *)user_pcb->cr3);
-    set_CR3((uint64_t)user_pcb->cr3);
-    memset((void*)user_virt_addr, 0, (uint32_t)PAGE_SIZE);
-    set_CR3((uint64_t)pml4);
-#endif
-
 //    uint64_t *kstack = (uint64_t *)umalloc(4096, (uint64_t *)user_pcb->cr3);
+
     user_pcb->rsp = user_pcb->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
     user_pcb->init_kernel = (uint64_t)(user_pcb + PAGE_SIZE - 8);
 
 //    set_user_space(user_pcb, offset);
 
-//    set_CR3((uint64_t)user_pcb);
-//    kprintf("I just loaded new CR3\n");
-
-      curr_process->next_proc = user_pcb;
-      user_pcb->next_proc = curr_process;
-      curr_process = user_pcb; 
+    curr_process->next_proc = user_pcb;
+    user_pcb->next_proc = curr_process;
+    curr_process = user_pcb; 
 
     return user_pcb;
 }
@@ -218,7 +210,7 @@ void initial_ret_function() {
 
     init_syscalls();
     
-    pcb_t *user_process = create_user_process("bin/hello");
+    pcb_t *user_process = create_user_process("bin/sbush");
     enable_page_fault();
 //    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);
@@ -253,9 +245,9 @@ void test_user_thread() {
 //    kprintf("Trying to print something\n");
 //    __asm__ volatile("int $0x80");
 //    __asm__ volatile("movq %%rax, %0;" : "=r"(b));
-    __asm__ volatile("movq %0, %%rax;"::"r"(c));
-    __asm__ volatile("movq %0, %%rbx;"::"r"(a));
-    __asm__ volatile("movq %0, %%rcx;"::"r"(b));
+    __asm__ volatile("movq %0, %%rax;"::"a"(c));
+    __asm__ volatile("movq %0, %%rbx;"::"a"(a));
+    __asm__ volatile("movq %0, %%rcx;"::"a"(b));
 //    __asm__ volatile("movq %0, %%rsi;"::"r"(c));
     __asm__ volatile("int $0x80");
 /*    __asm__ volatile("movq %1, %%rax;"
@@ -302,20 +294,20 @@ void switchTask(pcb_t *current, pcb_t *next) {
     __asm__ volatile ("ret");
 */
 
-    __asm__ volatile("movq %%rdi, %0;" : "=r"(current->regs.rdi));
-    __asm__ volatile("movq %%rsi, %0;" : "=r"(current->regs.rsi));
-    __asm__ volatile("movq %%rax, %0;" : "=r"(current->regs.rax));
-    __asm__ volatile("movq %%rbx, %0;" : "=r"(current->regs.rbx));
-    __asm__ volatile("movq %%rbp, %0;" : "=r"(current->regs.rbp));
+    __asm__ volatile("movq %%rdi, %0;" : "=a"(current->regs.rdi));
+    __asm__ volatile("movq %%rsi, %0;" : "=a"(current->regs.rsi));
+    __asm__ volatile("movq %%rax, %0;" : "=a"(current->regs.rax));
+    __asm__ volatile("movq %%rbx, %0;" : "=a"(current->regs.rbx));
+    __asm__ volatile("movq %%rbp, %0;" : "=a"(current->regs.rbp));
 
-    __asm__ volatile ("movq  %%rsp, %0;":"=r"(current->rsp));
-    __asm__ volatile ("movq %0, %%rsp;"::"r"(next->rsp));
+    __asm__ volatile ("movq  %%rsp, %0;":"=a"(current->rsp));
+    __asm__ volatile ("movq %0, %%rsp;"::"a"(next->rsp));
 
-    __asm__ volatile ("movq %0, %%rdi;" :: "r"(next->regs.rdi));
-    __asm__ volatile ("movq %0, %%rax;" :: "r"(next->regs.rax));
-    __asm__ volatile ("movq %0, %%rbx;" :: "r"(next->regs.rbx));
-    __asm__ volatile ("movq %0, %%rbp;" :: "r"(next->regs.rbp));
-    __asm__ volatile ("movq %0, %%rsi;" :: "r"(next->regs.rsi));
+    __asm__ volatile ("movq %0, %%rdi;" :: "a"(next->regs.rdi));
+    __asm__ volatile ("movq %0, %%rax;" :: "a"(next->regs.rax));
+    __asm__ volatile ("movq %0, %%rbx;" :: "a"(next->regs.rbx));
+    __asm__ volatile ("movq %0, %%rbp;" :: "a"(next->regs.rbp));
+    __asm__ volatile ("movq %0, %%rsi;" :: "a"(next->regs.rsi));
 
 }
 
@@ -324,8 +316,8 @@ void switchTask(pcb_t *current, pcb_t *next) {
  */
 void switchBack(pcb_t *current, pcb_t *next) {
     
-    __asm__ volatile ("movq %%rsp, %0;" : "=r"((current->init_kernel)));
-    __asm__ volatile ("movq %0, %%rsp;" :: "r"((next->init_kernel)));
+    __asm__ volatile ("movq %%rsp, %0;" : "=a"((current->init_kernel)));
+    __asm__ volatile ("movq %0, %%rsp;" :: "a"((next->init_kernel)));
 
     next->init_kernel = (uint64_t)next->init_kernel;
     set_tss_rsp((void *)next->init_kernel);
@@ -349,13 +341,13 @@ void switch_to_ring3(pcb_t *proc) {
     set_tss_rsp((void *)proc->init_kernel);
 
     __asm__ volatile ("cli" ::);
-    __asm__ volatile ("movq %0, %%cr3;" :: "r"(proc->cr3));
+    __asm__ volatile ("movq %0, %%cr3;" :: "a"(proc->cr3));
     __asm__ volatile ("mov $0x23, %%ax" ::);
     __asm__ volatile ("mov %%ax, %%ds;" ::);
     __asm__ volatile ("mov %%ax, %%es;" ::);
     __asm__ volatile ("mov %%ax, %%fs;" ::);
     __asm__ volatile ("mov %%ax, %%gs;" ::);
-    __asm__ volatile ("movq %0, %%rax;"::"r"(proc->rsp));
+    __asm__ volatile ("movq %0, %%rax;"::"a"(proc->rsp));
     __asm__ volatile ("pushq $0x23" ::);
     __asm__ volatile ("pushq %%rax" ::);
     __asm__ volatile ("pushfq" ::);
@@ -363,7 +355,7 @@ void switch_to_ring3(pcb_t *proc) {
     __asm__ volatile ("orq $0x200, %%rax;" ::);
     __asm__ volatile ("pushq %%rax" ::); 
     __asm__ volatile ("pushq $0x2B" ::);
-    __asm__ volatile ("pushq %0;" :: "r"(proc->rip));
+    __asm__ volatile ("pushq %0;" :: "a"(proc->rip));
     __asm__ volatile ("movq $0x0, %%rdi" ::);
     __asm__ volatile ("movq $0x0, %%rsi" ::);
     __asm__ volatile ("iretq" ::);
@@ -468,21 +460,23 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     memcpy((void *)parent_proc->init_kernel + 8 - PAGE_SIZE, (void *)child_pcb->init_kernel + 8 - PAGE_SIZE, PAGE_SIZE);
     child_pcb->user_stack = (uint64_t)parent_proc->user_stack;
     child_pcb->rsp = (uint64_t)(child_pcb->init_kernel - (parent_proc->init_kernel - rsp_pointer));
+  
+    set_CR3(curr_process->cr3);
                                                                                             
     return child_pcb;
 }
 
 void wait(uint64_t pid) {
-//    uint64_t     val = 0;
+    uint64_t     val = 0;
     curr_process->state = TASK_READY;
     curr_process = curr_process->next_proc;
     next_process = curr_process->next_proc;
 
     curr_process->state = TASK_RUNNING;
     if (curr_process->pid == pid) {
-    __asm__ volatile ("movq %0, %%cr3;" :: "r"(curr_process->cr3));
-    __asm__ volatile ("movq %0, %%rsp;" :: "r"(curr_process->rsp));
-//    __asm__ volatile ("movq %0, %%rax;" :: "r"(val));
+    __asm__ volatile ("movq %0, %%cr3;" :: "a"(curr_process->cr3));
+    __asm__ volatile ("movq %0, %%rsp;" :: "a"(curr_process->rsp));
+    __asm__ volatile ("movq %0, %%rax;" :: "a"(val));
     __asm__ volatile ("iretq");
     }
 }

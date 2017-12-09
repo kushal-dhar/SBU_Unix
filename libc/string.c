@@ -1,4 +1,3 @@
-#include <string.h>
 #include <sys/defs.h>
 #include <stdio.h>
 
@@ -22,6 +21,7 @@ char* strncpy(char *dest, char *src, int n) {
   while(*temp2 != '\0' && i++ < n) {
     *tmp++ = *temp2++;
   }
+  *tmp++ = '\0';
   *tmp = '\0';
   return dest;
 }

@@ -40,17 +40,15 @@ int elf_check_header(Elf64_Ehdr *elfhdr) {
 int load_binaries(pcb_t *proc, uint64_t *elf_start) {
     Elf64_Ehdr *elf_hdr;
     Elf64_Phdr *elf_phdr;
-//    char       *temp1;
-//    char       *temp2;
     int         i          = 0;
-//    int         iterator   = 0;
     int         p_flags    = 0;
     int         ret_val    = 0;
     uint64_t    phdr_start = 0;
     uint64_t    phdr_end   = 0;
-//    uint64_t    size       = 0;
+//    uint64_t   *user_virt;
+//    uint64_t   *user_stack;
 
-//    elf_hdr = (Elf64_Ehdr *)global_tarfs[fp].addr;
+
     elf_hdr = (Elf64_Ehdr *)elf_start;
 
     if (!elf_check_header(elf_hdr)) {
@@ -129,22 +127,46 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
 //    vma_t *heap_vma = (vma_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)page);
 //    map_phys_to_user_virt_addr((uint64_t)heap_vma, (uint64_t)page, (uint64_t *)proc->cr3);
     vma_t *heap_vma = (vma_t *)kmalloc(PAGE_SIZE);
-    heap_vma->vm_start = (uint64_t)heap_vma;
-    heap_vma->vm_end = (uint64_t)heap_vma->vm_start + PAGE_SIZE;
+    heap_vma->vm_start = (uint64_t)HEAP_ADDR;
+    heap_vma->vm_end = (uint64_t)HEAP_ADDR + PAGE_SIZE;
     ret_val = add_mmstruct(proc->mm, heap_vma);
-
     if (ret_val == -1) {
         kprintf("Unable to add to mmstruct\n");
         return -1;
     }
+
     heap_vma->flags = (PF_R | PF_W);
     heap_vma->type = HEAP;
     heap_vma->file = NULL;
     heap_vma->vm_next = NULL;
 
     /* Stack allocation */
-/*    vma_t *stack_vma = (vma_t *)umalloc(proc, 4096);
-    stack_vma->start = */
+    vma_t *stack_vma = (vma_t *)kmalloc(PAGE_SIZE);
+    stack_vma->vm_start = (uint64_t)STACK_ADDR;
+    stack_vma->vm_end = (uint64_t)STACK_END;
+    stack_vma->flags = (PF_R | PF_W);
+    stack_vma->type = STACK;
+    stack_vma->file = NULL;
+    stack_vma->vm_next = NULL;
+    ret_val = add_mmstruct(proc->mm, stack_vma);
+    if (ret_val == -1) {
+        kprintf("Unable to add to mmstruct\n");
+        return -1;
+    }
+
+#if 0
+    user_stack = (uint64_t *)allocate_virt_page();
+    user_virt = (uint64_t *)((uint64_t)STACK_END - PAGE_SIZE);
+    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)user_stack);
+    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)user_stack, (uint64_t *)proc->cr3);
+//    set_CR3((uint64_t)proc->cr3);
+    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
+//    set_CR3((uint64_t)curr_process->cr3);
+
+    proc->rsp = proc->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
+    proc->init_kernel = (uint64_t)(proc + PAGE_SIZE - 8);
+#endif
+
    // initialize mmap 
     init_mmap(proc);
     return 0;

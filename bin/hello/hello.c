@@ -99,28 +99,36 @@ int main(int argc, char *argv[], char *envp[]) {
    kprintf("\nkiller who %s",s);
 */ 
     printf("Hello world\n");
-    printf("Hello world\n");
-    printf("Hello world\n");
-    printf("Hello world\n");
-    printf("Hello world\n");
-    printf("Hello world\n");
     a = test(10);
     printf("Value: %d\n",a);
     test(20);
+
+#if 0
     int b = getpid();
     printf("PID again %d\n",b);
     int pid = fork();
+    printf("Jello world\n");
+/*    uint64_t syscall = 57;
+    __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
+    __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
+    __asm__ volatile ("int $0x80;");*/
+//    int pid = global_val;
 //    printf("process id: %d",pid);
     if (pid != 0) {
+        cwd();
 	wait_pid(pid);
     }
-    else {
-	while(1);
-    }
+#endif
+
+//    else {
+//        int b = getpid();
+//        cwd();
+//	printf("Child PID: %d\n",b);
+//    }
 /*    char s[100];
     scan("%s",s);
     printf("string: %s",s); */
-
+//    cwd(); 
     while(1);
     return 0;
 }
