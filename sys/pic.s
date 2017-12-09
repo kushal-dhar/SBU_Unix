@@ -87,6 +87,7 @@ kb_handler1:
     iretq
 
 user_interrupt1:
+    movq %rsp, rsp_pointer
     pushq %rbx 
     pushq %rcx
     pushq %rdx
@@ -119,7 +120,7 @@ user_interrupt1:
     iretq
 
 page_fault__handler1:
-    pushq %rax
+    pushq %rax 
     pushq %rbx
     pushq %rcx
     pushq %rdx
@@ -149,7 +150,8 @@ page_fault__handler1:
     popq %rdx
     popq %rcx
     popq %rbx
-    popq %rax
+    popq %rax 
+    addq $8, %rsp
     iretq
 
 

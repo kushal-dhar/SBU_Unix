@@ -45,13 +45,13 @@ void *irq_routines[129]=
 };
 
 /* To handle particular handler with a functional routines */
-void irq_set(int req, void (*handler)(regis* r)){
+void irq_set(int req, void (*handler)(regis r)){
 	irq_routines[req] = handler;
 }
 
 
 /* To handle particular handler with a functional routines */
-void irq_set_with_return(int req, uint64_t (*handler)(regis* r)){
+void irq_set_with_return(int req, uint64_t (*handler)(regis r)){
         irq_routines[req] = handler;
 }
 

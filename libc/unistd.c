@@ -196,8 +196,8 @@ int fork() {
     int syscall = 57;
     int ret_val = 0;
 
-    syscall_1((uint64_t)syscall);
-    ret_val =  global_val;
+    ret_val = syscall_1((uint64_t)syscall);
+//    ret_val =  global_val;
 //    printf("Hello");
     return ret_val;
 }

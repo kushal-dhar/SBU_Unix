@@ -13,7 +13,7 @@ void timer_count(int hz){
     outb(0x40, div >> 8);   //seding  lower bytes 
 }
 
-void timer_handler(){
+void timer_handler(regis reg){
    /*Increase the count */
     timer_tic++;
     outb(0x20,0x20);

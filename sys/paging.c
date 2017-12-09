@@ -468,7 +468,7 @@ void enable_page_fault() {
     irq_set(14, pagefault_handler);
 }
 
-void pagefault_handler(regis *reg) {
+void pagefault_handler(regis reg) {
     kprintf("I am inside pagefault_handler\n");
     uint64_t     fault_addr     = 0;
     uint64_t     phys_addr      = 0;

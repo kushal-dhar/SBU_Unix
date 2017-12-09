@@ -103,7 +103,6 @@ int main(int argc, char *argv[], char *envp[]) {
     printf("Value: %d\n",a);
     test(20);
 
-#if 0
     int b = getpid();
     printf("PID again %d\n",b);
     int pid = fork();
@@ -118,13 +117,13 @@ int main(int argc, char *argv[], char *envp[]) {
         cwd();
 	wait_pid(pid);
     }
-#endif
 
-//    else {
-//        int b = getpid();
-//        cwd();
-//	printf("Child PID: %d\n",b);
-//    }
+    else {
+        int b = getpid();
+        cwd();
+	while(1);
+	printf("Child PID: %d\n",b);
+    }
 /*    char s[100];
     scan("%s",s);
     printf("string: %s",s); */

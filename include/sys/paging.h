@@ -2,6 +2,8 @@
 #define __PAGING_H_
 
 #include <sys/process.h>
+#include <sys/idt.h>
+#include <sys/pic.h>
 
 #define KERNEL_ADDR      0xFFFFFFFF80000000UL
 #define KERNEL_BASE      0xFFFFFFFF80100000UL
@@ -41,7 +43,7 @@ extern uint64_t* create_user_address_space();
 extern void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_addr);
 extern uint64_t* umalloc(pcb_t *proc, int size);
 extern void enable_page_fault();
-extern void pagefault_handler();
+extern void pagefault_handler(regis r);
 extern void  init_mmap(pcb_t *process);
 extern uint64_t mmap(int  size);
 extern void copy_parent_tables(uint64_t* cr3_addr);
