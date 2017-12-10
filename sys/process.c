@@ -8,6 +8,7 @@
 #include <sys/timer.h>
 #include <sys/kb.h>
 #include <sys/paging.h>
+#include <sys/string.h>
 #include <sys/paging_helper.h>
 #include <sys/process.h>
 #include <sys/elf64.h>
@@ -134,12 +135,6 @@ pcb_t* create_user_process(char *filename) {
     set_CR3((uint64_t)user_pcb->cr3);
     memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     set_CR3((uint64_t)first_process->cr3);
-
-/*    vAddr = 0;
-    pAddr = 0;
-    for (; pAddr < 0xF4240; pAddr += 0x1000, vAddr += 0x1000) {
-        map_phys_to_user_virt_addr((uint64_t)vAddr, (uint64_t)pAddr, (uint64_t *)user_pcb->cr3);
-    }*/
 
 //    mm = (mm_struct_t *)kmalloc(1000);
 /*    mm = (mm_struct_t *)allocate_virt_page();
@@ -362,6 +357,39 @@ void switch_to_ring3(pcb_t *proc) {
 
 }
 
+/*
+ * Stub to switch ring 3
+ */
+void execve_switch_to_ring3(pcb_t *proc) {
+    proc->state = TASK_RUNNING;
+    curr_process = proc;
+
+    set_tss_rsp((void *)proc->init_kernel);
+
+    __asm__ volatile ("cli" ::);
+    __asm__ volatile ("movq %0, %%cr3;" :: "a"(proc->cr3));
+//    __asm__ volatile ("movq %0, %%rsp;" :: "a"(proc->init_kernel));
+    __asm__ volatile ("mov $0x23, %%ax" ::);
+    __asm__ volatile ("mov %%ax, %%ds;" ::);
+    __asm__ volatile ("mov %%ax, %%es;" ::);
+    __asm__ volatile ("mov %%ax, %%fs;" ::);
+    __asm__ volatile ("mov %%ax, %%gs;" ::);
+    __asm__ volatile ("movq %0, %%rax;"::"a"(proc->rsp));
+    __asm__ volatile ("pushq $0x23" ::);
+    __asm__ volatile ("pushq %%rax" ::);
+    __asm__ volatile ("pushfq" ::);
+    __asm__ volatile ("popq %%rax" ::);
+    __asm__ volatile ("orq $0x200, %%rax;" ::);
+    __asm__ volatile ("pushq %%rax" ::);
+    __asm__ volatile ("pushq $0x2B" ::);
+    __asm__ volatile ("pushq %0;" :: "a"(proc->rip));
+    __asm__ volatile ("movq $0x0, %%rdi" ::);
+    __asm__ volatile ("movq $0x0, %%rsi" ::);
+    __asm__ volatile ("iretq" ::);
+
+}
+
+
 void set_user_space(pcb_t *user_process, uint64_t offset) {
     uint64_t* user_page = (uint64_t *)user_process->rip;
     uint64_t* user_virtual_addr;
@@ -484,3 +512,107 @@ void wait(uint64_t pid) {
 uint64_t get_pid(){
   return (uint64_t) curr_process->pid;
 }
+
+
+void execve(char *filename, char *argv) {
+    pcb_t       *user_pcb = (pcb_t *)kmalloc((int)6000);
+    pcb_t       *pointer;
+    uint64_t    *user_virt;
+    uint64_t    *user_stack;
+    uint64_t    *file_pt;
+    char         file[100];
+    char         kernel_args[5][64];
+    int          ret_val;
+    int          i           = 0;
+    int          argc        = 0;
+    int          j           = 0;
+    int	         k           = 0;
+    mm_struct_t *mm;
+
+    while (*filename != '\0') {
+        file[i++] = *filename;
+        filename++;
+    }
+    file[i] = '\0';
+
+    i = 0;
+    /* Need this to figure out size of envp by sizeof */
+/*    while (i < 5) {
+	kernel_args[i][0] = '\0';
+  	kernel_args[i][1] = '\0';
+	i++;
+    } */
+    
+    i = 0;
+    while(argv[k] != '\0') {
+	j = 0;
+	while (argv[k] != '\n') {
+	    kernel_args[i][j++] = (char)argv[k++]; 
+	}
+	kernel_args[i][j] = '\0';
+	i++;
+//	strcpy(argv[i], kernel_args[i]);
+	k++;
+    }
+
+    argc = i - 1;
+
+    user_pcb->pid = curr_process->pid;
+    user_pcb->ppid = curr_process->ppid;
+
+    user_pcb->cr3 = (uint64_t)create_user_address_space();
+
+    user_stack = (uint64_t *)allocate_virt_page();
+    user_virt = (uint64_t *)((uint64_t)STACK_END - PAGE_SIZE);
+    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)user_stack);
+    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)user_stack, (uint64_t *)user_pcb->cr3);
+    set_CR3((uint64_t)user_pcb->cr3);
+    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
+    set_CR3((uint64_t)first_process->cr3);
+
+    mm = (mm_struct_t *)kmalloc(PAGE_SIZE);
+    user_pcb->mm = (mm_struct_t *)mm;
+    set_CR3((uint64_t)user_pcb->cr3);
+
+    file_pt = (uint64_t *)is_file_exist(file);
+    ret_val = load_binaries(user_pcb, (uint64_t *)file_pt);
+    if (ret_val == -1) {
+        kprintf("Unable to load binaries\n");
+        return;
+    }
+
+    set_CR3(first_process->cr3);
+
+    user_pcb->state = TASK_READY;
+    user_pcb->next_proc = first_process;
+
+    user_pcb->rsp = user_pcb->user_stack = ((uint64_t)user_virt +PAGE_SIZE - 8);
+    user_pcb->init_kernel = (uint64_t)(user_pcb + PAGE_SIZE - 8);
+
+    user_pcb->state = TASK_READY;
+    user_pcb->next_proc = curr_process->next_proc;
+    pointer = curr_process;
+    while(pointer->next_proc != curr_process) {
+	pointer = pointer->next_proc;
+    }
+    pointer->next_proc = user_pcb;
+
+    /* Free the current user space */
+    //free_vma(curr_process->mm);
+
+    set_CR3(user_pcb->cr3);
+
+    /*Set user stack to contain argc and argv values */
+    i = sizeof(kernel_args);  
+    kprintf("size here: %d\n",i);
+    char *ptr = (char *)(user_pcb->user_stack - sizeof(kernel_args));
+    memcpy((void *)kernel_args, (void *)ptr, sizeof(kernel_args));
+    ptr = ptr - 8;
+    *((int *)ptr) = argc;
+    user_pcb->rsp = user_pcb->user_stack - sizeof(kernel_args) - 8;
+
+//    switch_to_ring3(user_pcb);
+
+    execve_switch_to_ring3(user_pcb);
+}
+

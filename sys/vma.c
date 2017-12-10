@@ -25,6 +25,38 @@ vma_t* create_vma(uint64_t vm_start, uint64_t vm_end, int p_flags) {
     return vma;
 }
 
+void free_vma(mm_struct_t *mm) {
+    vma_t      *curr;
+    vma_t      *next;
+    uint64_t    start_addr;
+    uint64_t    end_addr;
+    uint64_t    physfree;
+
+    curr = mm->vma;
+    while(curr != NULL) {
+        start_addr = curr->vm_start;
+        end_addr = curr->vm_end;
+        physfree = start_addr;
+
+        while (physfree < end_addr) {
+	    free_page((uint64_t)physfree);
+	    physfree += PAGE_SIZE;
+	}
+	curr = curr->vm_next;
+    }
+
+    curr = mm->vma;
+    next = curr->vm_next;
+    while (curr != NULL) {
+	next = curr->vm_next;
+	free_page((uint64_t)curr);
+	curr = next;
+    }
+    mm->vma = NULL;
+
+    return;
+}
+
 int add_mmstruct(mm_struct_t *mm, vma_t *vma) {
     vma_t    *curr;
  

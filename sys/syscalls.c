@@ -95,6 +95,10 @@ uint64_t syscall_handler (regis  reg) {
          __asm__ volatile("sti");  
         sleep((int) reg.rcx);
     }
+    else if (reg.rbx == 59) {
+        execve((char *)reg.rcx, (char *)reg.rdx);
+        return 0;
+    }
     return 0;
 }
 

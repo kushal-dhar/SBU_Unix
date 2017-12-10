@@ -36,7 +36,7 @@ int elf_check_header(Elf64_Ehdr *elfhdr) {
  
     return 1;
 }
-
+ 
 int load_binaries(pcb_t *proc, uint64_t *elf_start) {
     Elf64_Ehdr *elf_hdr;
     Elf64_Phdr *elf_phdr;

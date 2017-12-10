@@ -49,4 +49,5 @@ extern void catt(char *filename, int perm);
 extern int fork();
 extern void wait_pid(uint64_t pid);
 extern void sleep(int val);
+extern void execve(char *filename, char *ex_argv);
 #endif

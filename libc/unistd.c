@@ -213,3 +213,14 @@ void sleep(int val){
    syscall_2(35,(uint64_t) val);
 }
 
+void execve(char *filename, char *ex_argv) {
+    int syscall = 59;
+    int ret = 0;
+
+    ret = syscall_3((uint64_t)syscall, (uint64_t)filename, (uint64_t)ex_argv);
+    if (ret != 0) {
+	printf("Error in executing binary\n");
+    }
+    return;
+}
+

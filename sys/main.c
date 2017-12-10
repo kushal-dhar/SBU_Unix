@@ -50,13 +50,11 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
  // char s[100]="sahil";
  // char *ss = s;
   //strcpy(ss, s);
-  kprintf("pointer = %x", 1234);
 
 
   setup_page_tables((uint64_t)physbase, (uint64_t)physfree);
   set_identity_paging();
   load_CR3();
-   kprintf("pointer = %x", 1234);
 //  kprintf("Printing after CR3 called");
 
  // uint64_t *p = (uint64_t*)0x8888123;
@@ -69,11 +67,8 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
   init_timer(1000);
   kb_init();
 
-  kprintf("Printing something\n");
   __asm__ volatile("sti"); 
 
-  uint64_t *addr = (uint64_t *)kmalloc(6000);
-  kprintf("addrs: %d\n",addr);
 //  is_file_exist("hello");
   init_tarfs();
 //  kprintf("printing value at %p\n",*(uint64_t *)0x888FF292001);

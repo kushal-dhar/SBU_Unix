@@ -26,6 +26,8 @@ uint64_t virtual_mmap = (uint64_t) 0x88888000000UL;
 //vma_t *vma_mmap;
 #define HEAP    2
 /**********/
+
+
 /*
  * Initializing the free pages and pagelist entries
  */
@@ -43,6 +45,7 @@ void init_paging(uint64_t physbase, uint64_t physfree, uint64_t base, uint64_t l
     physfree_start += (uint64_t)(256 * 64/8);
     //physfree_start += (uint64_t)8192;
     physfree_end = base + length;
+    kprintf("physfree %d\n physend: %d\n",physfree_start, physfree_end);
 
     while (start < end) {
 	address = start * PAGE_SIZE;
@@ -315,7 +318,7 @@ uint64_t* kmalloc(int size) {
     int        num_page      = 0;
     int        i             = 0;
     uint64_t   page_addr     = 0;
-    uint64_t   ret_addr;
+    uint64_t   ret_addr      = 0;
 
     if (size % PAGE_SIZE == 0) {
 	num_page = size / PAGE_SIZE;
@@ -323,11 +326,14 @@ uint64_t* kmalloc(int size) {
     else {
  	num_page = (size / PAGE_SIZE) + 1;
     }
-    ret_addr = virt_addr + 0x1000;
+//    ret_addr = virt_addr + 0x1000;
     
     for (i = 0; i < num_page; i++) {
-	virt_addr += 0x1000;
 	page_addr = (uint64_t )allocate_virt_page();
+	virt_addr = (uint64_t)(KERNEL_BASE | page_addr);
+	if (i == 0) {
+	    ret_addr = virt_addr;
+	}
         map_phys_to_virt_addr((uint64_t)virt_addr, (uint64_t)page_addr);
 	memset((void*)virt_addr, 0, (uint32_t)PAGE_SIZE);
     }
@@ -371,8 +377,9 @@ uint64_t* create_user_address_space() {
     uint64_t*          pml4_virt_addr; 
     uint64_t*          cr3_addr;
 
-    virt_addr += 0x1000;
+//    virt_addr += 0x1000;
     pml4_addr = (uint64_t *)allocate_virt_page();
+    virt_addr = (uint64_t)(KERNEL_BASE | (uint64_t)pml4_addr);
     map_phys_to_virt_addr((uint64_t)virt_addr, (uint64_t)pml4_addr);
     memset((void*)virt_addr, 0, (uint32_t)PAGE_SIZE);
     __asm__ volatile("mov %%cr3, %0" : "=a" (cr3_addr));
@@ -393,12 +400,6 @@ uint64_t* create_user_address_space() {
 
     return pml4_addr;    
 }
-
-#if 0
-void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t *cr3_addr) {
-
-}
-#endif
 
 void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_addr) {
     uint64_t  pml4_index = (vAddress >> PML4_INDEX) & 0x1FF;
@@ -469,14 +470,10 @@ void enable_page_fault() {
 }
 
 void pagefault_handler(regis reg) {
-    kprintf("I am inside pagefault_handler\n");
     uint64_t     fault_addr     = 0;
     uint64_t     phys_addr      = 0;
     uint64_t     new_page       = 0;
-//    pcb_t       *pcb;
     vma_t       *vma;
-//    uint64_t     err_code    = 0;
-//    vma_t       *curr;
     
     __asm__ volatile ("mov %%cr2, %0" : "=a" (fault_addr));
 
@@ -494,13 +491,18 @@ void pagefault_handler(regis reg) {
 
     if (err_code & (PT_PR | PT_WR)) {
 #endif
-    if (phys_addr != 0) {
+    if (phys_addr != 999) {
         while(vma != NULL) {
     	    if (vma->vm_start <= fault_addr && fault_addr <= vma->vm_end) {
 	        if (vma->type == HEAP || vma->type == STACK || vma->type == DATA) {
 		    new_page = (uint64_t)allocate_virt_page();
 		    virt_addr = (uint64_t)(KERNEL_ADDR | new_page);
-	       	    memcpy((void *)fault_addr, (void *)virt_addr, PAGE_SIZE);
+		    if (phys_addr != 0) {
+   	       	        memcpy((void *)fault_addr, (void *)virt_addr, PAGE_SIZE);
+		    }
+		    else {
+			memset((void *)virt_addr, 0, PAGE_SIZE);
+		    }
 		    map_phys_to_user_virt_addr((uint64_t)fault_addr, (uint64_t)new_page, (uint64_t *)curr_process->cr3);
 		    break;
 		}
@@ -511,7 +513,7 @@ void pagefault_handler(regis reg) {
 	}
     } 
 
-    if (phys_addr == 0 || vma == NULL) {
+    if (phys_addr == 999 || vma == NULL) {
 	kprintf("Segmentation fault\n");
 	__asm__ volatile("hlt");
     }
@@ -536,6 +538,8 @@ void pagefault_handler(regis reg) {
     }
 #endif
 //    while(1);
+
+    set_CR3((uint64_t)curr_process->cr3);
 
     return;
 }
@@ -626,7 +630,6 @@ void copy_parent_tables(uint64_t* cr3_addr) {
 				    pt[pt_index] = (uint64_t)table_entry | (PT_PR | PT_U | (0x1 << 9));
                                     table_entry = (uint64_t)table_entry | (PT_PR | PT_U | (0x1 << 9));
                                     c_pt[pt_index] = table_entry;
-				    kprintf("%d   %d     %d    %d   %x    %x\n ",pml4_index, pdpt_index, pd_index, pt_index, pt[pt_index], c_pt[pt_index]);
                                 }
                             }
                         }
@@ -637,7 +640,6 @@ void copy_parent_tables(uint64_t* cr3_addr) {
         }
     }
     cr3_addr[511] = pml4[511];
-    kprintf("cr3: %x\n",curr_process->cr3);
     return;
 }
 
@@ -676,9 +678,97 @@ uint64_t virt_to_phys(uint64_t vAddress) {
 		    table_entry = (uint64_t)remove_flag(table_entry);
 		    pAddr = (uint64_t)table_entry;
 		}
+	        else if (table_entry & PT_PR) {
+		    return 999;
+		}
 	    }
 	}
     }
-    kprintf("pAddr: %d\n",pAddr);
     return pAddr;
+}
+
+void free_page(uint64_t vAddress) {
+    uint64_t    *pml4 ;
+    uint64_t    *pdpt;
+    uint64_t    *pd;
+    uint64_t    *pt;
+    uint64_t     table_entry;
+    uint64_t     pml4_index = (vAddress >> PML4_INDEX) & 0x1FF;
+    uint64_t     pdpt_index = (vAddress >> PDPT_INDEX) & 0x1FF;
+    uint64_t     pd_index   = (vAddress >> PD_INDEX) & 0x1FF;
+    uint64_t     pt_index   = (vAddress >> PT_INDEX) & 0x1FF;
+
+    __asm__ volatile("mov %%cr3, %0" : "=a" (pml4));
+    pml4 = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)pml4);
+    table_entry = pml4[pml4_index];
+
+    if(table_entry & PT_PR) {
+        table_entry = (uint64_t)remove_flag(table_entry);
+        pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+        table_entry = pdpt[pdpt_index];
+
+        if (table_entry & PT_PR) {
+            table_entry = (uint64_t)remove_flag(table_entry);
+            pd = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+            table_entry = pd[pd_index];
+
+            if (table_entry & PT_PR) {
+                table_entry = (uint64_t)remove_flag(table_entry);
+                pt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+                table_entry = pt[pt_index];
+
+                if (table_entry & PT_PR ) {
+                    table_entry = (uint64_t)remove_flag(table_entry);
+		    set_bit(free_map, table_entry);
+		    pt[pt_index] = 0;
+		    table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
+		    memset((void *)table_entry, 0, PAGE_SIZE);
+                }
+            }
+        }
+    }
+    return;
+}
+
+void free_kernel_page(uint64_t vAddress) {
+    uint64_t    *pml4 ;
+    uint64_t    *pdpt;
+    uint64_t    *pd;
+    uint64_t    *pt;
+    uint64_t     table_entry;
+    uint64_t     pml4_index = (vAddress >> PML4_INDEX) & 0x1FF;
+    uint64_t     pdpt_index = (vAddress >> PDPT_INDEX) & 0x1FF;
+    uint64_t     pd_index   = (vAddress >> PD_INDEX) & 0x1FF;
+    uint64_t     pt_index   = (vAddress >> PT_INDEX) & 0x1FF;
+
+    __asm__ volatile("mov %%cr3, %0" : "=a" (pml4));
+    pml4 = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)pml4);
+    table_entry = pml4[pml4_index];
+
+    if(table_entry & PT_PR) {
+        table_entry = (uint64_t)remove_flag(table_entry);
+        pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+        table_entry = pdpt[pdpt_index];
+
+        if (table_entry & PT_PR) {
+            table_entry = (uint64_t)remove_flag(table_entry);
+            pd = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+            table_entry = pd[pd_index];
+
+            if (table_entry & PT_PR) {
+                table_entry = (uint64_t)remove_flag(table_entry);
+                pt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
+                table_entry = pt[pt_index];
+
+                if (table_entry & PT_PR ) {
+                    table_entry = (uint64_t)remove_flag(table_entry);
+                    set_bit(free_map, table_entry);
+//                    pt[pt_index] = 0;
+                    table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
+                    memset((void *)table_entry, 0, PAGE_SIZE);
+                }
+            }
+        }
+    }
+    return;
 }

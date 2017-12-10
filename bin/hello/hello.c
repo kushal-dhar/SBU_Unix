@@ -69,8 +69,8 @@ int main(int argc, char *argv[], char *envp[]) {
      char t[100];
      strcpy(t,"extra/\0");
      chdir(t);
-     int a = getpid();
-     printf("PID: %d\n",a);
+//     int a = getpid();
+//     printf("PID: %d\n",a);
 
 //     chdir(s);
 
@@ -98,15 +98,12 @@ int main(int argc, char *argv[], char *envp[]) {
    s[1]='\0';
    kprintf("\nkiller who %s",s);
 */ 
-    printf("Hello world\n");
-    a = test(10);
+    int a = test(10);
     printf("Value: %d\n",a);
-    test(20);
 
-    int b = getpid();
-    printf("PID again %d\n",b);
+//    int b = getpid();
+//    printf("PID again %d\n",b);
     int pid = fork();
-    printf("Jello world\n");
 /*    uint64_t syscall = 57;
     __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
     __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
@@ -114,15 +111,28 @@ int main(int argc, char *argv[], char *envp[]) {
 //    int pid = global_val;
 //    printf("process id: %d",pid);
     if (pid != 0) {
-        cwd();
+        //cwd();
+        printf("Inside parent\n");
 	wait_pid(pid);
     }
 
     else {
-        int b = getpid();
-        cwd();
+//        int b = getpid();
+//        printf("Child pid is: %d\n",b);
+	chdir("bin/");
+//        cwd();
+	char *str = (char *)mallocc(sizeof(char) * 100);
+//	char str[2][100];
+	strcpy(str, "Hello");
+	strcat(str, "\n");
+	strcat(str, "World\n\0");
+//	str[0] = (char *)mallocc(sizeof(char) * 50);
+//	strcpy(str[0], "Hello");
+//	str[1] = (char *)mallocc(sizeof(char) * 20);
+//	strcpy(str[1], "world");
+        printf("Printf is also working\n");
+        execve("bin/temp", (char *)str);
 	while(1);
-	printf("Child PID: %d\n",b);
     }
 /*    char s[100];
     scan("%s",s);
