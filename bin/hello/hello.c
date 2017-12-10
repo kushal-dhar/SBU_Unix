@@ -125,12 +125,13 @@ int main(int argc, char *argv[], char *envp[]) {
 //	char str[2][100];
 	strcpy(str, "Hello");
 	strcat(str, "\n");
-	strcat(str, "World\n\0");
+	strcat(str, "World\n");
+        strcat(str, "Again\n\0");
 //	str[0] = (char *)mallocc(sizeof(char) * 50);
 //	strcpy(str[0], "Hello");
 //	str[1] = (char *)mallocc(sizeof(char) * 20);
 //	strcpy(str[1], "world");
-        printf("Printf is also working\n");
+//        printf("Printf is also working %s    %s\n",str[0],str[1]);
         execve("bin/temp", (char *)str);
 	while(1);
     }

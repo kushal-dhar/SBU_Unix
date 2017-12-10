@@ -552,6 +552,7 @@ void execve(char *filename, char *argv) {
 	kernel_args[i][j] = '\0';
 	i++;
 //	strcpy(argv[i], kernel_args[i]);
+	argc++;
 	k++;
     }
 
@@ -608,7 +609,7 @@ void execve(char *filename, char *argv) {
     char *ptr = (char *)(user_pcb->user_stack - sizeof(kernel_args));
     memcpy((void *)kernel_args, (void *)ptr, sizeof(kernel_args));
     ptr = ptr - 8;
-    *((int *)ptr) = argc;
+    *((int *)ptr) = argc+1;
     user_pcb->rsp = user_pcb->user_stack - sizeof(kernel_args) - 8;
 
 //    switch_to_ring3(user_pcb);
