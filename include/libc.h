@@ -24,7 +24,7 @@ extern uint64_t syscall_getpid(uint64_t syscall);
 extern uint64_t syscall_1(uint64_t syscall);
 extern uint64_t syscall_2(uint64_t syscall, uint64_t ch);
 extern uint64_t syscall_3(uint64_t syscall, uint64_t ch, uint64_t buf);
-extern void syscall_4(uint64_t syscall, uint64_t ch, uint64_t buf, uint64_t size);
+extern uint64_t syscall_4(uint64_t syscall, uint64_t ch, uint64_t buf, uint64_t size);
 extern void syscall_2next(uint64_t syscall);
 extern void syscall_2_1(uint64_t syscall, uint64_t ch);
 extern void syscall_2_char(uint64_t syscall);

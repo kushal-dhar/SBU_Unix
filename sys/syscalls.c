@@ -98,6 +98,10 @@ uint64_t syscall_handler (regis  reg) {
     else if (reg.rbx == 59) {
         execve((char *)reg.rcx, (char *)reg.rdx);
         return 0;
+    }else if (reg.rbx == 78){
+          get_cwd((char *)reg.rcx);
+    }else if (reg.rbx == 270){
+          print_allPID();
     }
     return 0;
 }

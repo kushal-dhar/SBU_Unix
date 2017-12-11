@@ -126,6 +126,8 @@ pcb_t* create_user_process(char *filename) {
     user_pcb->pid = get_next_processID();
     user_pcb->ppid = 0;
     user_pcb->cr3 = (uint64_t)create_user_address_space();
+    strcpy(ROOT, user_pcb->curr_dir);
+    strcpy(ROOT, user_pcb->temp_curr_dir);
 //    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | user_pcb->cr3);
 
     user_stack = (uint64_t *)allocate_virt_page();
@@ -205,7 +207,7 @@ void initial_ret_function() {
 
     init_syscalls();
     
-    pcb_t *user_process = create_user_process("bin/hello");
+    pcb_t *user_process = create_user_process("bin/sbush");
     enable_page_fault();
 //    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);
@@ -616,3 +618,11 @@ void execve(char *filename, char *argv) {
     execve_switch_to_ring3(user_pcb);
 }
 
+void print_allPID(){
+  kprintf("\nPID\n");
+  pcb_t * proc=  curr_process;
+  while(proc != NULL){
+       kprintf("%d",proc->pid);
+        proc = proc->next_proc;
+  } 
+}

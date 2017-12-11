@@ -13,12 +13,12 @@
 #include <sys/utils.h>
 #include <sys/string.h>
 #define ROOT "rootfs/" 
+
+extern pcb_t *curr_process;
  
 tarfile_t global_tarfs[100];
 int file_count = 3;
 char temp_filename[100];
-char current_dir[100] = ROOT;
-char temp_curr_dir[100] = ROOT;
 /*
 char * extract_parent_name(uint64_t parent_num){
   int      iterator  = 3;
@@ -190,19 +190,45 @@ int close(int fd) {
     return 1;
 }
 
+uint64_t checkCorrectParent(char *file){
+     char temp[100];
+     char *s = curr_process->curr_dir; 
+     if(strcmp(ROOT,s) != 0){
+            strcpy(s+7,temp);
+     }
+     strcat(temp,file);
+     int     iterator    = 3;
+     while (iterator < file_count) {
+         if (strcmp(temp, global_tarfs[iterator-3].name) == 0)
+           {
+		return 1;
+           }
+       iterator++;
+     }
+ return 999;
+}
+
+
 /*
  * Stub to open directory
  */
-int opendir(char *filename) {
+uint64_t opendir(char *filename) {
     int     iterator    = 3;
-
+    uint64_t ret = 0;
+    if (strlen(filename) == 0){
+        strcpy(curr_process->curr_dir,filename);
+    }else{
+     ret =  checkCorrectParent(filename);
+   }
+    if(ret == 1){
     while (iterator < file_count) {
         if ((global_tarfs[iterator-3].type == DIRECTORY) && (strcmp(filename, global_tarfs[iterator-3].name) == 0)) {
             return global_tarfs[iterator-3].inode;
         }
         iterator ++;
     }
-    return -1;
+    }
+    return 999;
 
 }
 
@@ -256,33 +282,33 @@ if(len > 0){
 	if (len >= 1 && *dir == '/'){
    	     // case cd /  
              if (len == 1){
-   	   	 strcpy(ROOT,current_dir);  
+   	   	 strcpy(ROOT,curr_process->curr_dir);  
    	         flag = 1;	
                }
                //case cd /bin
                  else{
-       	   	    strcpy(ROOT, temp_curr_dir);
+       	   	    strcpy(ROOT, curr_process->temp_curr_dir);
                	    strcpy(dir+1, dirname);
          	}
          }
         else if ( len >= 2 && *dir == '.' && *(dir+1) == '.'){
-        	int rr = substr_tillchar(temp_curr_dir, '/');
+        	int rr = substr_tillchar(curr_process->temp_curr_dir, '/');
                 if(rr == -1){
-                  strcpy(ROOT, temp_curr_dir);
+                  strcpy(ROOT, curr_process->temp_curr_dir);
                 }
                 // case cd ..
                 if (len == 2){
-                   strcpy(temp_curr_dir, current_dir);
+                   strcpy(curr_process->temp_curr_dir, curr_process->curr_dir);
                    flag =1;
                 }
                 // Case cd ../bin 
                 else{
-                     strcpy(temp_curr_dir+7,dirname);
+                     strcpy(curr_process->temp_curr_dir+7,dirname);
                      strcat(dirname,dir+3);
                 }
         } else {
                // Case cd ./bin
-              strcpy(current_dir+7, dirname); 
+              strcpy(curr_process->curr_dir+7, dirname); 
               if (len > 2 && *dir=='.' && *(dir+1) == '/'){
                    strcat(dirname,dir+2);
                }
@@ -299,7 +325,7 @@ if(len > 0){
    	}
         int ret = changedir(dirname);
         if(ret == 999){
-   		kprintf("\n%s","Wrong directory");
+   		kprintf("\n%s","-sbush: cd:  No such file or directory");
         }
         }
 
@@ -318,11 +344,11 @@ int  changedir( char* filename){
              strcpy(global_tarfs[iterator-3].name,parent_name); 
               ret = substr_tillchar(parent_name, '/');
              strcat(parent_name2, parent_name);  
-              if(((strcmp(ROOT, current_dir) == 0) && (ret == -1)) ||
-                        (strcmp(parent_name2, temp_curr_dir) == 0) ){
-                strcpy(ROOT, current_dir);
-                strcat(current_dir,filename);
-                strcpy(current_dir, temp_curr_dir);
+              if(((strcmp(ROOT, curr_process->curr_dir) == 0) && (ret == -1)) ||
+                        (strcmp(parent_name2, curr_process->temp_curr_dir) == 0) ){
+                strcpy(ROOT, curr_process->curr_dir);
+                strcat(curr_process->curr_dir,filename);
+                strcpy(curr_process->curr_dir, curr_process->temp_curr_dir);
                 return 1;
              }
          }
@@ -332,6 +358,9 @@ int  changedir( char* filename){
   return 999;
 }
 void  getcwd(){
-  kprintf("\n%s",current_dir);
+  kprintf("\n<%s>",curr_process->curr_dir);
 }
 
+void  get_cwd(char * buf){
+ strcpy(curr_process->curr_dir, buf);
+}

@@ -176,3 +176,23 @@ int  substr_tillchar(char *s, char c){
     return 0;
 }
 
+int atoi(char *str) {
+    int val = 0;
+    while (*str != '\0') {
+        val = (val * 10) + (*str - '0');
+        str++;
+    }
+    return val;
+}
+
+void addDelimiter(char *str){
+    char *temp = str;
+   while(*temp != '\0'){
+        if(*temp == ' '){
+             *temp = '\n';
+        }
+        temp++;
+   }
+    *temp++ = '\n';
+    *temp ='\0';
+}

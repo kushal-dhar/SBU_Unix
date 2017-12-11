@@ -17,7 +17,7 @@
 
 unsigned char control    = 0;
 unsigned char shift      = 0;
-uint64_t      count      = 0;
+int       count      = 0;
 volatile int  input_done = 0;
 unsigned char pressed[200];
 unsigned char keyboard_map[128] =
@@ -160,9 +160,13 @@ void kb_handler(regis reg) {
 	    return;
         }
 	else if (scancode == 0x0E) {
-	/* If backspace is pressed, diplay '^H' */
+         /* If backspace is pressed, diplay '^H' */
 	    control = 1;
-	    kprintf_kb('h');
+            count--;
+	    if (count < 0){
+               count = 0;
+            }
+            kprintf_kb('h');
 	    control = 0;
 	    return;
 	}

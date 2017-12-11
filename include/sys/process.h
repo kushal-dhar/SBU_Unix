@@ -13,6 +13,7 @@
 #define  TASK_WAITING     4
 #define  TASK_STOPPED     5
 #define  TASK_ZOMBIE      6
+#define ROOT "rootfs/"
 
 typedef struct process_ctrl_blk pcb_t;
 typedef struct mm_struct mm_struct_t;
@@ -62,6 +63,8 @@ struct process_ctrl_blk {
     uint64_t      cr3;
     int           state;
     int           n_child;
+    char          curr_dir[100];
+    char          temp_curr_dir[100];
     pcb_t        *next_proc;
     mm_struct_t  *mm;
     register_t    regs;
@@ -86,5 +89,5 @@ extern uint64_t get_pid();
 extern void wait(uint64_t pid);
 extern void execve(char *filename, char *argv);
 extern void execve_switch_to_ring3(pcb_t *proc);
-
+extern void print_allPID();
 #endif

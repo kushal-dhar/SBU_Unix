@@ -49,8 +49,9 @@ extern void init_tarfs();
 extern int open(char *filename, int permission);
 extern int read(int fd, char *buf, int size);
 extern void read_dir(int fd);
-extern int opendir(char *filename);
+extern uint64_t opendir(char *filename);
 extern int  changedir( char* filename);
 extern void getcwd();
 extern void chdir(char * dir);
+extern  void  get_cwd(char * buf);
 #endif

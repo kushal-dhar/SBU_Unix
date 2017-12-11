@@ -104,7 +104,7 @@ int get_pid() {
     return pid;
 }
 */
-int open_dir(char *filename) {
+uint64_t open_dir(char *filename) {
     char temp_buf[100];
     int      i       = 0;
     uint64_t ret_val = 0;
@@ -116,20 +116,21 @@ int open_dir(char *filename) {
     temp_buf[i] = '\0';
 
     i = 89;    //Syscall number for open_dir
-    syscall_2((uint64_t)i, (uint64_t)temp_buf); 
-    ret_val = global_val;
-
-    return ret_val;
+    ret_val = syscall_2((uint64_t)i, (uint64_t)temp_buf); 
+    if(ret_val== 999){
+     printf("\n%s","-sbush: cd:  No such file or directory");
+    }
+    return 999;
 }
 
-void read_dir(int fd) {
+void read_dir(uint64_t fd) {
     int syscall = 90;
 
     syscall_2((uint64_t)syscall, (uint64_t)fd);
     return;
 }
 
-int open(char *filename, int perm) {
+uint64_t open(char *filename, int perm) {
     int           syscall = 0;
     uint64_t      fd      = 0;
     char          temp_buf[100];
@@ -141,29 +142,31 @@ int open(char *filename, int perm) {
     }
     temp_buf[i] = '\0';
 
-    syscall_3((uint64_t)syscall, (uint64_t)temp_buf, (uint64_t)perm);
-    fd = global_val;
-    if (fd > 10000) {
-        fd = global_val;
-    }
-    return (int)fd;
+    fd = syscall_3((uint64_t)syscall, (uint64_t)temp_buf, (uint64_t)perm);
+    return fd;
 }
 
-void read(int fd, char *buf, int size) {
+void read(uint64_t fd, char *buf, int size) {
     int syscall = 2;
 
-    syscall_4((uint64_t)syscall, (uint64_t)fd, (uint64_t)buf, (uint64_t)size);
+    uint64_t ret =0;
+    ret = syscall_4((uint64_t)syscall, (uint64_t)fd, (uint64_t)buf, (uint64_t)size);
+    if(ret != 0){
+      printf("\nSomething is fishy"); 
+     } 
     return;
 }
 void chdir(char * dir) {
-//   strcpy(sys_temp, dir);
-    strcpy(global_str, dir);
+   uint64_t r =0;
     /* System call for pipe is 80 */
-    syscall_2_char(80);
+   r =  syscall_2(80,(uint64_t) dir);
+   if(r != 0){
+   printf("Something is not right");
+   }
 }
-void cwd() {
+void  cwd() {
   /* System call for pipe is 79 */
-  uint64_t ret =0;
+  uint64_t  ret =0;
   ret =  syscall_1(79);
   if(ret != 0){
   printf("%s","Error");
@@ -177,12 +180,6 @@ void* mallocc(int size){
   return (void *)ch;
 }
 
-void catt(char *filename, int perm){
-  char buf[250]; 
-  int fd = open(filename,perm);
-  read(fd, buf,1000);
-  printf("%s",buf);
-}
 
 uint64_t getpid(){
  uint64_t pid=0;
@@ -223,4 +220,20 @@ void execve(char *filename, char *ex_argv) {
     }
     return;
 }
+void  cwd2(char * buf ) {
+  /* System call for pipe is 79 */
+  uint64_t ret =0;  
+  ret =  syscall_2(78,(uint64_t) buf);
+  if(ret != 0){
+    printf("\nSomething fishy");
+  }
+}
+void  printAllProcess(){
+    uint64_t syscall = 270;
+    uint64_t ret_val = syscall_1((uint64_t)syscall);
+    if (ret_val != 0){
+        printf("\nSomething is fishy");
+   }
+}
+
 

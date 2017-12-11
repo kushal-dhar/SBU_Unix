@@ -12,5 +12,7 @@ extern   char ** split_string(char str[], char delim, char **s);
 extern   int     strcmp(char *str1, char *str2);
 extern   void*  memset(void *ptr, int x, uint32_t n);
 extern int  substr_tillchar(char *s, char c);
+extern int atoi(char *str);
+extern void addDelimiter(char *str);
 
 #endif

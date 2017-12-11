@@ -10,35 +10,31 @@
 #include  <get_cmd.h>
 #include <libc.h>
 int main(int argc, char *argv[], char *envp[]) {
+/*char ** str = (char **)mallocc(sizeof(char *) * 10);
+str[0] = (char*) mallocc(sizeof(char)*50);
+strcpy(str[0],"hello\0");
+printf("%s",str[0]);
+while(1);
+*/
 char path[100] = "rootfs/bin/\0\0\0";
-char *str = (char *)mallocc(50); 
-char temp[100];// = (char *) mallocc(100);
+char *str =  (char *) mallocc(100);
+char temp[100];
 while(1){
    
-//          str[0] = '\0';
- //         temp[0] ='\0';
+          str[0] = '\0';
+          temp[0] ='\0';
           cwd();
           scan("%s",(void *)str);
-          printf("string here: %s\n",str);
-          int a = getpid();
-	  printf("pid is: %d\n",a);
-	  while(1);
-         // check the currenht ditectory 
+         // check the current ditectory 
          if (strcmp(str, "pwd\0\0\0") ==0){
-            cwd();
+            cwd2(temp);
+            printf("\n%s",temp);
         }
         // check the change dir command cd
         else if( *(str) == 'c' && *(str+1) == 'd' && *(str+2) == ' '){
              for(int i =0; i <100;i++)   *(temp+i) = '\0';
              strcpy(temp,str+3);
              chdir(temp);
-        }
-        // check the cat command
-        else if (*str == 'c' && *(str+1) == 'a' && *(str+2) == 't' && *(str+3) == ' '){
-           int perm = 1; 
-           for(int i =0; i <100;i++)   *(temp+i) = '\0';
-           strcpy(temp,str+4);
-           catt(temp,perm );
         }
         // check echo $PATH
         else if (strcmp(str, "echo $PATH\0\0\0")== 0){
@@ -54,44 +50,45 @@ while(1){
                       strcpy(temp,str+5);
                   }
                   printf("\n%s",temp);
-        }else{
-             printf("\n%s",":sbush : --command not found");
-        } 
-
-} 
-#if 0
-       getcwd(cwd,100);
-       printf("%s", cwd);
-       printf("%s","<sbush>");	
-       fgets(cmd,100,1);
-       if(cmd[0] == 'c' && cmd [1] == 'd'){
-//        change_dir(cmd);
-//       } else if((strstr(cmd, "export") != NULL) && (strlen(cmd) > 4)) {
-//        set_cmd(cmd);
-
-       /* if condition for path and PS1 is required */
-       /* if condition for bckground */
-        
-        }  else if (strstr(cmd, "|") != NULL) {
-   	   	pipe_proc(cmd);
-     		getcwd(cwd,1024);
-     		//printf("%s:sbush> ",cwd);
-/*      } else if((strstr(cmd, "echo") != NULL) && (strstr(cmd,"$") != NULL)) {
-        get_cmd(cmd+4);
-        getcwd(cwd, 1024); */
-
-        // Write script case here
-        /*
-	if(scriptCalled(cmd) == 1){
-        	verifyAndRunScript(cmd,delim);
         }
-        checkForBinary(cmd, ' ');             	
-        */ 
-	} else {
-     	exec_shell(cmd);
-        getcwd(cwd,1024);
-      	printf("%s:sbush> ",cwd);
+        // check for sleep
+        else if (*str =='s' && *(str+1) == 'l' && *(str+2) == 'e' && *(str+3) =='e' &&
+		 *(str+4) == 'p'&& *(str+5) == ' '){
+               int val =  atoi(str+6);
+               sleep(val);
+        }
+        // check for Cat
+        else if (*str == 'c' && *(str+1) == 'a' && *(str+2) == 't' && *(str+3) == ' ') {
+             uint64_t pid = fork();
+             if(pid != 0){
+                wait_pid(pid);
+             }else{
+                   addDelimiter(str+4);  
+                   execve("bin/cat\0\0",str+4);
+             }
+        }
+        // check for ls
+        else if (*str == 'l' && *(str+1) == 's'){
+               int len = strlen(str);
+               uint64_t pid = fork();
+               if(pid != 0){
+                   wait_pid(pid);
+               }
+               else{
+                    if(*(str+2) == ' ' && len > 2){
+    			   addDelimiter(str+3);
+                    }
+                    execve("bin/ls\0\0",str+3);
+              }
         } 
-#endif
+        // Check for ps
+        else if (*str=='p' && *(str+1) == 's'){
+              printAllProcess();
+        } 
+        else{
+             printf("\n%s",":sbush : --command not found");
+        }
+
+}
 return 0;
 }

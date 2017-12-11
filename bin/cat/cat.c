@@ -6,17 +6,19 @@
 
 void cat(int argc, char *argv[]) {
   int     j          = 0;
-  char   *text       = NULL;
-  int     fd;
+  char   *text       =  (char *) mallocc(sizeof(char)*1000);
+  uint64_t    fd;
 
-
+  printf("hello I am in Cat");
   /* Loops through all files and displays them one by one */
   for (j = 0; j < argc; j++) {
-    fd = open(argv[j], 2);
-    text = read_char(0, fd, text, 1000);
-    //printf("%s",text);
+    fd = open(argv[j], 0);
+    text[0]='\0';
+    read(fd, text,1000);
+    printf("%s",text);
   }
 
+//  while(1);
   return;
 }
 

@@ -131,7 +131,7 @@ int main(int argc, char *argv[], char *envp[]) {
 //	str[1] = (char *)mallocc(sizeof(char) * 20);
 //	strcpy(str[1], "world");
         printf("Printf is also working\n");
-        execve("bin/temp", (char *)str);
+//        execve("bin/temp", (char *)str);
 	while(1);
     }
 /*    char s[100];
