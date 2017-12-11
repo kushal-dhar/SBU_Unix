@@ -131,13 +131,8 @@ int main(int argc, char *argv[], char *envp[]) {
 //	strcpy(str[0], "Hello");
 //	str[1] = (char *)mallocc(sizeof(char) * 20);
 //	strcpy(str[1], "world");
-<<<<<<< HEAD
-        printf("Printf is also working\n");
-//        execve("bin/temp", (char *)str);
-=======
-//        printf("Printf is also working %s    %s\n",str[0],str[1]);
+        printf("Printf is also working %s    %s\n",str[0],str[1]);
         execve("bin/temp", (char *)str);
->>>>>>> 6d30c471091394f8d1fbe95cb091434d57e48294
 	while(1);
     }
 /*    char s[100];

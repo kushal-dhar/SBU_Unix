@@ -82,7 +82,7 @@ void start(uint32_t *modulep, void *physbase, void *physfree)
 //  switch_to_ring3((pcb_t *)user_process);
   create_kernel_thread();
 //caller();
-  while(1);
+//  while(1);
 
 }
 
