@@ -64,12 +64,12 @@ int main(int argc, char *argv[], char *envp[]) {
 
      char str[100];
      strcpy(str,"bin/\0");
-     chdir(str);
+//     chdir(str);
      test(25);
      cwd();
      char t[100];
      strcpy(t,"extra/\0");
-     chdir(t);
+//     chdir(t);
 //     int a = getpid();
 //     printf("PID: %d\n",a);
 

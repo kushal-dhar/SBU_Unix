@@ -130,6 +130,8 @@ void read(uint64_t fd, char *buf, int size) {
     }
     return;
 }
+
+#if 0
 void chdir(char * dir) {
    uint64_t r =0;
     /* System call for pipe is 80 */
@@ -138,6 +140,8 @@ void chdir(char * dir) {
        printf("Something is not right");
    }
 }
+#endif
+
 void  cwd() {
   /* System call for pipe is 79 */
   uint64_t  ret =0;
@@ -180,10 +184,6 @@ void wait_pid(uint64_t pid) {
     }
     return;
 }
-void sleep(int val){
-   /* System call for nano sleep is 35 */
-   syscall_2(35,(uint64_t) val);
-}
 
 void execve(char *filename, char *ex_argv) {
     int syscall = 59;
@@ -203,16 +203,6 @@ void  cwd2(char * buf ) {
     printf("\nSomething fishy");
   }
 }
-
-#if 0
-void  printAllProcess(){
-    uint64_t syscall = 270;
-    uint64_t ret_val = syscall_1((uint64_t)syscall);
-    if (ret_val != 0){
-        printf("\nSomething is fishy");
-   }
-}
-#endif
 
 
 void exit() {

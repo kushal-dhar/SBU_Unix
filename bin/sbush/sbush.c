@@ -32,9 +32,15 @@ while(1){
         }
         // check the change dir command cd
         else if( *(str) == 'c' && *(str+1) == 'd' && *(str+2) == ' '){
-             for(int i =0; i <100;i++)   *(temp+i) = '\0';
-             strcpy(temp,str+3);
-             chdir(temp);
+//             for(int i =0; i <100;i++)   *(temp+i) = '\0';
+//             strcpy(temp,str+3);
+             uint64_t pid = fork();
+             if(pid != 0){
+                wait_pid(pid);
+             }else{
+//                   addDelimiter(str+4);
+                   execve("bin/cd\0\0",str+3);
+             }
         }
         // check echo $PATH
         else if (strcmp(str, "echo $PATH\0\0\0")== 0){
@@ -55,8 +61,13 @@ while(1){
 //	else if (strstr(str, "sleep") != 0) {
         else if (*str =='s' && *(str+1) == 'l' && *(str+2) == 'e' && *(str+3) =='e' &&
 		 *(str+4) == 'p'&& *(str+5) == ' '){
-               int val =  atoi(str+6);
-               sleep(val);
+             uint64_t pid = fork();
+             if(pid != 0){
+                wait_pid(pid);
+             }else{
+                   execve("bin/sleep\0\0",str+6);
+             }
+
         }
         // check for Cat
 //        else if (strstr(str, "sleeping") != 0) {

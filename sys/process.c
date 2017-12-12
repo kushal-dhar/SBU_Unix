@@ -209,7 +209,7 @@ void initial_ret_function() {
 
     init_syscalls();
     
-    pcb_t *user_process = create_user_process("bin/sbush");
+    pcb_t *user_process = create_user_process("bin/temp");
     enable_page_fault();
 //    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);

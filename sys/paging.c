@@ -507,18 +507,19 @@ void pagefault_handler(regis reg) {
 
     if (err_code & (PT_PR | PT_WR)) {
 #endif
-    if (phys_addr != 999) {
+    if (phys_addr != 999 && phys_addr != 0) {
+        new_page = (uint64_t)allocate_virt_page();
+        virt_addr = (uint64_t)(KERNEL_ADDR | new_page);
+        memcpy((void *)fault_addr, (void *)virt_addr, PAGE_SIZE);
+        map_phys_to_user_virt_addr((uint64_t)fault_addr, (uint64_t)new_page, (uint64_t *)curr_process->cr3);
+    }
+    else if (vma != NULL) {
         while(vma != NULL) {
     	    if (vma->vm_start <= fault_addr && fault_addr <= vma->vm_end) {
 	        if (vma->type == HEAP || vma->type == STACK || vma->type == DATA) {
 		    new_page = (uint64_t)allocate_virt_page();
 		    virt_addr = (uint64_t)(KERNEL_ADDR | new_page);
-		    if (phys_addr != 0) {
-   	       	        memcpy((void *)fault_addr, (void *)virt_addr, PAGE_SIZE);
-		    }
-		    else {
-			memset((void *)virt_addr, 0, PAGE_SIZE);
-		    }
+	  	    memset((void *)virt_addr, 0, PAGE_SIZE);
 		    map_phys_to_user_virt_addr((uint64_t)fault_addr, (uint64_t)new_page, (uint64_t *)curr_process->cr3);
 		    break;
 		}
@@ -529,9 +530,11 @@ void pagefault_handler(regis reg) {
 	}
     } 
 
-    if (phys_addr == 999 || vma == NULL) {
+    else if(phys_addr == 999 || vma == NULL) {
+	/* Segmentation fault. Exit from the child now */
 	kprintf("Segmentation fault\n");
-	__asm__ volatile("hlt");
+	sys_exit();
+//	__asm__ volatile("hlt");
     }
 #if 0
     while(1);
