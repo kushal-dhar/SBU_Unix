@@ -19,6 +19,13 @@ extern pcb_t *curr_process;
 tarfile_t global_tarfs[100];
 int file_count = 3;
 char temp_filename[100];
+char current_dir[100] = ROOT;
+char temp_curr_dir[100] = ROOT;
+
+extern pcb_t *first_process;
+extern pcb_t *curr_process;
+extern pcb_t *next_process;
+
 /*
 char * extract_parent_name(uint64_t parent_num){
   int      iterator  = 3;
@@ -32,33 +39,7 @@ char * extract_parent_name(uint64_t parent_num){
 }
 */
 uint64_t is_file_exist(char *filename) {
-//    tarfs_t *tarfs_start = (tarfs_t *)&_binary_tarfs_start;
-//    int      offset    = 0;
-//    int      size      = 0;
     int      iterator  = 3;
-
-#if 0
-    while (strlen(tarfs_start->name) != 0) {
-	kprintf("file: %s ",tarfs_start->name);
- 	size = atoi(tarfs_start->size);
-        size = octtodec(size);
-        if (strcmp(tarfs_start->name, filename) == 0) {
-	    return offset + TARFS_HEADER;
-	}
-        else if ( size == 0) {
-	    offset += TARFS_HEADER;
-        }
-	else {
-	    if (size % TARFS_HEADER == 0) {
-		offset += size + TARFS_HEADER;
-	    } 
-	    else {
-		offset += ((size / TARFS_HEADER) + 1) * TARFS_HEADER + TARFS_HEADER;
-	    }
-	}
-	tarfs_start = (tarfs_t *)(&_binary_tarfs_start + offset);
-    }
-#endif
 
     while (iterator < file_count) {
 	if (strcmp(global_tarfs[iterator-3].name, filename) == 0) {
@@ -153,13 +134,21 @@ void init_tarfs() {
  * Stub to open file contents
  */
 int open(char *filename, int permission) {
+    int     fd_count  = 0;
     int     iterator    = 3;
 
+    fd_count = curr_process->file_count;
     kprintf("file count: %d\n", file_count);
     while (iterator < file_count) {
 	if (strcmp(filename, global_tarfs[iterator-3].name) == 0) {
-	    kprintf("iterator: %d\n",global_tarfs[iterator-3].inode);
-	    return global_tarfs[iterator-3].inode;
+            strcpy(filename, curr_process->fd[fd_count].name);
+            curr_process->fd[fd_count].inode = global_tarfs[iterator-3].inode;
+            curr_process->fd[fd_count].p_inode = global_tarfs[iterator-3].p_inode;
+            curr_process->fd[fd_count].size = global_tarfs[iterator-3].size;
+            curr_process->fd[fd_count].read_addr = global_tarfs[iterator-3].addr;
+ 	    curr_process->file_count ++;
+//	    kprintf("iterator: %d\n",global_tarfs[iterator-3].inode);
+ 	    return global_tarfs[iterator-3].inode;
 	}
 	iterator ++;
     }
@@ -171,12 +160,31 @@ int open(char *filename, int permission) {
  */
 int read(int fd, char *buf, int size) {
     int      length      = 0;
-    char    *content;
+    int      fd_count    = 0;
+    int      i           = 0;
+    int      found       = 0;
+    char    *content     = NULL;
     
-    length = global_tarfs[fd-4].size;
-    content = (char *)global_tarfs[fd-4].addr;
+    fd_count = curr_process->file_count;
+    for (i = 0; i < fd_count; i++) {
+        if (fd == curr_process->fd[i].inode) {
+            length = curr_process->fd[i].size;
+            content = (char *)curr_process->fd[i].read_addr;
+	    found = 1;
+            break;
+        }
+    }
+
+    if (found == 0) {
+	kprintf("File not opened for reading\n");
+	return 0;
+    }
+    length = curr_process->fd[i].size;
+//    content = (char *)global_tarfs[fd-4].addr;
+    content = (char *)curr_process->fd[i].read_addr;
 
     length = (length > size)?size:length;
+    curr_process->fd[i].read_addr += length;
     memcpy((void *)content, (void *)buf, length);
 
     return length;
@@ -236,17 +244,7 @@ uint64_t opendir(char *filename) {
  * Stub to read file contents
  */
 void read_dir(int fd) {
-//    int      length      = 0;
     int      iterator    = 3;
-//    char    *content;
-
-/*    while (iterator < file_count) {
-        if (global_tarfs[iterator].inode == fd) {
-            fd = iterator;
-            break;
-        }
-        iterator++;
-    } */
 
     iterator = 3;
     kprintf("List of files: \n");
@@ -256,14 +254,6 @@ void read_dir(int fd) {
 	}
 	iterator++;
     }
-
-#if 0
-    length = global_tarfs[fd].size;
-    content = (char *)global_tarfs[fd].addr;
-
-    length = (length > size)?size:length;
-    memcpy((void *)content, (void *)buf, length);
-#endif
 
     return;
 }

@@ -41,7 +41,7 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
     Elf64_Ehdr *elf_hdr;
     Elf64_Phdr *elf_phdr;
     int         i          = 0;
-    int         p_flags    = 0;
+//    int         p_flags    = 0;
     int         ret_val    = 0;
     uint64_t    phdr_start = 0;
     uint64_t    phdr_end   = 0;
@@ -55,7 +55,6 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
         return -1;
     }
 
-    kprintf("elf_hdr: %d\n",elf_hdr->e_entry);
     proc->rip = (uint64_t)elf_hdr->e_entry;
     for (i = 0; i < elf_hdr->e_phnum; i++) {
 	elf_phdr = (Elf64_Phdr *)((uint64_t)elf_hdr + elf_hdr->e_phoff) + i;
@@ -63,14 +62,7 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
         phdr_end = elf_phdr->p_vaddr + elf_phdr->p_memsz;
 
 	if (elf_phdr->p_type == PT_LOAD) {
-            kprintf("p_vaddr: %d\n",elf_phdr->p_vaddr);
-	    p_flags = (elf_phdr->p_flags & PF_W) ? PT_WR:     0;
-//	    phdr_start = (elf_phdr->p_vaddr / PAGE_SIZE)     * PAGE_SIZE;
-//	    phdr_end = elf_phdr->p_vaddr + elf_phdr->p_memsz;
-	    kprintf("p_flags: %d\n",p_flags);
-	    kprintf("start: %d\n",phdr_start);
-	    kprintf("end: %d\n",phdr_end);
-//            ret_val = mmap_alloc(mm, fp, elf_phdr->p_offset, elf_phdr->p_filesz, elf_phdr->p_vaddr, phdr_end, p_flags);
+//	    p_flags = (elf_phdr->p_flags & PF_W) ? PT_WR:     0;
 /*	    if (ret_val == -1) {
 		kprintf("Memory Allocation failed\n");
 		return ret_val;

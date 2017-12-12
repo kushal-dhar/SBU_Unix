@@ -1,4 +1,6 @@
+#if 0
 #include <stdlib.h>
+
 void exit(int status){
 long syscall = 60;
 __asm__ volatile (
@@ -9,3 +11,4 @@ __asm__ volatile (
     : "r"(syscall), "r"((uint64_t)status)
 );
 }
+#endif

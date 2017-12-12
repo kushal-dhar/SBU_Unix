@@ -50,5 +50,6 @@ extern void copy_parent_tables(uint64_t* cr3_addr);
 extern uint64_t virt_to_phys(uint64_t vAddr);
 extern void free_page(uint64_t vAddress);
 extern void free_kernel_page(uint64_t vAddress);
+extern void delete_pagetable(uint64_t pml4_addr);
 
 #endif

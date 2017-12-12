@@ -19,6 +19,7 @@ while(1);
 char path[100] = "rootfs/bin/\0\0\0";
 char *str =  (char *) mallocc(100);
 char temp[100];
+clear();
 while(1){
    
           str[0] = '\0';
@@ -52,12 +53,14 @@ while(1){
                   printf("\n%s",temp);
         }
         // check for sleep
+//	else if (strstr(str, "sleep") != 0) {
         else if (*str =='s' && *(str+1) == 'l' && *(str+2) == 'e' && *(str+3) =='e' &&
 		 *(str+4) == 'p'&& *(str+5) == ' '){
                int val =  atoi(str+6);
                sleep(val);
         }
         // check for Cat
+//        else if (strstr(str, "sleeping") != 0) {
         else if (*str == 'c' && *(str+1) == 'a' && *(str+2) == 't' && *(str+3) == ' ') {
              uint64_t pid = fork();
              if(pid != 0){

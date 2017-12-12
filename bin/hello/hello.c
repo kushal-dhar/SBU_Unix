@@ -9,32 +9,32 @@ int test(int x) {
     return 10;
 }
 int main(int argc, char *argv[], char *envp[]) {
+    clear();
 /*    char str[100];
     scan("%s",(void *)str);
     print("%s\n",str);
     scan("%S",(void *)str);
     print("%s\n",str); */
     
-#if 0
     int fd = open_dir("bin/");
     if (fd == -1) {
-	print("Not a valid directory\n");
+	printf("Not a valid directory\n");
     }
-    print("Working %d\n",fd);
+    printf("Working %d\n",fd);
     read_dir(fd);
-#endif
 
-#if 0
-    int fd = open("bin/temp.txt",3);
+    fd = open("random.txt",3);
     if (fd == -1) {	
 	printf("Not a valid file\n");
     }
     printf("File number: %d\n",fd);
 
     char temp[1000];
-    read(fd, temp, 1000);
+    read(fd, temp, 5);
     printf("Contents: %s\n",temp); 
-#endif
+    read(fd, temp, 5);
+    printf("Contents: %s\n",temp);
+
 /*    clear();
     char temp1[1000];
     scan("%s",temp1);
@@ -104,41 +104,29 @@ int main(int argc, char *argv[], char *envp[]) {
 //    int b = getpid();
 //    printf("PID again %d\n",b);
     int pid = fork();
-/*    uint64_t syscall = 57;
-    __asm__ volatile ("movq %0, %%rbx;"::"r"(syscall));
-    __asm__ volatile ("movq %0, %%r10;"::"r"(&global_val));
-    __asm__ volatile ("int $0x80;");*/
-//    int pid = global_val;
-//    printf("process id: %d",pid);
     if (pid != 0) {
         //cwd();
         printf("Inside parent\n");
 	wait_pid(pid);
+	printf("I came bacl here \n");
+	while(1);
     }
 
     else {
-//        int b = getpid();
-//        printf("Child pid is: %d\n",b);
-	chdir("bin/");
-//        cwd();
 	char *str = (char *)mallocc(sizeof(char) * 100);
-//	char str[2][100];
 	strcpy(str, "Hello");
 	strcat(str, "\n");
 	strcat(str, "World\n");
         strcat(str, "Again\n\0");
-//	str[0] = (char *)mallocc(sizeof(char) * 50);
-//	strcpy(str[0], "Hello");
-//	str[1] = (char *)mallocc(sizeof(char) * 20);
-//	strcpy(str[1], "world");
-        printf("Printf is also working %s    %s\n",str[0],str[1]);
-        execve("bin/temp", (char *)str);
-	while(1);
+        printf("Printf is also working %s    \n",str);
+        execve("bin/test", (char *)str);
     }
 /*    char s[100];
     scan("%s",s);
     printf("string: %s",s); */
 //    cwd(); 
-    while(1);
+    printf("Going to exit now\n");
+    exit();
+//    while(1);
     return 0;
 }

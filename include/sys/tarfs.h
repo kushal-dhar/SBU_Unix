@@ -36,6 +36,7 @@ struct tar_file {
   char uid[8];
   uint64_t size;
   uint64_t addr;
+  uint64_t read_addr;
   uint64_t inode;
   uint64_t p_inode;
   uint64_t type;

@@ -21,9 +21,9 @@ void timer_handler(regis reg){
     outb(0xa0,0x20);
     /*Display after every 100 clocks */
     if(timer_tic % 1000 == 0){
-      //kprintf("%d\n",timer_tic/1000);
+        //kprintf("%d\n",timer_tic/1000);
         if (sleep_flag == 0){
-       		 kprintf_timer(timer_tic/1000);
+            kprintf_timer(timer_tic/1000);
         }
         current_sec = ((timer_tic/1000) % 3600) % 60;
     }
@@ -40,7 +40,7 @@ void sleep(int val ){
       sleep_flag = 1;
       volatile int ti  = current_sec;
       ti = ti+val;
-     while(current_sec < ti);
-     sleep_flag =0;
-     timer_tic = cur_tic; 
+      while(current_sec < ti);
+      sleep_flag =0;
+      timer_tic = cur_tic; 
 }

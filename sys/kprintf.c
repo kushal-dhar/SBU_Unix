@@ -293,6 +293,14 @@ void kprintf(char *string, ...)
                            y_pos ++;
     }
     if (ch == '\n') {
+	x_pos = 0;
+	y_pos ++;
+#if 0
+        video[x_pos++ + (y_pos * 160)] = '^';
+        video[x_pos++ + (y_pos * 160)] = colour;
+        video[x_pos++ + (y_pos * 160)] = 'M';
+        video[x_pos++ + (y_pos * 160)] = colour;
+#endif
     }
     else if (control == 1) {
 	if (ch == 0x48 && shift == 1) {

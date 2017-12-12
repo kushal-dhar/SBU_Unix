@@ -4,6 +4,7 @@
 #include <libc.h>
 
 int main(int argc, char *argv[], char *envp[]) {
+#if 0
     char str[5][50];
     char temp_str[50];
     int i = 0;
@@ -24,11 +25,32 @@ int main(int argc, char *argv[], char *envp[]) {
 	    temp_str[i++] = '\0';
 	}
     }
-    printf("Argv: %s\n",str[1]);
+#endif
     cwd();
+    int i = 0;
     int b = getpid();
     printf("PID in execve %d\n",b);
-    printf("Even printf is returning properly\n");
-    while(1);
+        int pid = fork();
+        if (pid != 0) {
+        //cwd();
+	        printf("\nInside parent %d",b);
+        	wait_pid(pid);
+	        printf("    I came bacl here i   %d",b);
+        	exit();
+        }
+
+        else {
+//        int b = getpid();
+//        printf("Child pid is: %d\n",b);
+        	chdir("bin/");
+	        cwd();
+        	char *str = (char *)mallocc(sizeof(char) * 100);
+	        strcpy(str, "Hello");
+        	strcat(str, "\n");
+	        strcat(str, "World\n");
+        	strcat(str, "Again\n\0");
+        	printf("     Printf is also working %d ",str,i);
+	        execve("bin/temp", (char *)str);
+         }
     return 0;
 }

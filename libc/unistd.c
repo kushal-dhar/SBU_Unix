@@ -22,21 +22,6 @@ __asm__ volatile (
 return(char *) ret;
 }
 
-/*
-int chdir ( char * str){
-long syscall = 80;
-long  ret ;
-__asm__ volatile (
-    "syscall\n\t"
-    "mov %%rax, %0\n\t"
-    : "=a"(ret)
-    : "r"(syscall), "r"(str)
-    : "rdi"
-);
-return  (int)ret;
-}
-*/
-
 int waitpid(int pid, int *wstatus, int options) {
 
    /* System call for wait is 61*/
@@ -52,25 +37,6 @@ int execvp(char *file, char *argv[]) {
    return ret;
 }
 
-#if 0
-pid_t fork() {
-  pid_t ret = 0;
-
-  /* System call for fork is 57 */
-  ret = syscall_fork(57, ret);
-  return ret;
-}
-#endif
-
-#if 0
-int open(const char *path, int flag) {
-  int ret;
-
-  /* 2 is the system call for open */
-  ret = syscall_open(2, (long)path, flag);
-  return ret;
-}
-#endif
 
 int pipe(int fd[]) {
   int ret;
@@ -115,22 +81,28 @@ uint64_t open_dir(char *filename) {
     }
     temp_buf[i] = '\0';
 
-    i = 89;    //Syscall number for open_dir
+    i = 89;    
+    //Syscall number for open_dir
     ret_val = syscall_2((uint64_t)i, (uint64_t)temp_buf); 
     if(ret_val== 999){
      printf("\n%s","-sbush: cd:  No such file or directory");
     }
-    return 999;
+
+    return ret_val;
 }
 
 void read_dir(uint64_t fd) {
     int syscall = 90;
+    int ret     = 0;
 
-    syscall_2((uint64_t)syscall, (uint64_t)fd);
+    ret = syscall_2((uint64_t)syscall, (uint64_t)fd);
+    if (ret != 0) {
+	printf("Error in reading directory");
+    }
     return;
 }
 
-uint64_t open(char *filename, int perm) {
+int open(char *filename, int perm) {
     int           syscall = 0;
     uint64_t      fd      = 0;
     char          temp_buf[100];
@@ -143,17 +115,19 @@ uint64_t open(char *filename, int perm) {
     temp_buf[i] = '\0';
 
     fd = syscall_3((uint64_t)syscall, (uint64_t)temp_buf, (uint64_t)perm);
-    return fd;
+
+    return (int)fd;
 }
 
 void read(uint64_t fd, char *buf, int size) {
     int syscall = 2;
+    int ret;
 
-    uint64_t ret =0;
-    ret = syscall_4((uint64_t)syscall, (uint64_t)fd, (uint64_t)buf, (uint64_t)size);
-    if(ret != 0){
-      printf("\nSomething is fishy"); 
-     } 
+    ret = syscall_2((uint64_t)50, (uint64_t)size);
+    ret = syscall_3((uint64_t)syscall, (uint64_t)fd, (uint64_t)buf);
+    if (ret != 0) {
+        printf("Error in reading file");
+    }
     return;
 }
 void chdir(char * dir) {
@@ -167,16 +141,17 @@ void chdir(char * dir) {
 void  cwd() {
   /* System call for pipe is 79 */
   uint64_t  ret =0;
+
   ret =  syscall_1(79);
   if(ret != 0){
-  printf("%s","Error");
+      printf("%s","Error");
   }
+  return;
 }
 
 void* mallocc(int size){
   uint64_t  ch;
   ch = syscall_2(9,(uint64_t) size);
- // ptr = global_val;
   return (void *)ch;
 }
 
@@ -184,8 +159,6 @@ void* mallocc(int size){
 uint64_t getpid(){
  uint64_t pid=0;
   pid = syscall_pid(39);
-// syscall_1(39);
-// pid = global_val;
  return pid;
 }
 
@@ -194,15 +167,17 @@ int fork() {
     int ret_val = 0;
 
     ret_val = syscall_1((uint64_t)syscall);
-//    ret_val =  global_val;
-//    printf("Hello");
     return ret_val;
 }
 
 void wait_pid(uint64_t pid) {
     int syscall = 247;
+    int ret     = 0;
 
-    syscall_2((uint64_t)syscall, (uint64_t)pid);
+    ret = syscall_2((uint64_t)syscall, (uint64_t)pid);
+    if (ret != 0) {
+	printf("Error in exiting. You are going to exit too\n");
+    }
     return;
 }
 void sleep(int val){
@@ -236,4 +211,15 @@ void  printAllProcess(){
    }
 }
 
+
+void exit() {
+    int syscall = 60;
+    int ret     = 0;
+
+    ret = syscall_1((uint64_t)syscall);
+    if (ret != 0) {
+	printf("Error in exiting \n");
+    }
+    return;
+}
 

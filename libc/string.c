@@ -92,6 +92,22 @@ char* strstr(char *str, char *search) {
   if ( !len1 || !len2) {
     return 0;
   }
+
+  for (i = 0; i < len1 - len2; i++) {
+    for (j = i; j < i + len2; j++) {
+      found = 1;
+      if (str[j] != search[j-i]) {
+	found = 0;
+	break;
+      }
+    }
+    if (found == 1) {
+      found = 1;
+      break;
+    }
+  }
+
+#if 0
   while (i < len1 && j < len2) {
     if (search[j] == str[i]) {
       if (found == 0) {
@@ -110,6 +126,7 @@ char* strstr(char *str, char *search) {
       i++;
     }
   }
+#endif
 
   if (found == 1) {
     return tmp;

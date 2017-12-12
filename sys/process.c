@@ -193,13 +193,13 @@ void initial_ret_function() {
 
     init_timer(1000);
     kb_init();
+
     int  i = 0;
     while (i < 4) {
         kprintf("I am in kernel thread again\n");
         switchTask(first_process, next_process);
         i ++;
     } 
-
 //    init_picirr();
 
 //    init_timer(1000);
@@ -276,21 +276,6 @@ void scheduler() {
  */
 void switchTask(pcb_t *current, pcb_t *next) {
 
-//    __asm__ volatile ("cli"); 
-/*
-    __asm__ volatile ("movq %%rsp, %0;" : "=r"((current->init_kernel)));
-    current->init_kernel += 8;
-    __asm__ volatile ("movq %0, %%rsp;" :: "r"((next->init_kernel)));
-    __asm__ volatile ("movq %0, %%rax"::"r" (next->rip));
-    __asm__ volatile ("pushq %%rax;" :: );
-    __asm__ volatile ("movq %%rsp, (%0)":"=r"(rsp_addr));
-
-    next->init_kernel = (uint64_t)rsp_addr;
-    set_tss_rsp((void *)rsp_addr);
-
-    __asm__ volatile ("ret");
-*/
-
     __asm__ volatile("movq %%rdi, %0;" : "=a"(current->regs.rdi));
     __asm__ volatile("movq %%rsi, %0;" : "=a"(current->regs.rsi));
     __asm__ volatile("movq %%rax, %0;" : "=a"(current->regs.rax));
@@ -307,6 +292,37 @@ void switchTask(pcb_t *current, pcb_t *next) {
     __asm__ volatile ("movq %0, %%rsi;" :: "a"(next->regs.rsi));
 
 }
+/*
+ * Process to switch between user process after yield
+ */
+void user_switchTask(pcb_t *current, pcb_t *next) {
+
+    set_tss_rsp((void *)next->init_kernel);
+
+#if 0
+    __asm__ volatile("movq %%rdi, %0;" : "=a"(current->regs.rdi));
+    __asm__ volatile("movq %%rsi, %0;" : "=a"(current->regs.rsi));
+    __asm__ volatile("movq %%rax, %0;" : "=a"(current->regs.rax));
+    __asm__ volatile("movq %%rbx, %0;" : "=a"(current->regs.rbx));
+    __asm__ volatile("movq %%rbp, %0;" : "=a"(current->regs.rbp));
+#endif
+
+    __asm__ volatile ("movq %0, %%cr3;" :: "a"(next->cr3));
+    __asm__ volatile ("movq  %%rsp, %0;":"=a"(current->kern_rsp));
+    __asm__ volatile ("movq %0, %%rsp;"::"a"(next->kern_rsp));
+
+#if 0
+    __asm__ volatile ("movq %0, %%rdi;" :: "a"(next->regs.rdi));
+    __asm__ volatile ("movq %0, %%rax;" :: "a"(next->regs.rax));
+    __asm__ volatile ("movq %0, %%rbx;" :: "a"(next->regs.rbx));
+    __asm__ volatile ("movq %0, %%rbp;" :: "a"(next->regs.rbp));
+    __asm__ volatile ("movq %0, %%rsi;" :: "a"(next->regs.rsi));
+#endif
+    __asm__ volatile ("addq $8, %rsp;");
+    __asm__ volatile("ret");
+
+}
+
 
 /*
  * Process to switch back from 2nd to 1st process
@@ -324,6 +340,26 @@ void switchBack(pcb_t *current, pcb_t *next) {
 }
 
 /*
+ * Stub to switch back from user to kernel process
+ */
+void user_switchBack(pcb_t *next) {
+
+    set_tss_rsp((void *)next->init_kernel);
+
+//    __asm__ volatile ("movq %%rsp, %0;" : "=a"((current->kern_rsp)));
+    __asm__ volatile ("movq %0, %%rsp;" :: "a"((next->kern_rsp)));
+//    __asm__ volatile ("addq $8, %rsp;");
+    __asm__ volatile ("movq %0, %%cr3;" :: "a"(next->cr3));
+
+//    next->init_kernel = (uint64_t)next->init_kernel;
+//    set_tss_rsp((void *)next->init_kernel);
+
+    __asm__ volatile ("ret");
+
+}
+
+
+/*
  * Stub to switch ring 3
  */
 void switch_to_ring3(pcb_t *proc) {
@@ -338,6 +374,7 @@ void switch_to_ring3(pcb_t *proc) {
     set_tss_rsp((void *)proc->init_kernel);
 
     __asm__ volatile ("cli" ::);
+    __asm__ volatile ("movq %%rsp, %0;" : "=a"((first_process->kern_rsp)));
     __asm__ volatile ("movq %0, %%cr3;" :: "a"(proc->cr3));
     __asm__ volatile ("mov $0x23, %%ax" ::);
     __asm__ volatile ("mov %%ax, %%ds;" ::);
@@ -414,8 +451,8 @@ pid_t fork_child() {
     c_pcb = (pcb_t *)copy_parent_structure((pcb_t *)curr_process);
 
 //    next = curr_process->next_proc;
+    c_pcb->next_proc = curr_process->next_proc;
     curr_process->next_proc = c_pcb;
-    c_pcb->next_proc = curr_process;
     return c_pcb->pid;
 }
 
@@ -497,18 +534,34 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
 }
 
 void wait(uint64_t pid) {
-    uint64_t     val = 0;
+    uint64_t     val         = 0;
+    pcb_t       *prev_task;
+
+    prev_task = curr_process;
+    curr_process->kern_rsp=rsp_pointer;
     curr_process->state = TASK_READY;
     curr_process = curr_process->next_proc;
     next_process = curr_process->next_proc;
-
     curr_process->state = TASK_RUNNING;
+
     if (curr_process->pid == pid) {
-    __asm__ volatile ("movq %0, %%cr3;" :: "a"(curr_process->cr3));
-    __asm__ volatile ("movq %0, %%rsp;" :: "a"(curr_process->rsp));
-    __asm__ volatile ("movq %0, %%rax;" :: "a"(val));
-    __asm__ volatile ("iretq");
+        set_tss_rsp((void *)curr_process->init_kernel);
+
+        __asm__ volatile("movq %%rdi, %0;" : "=a"(prev_task->regs.rdi));
+        __asm__ volatile("movq %%rsi, %0;" : "=a"(prev_task->regs.rsi));
+    	__asm__ volatile("movq %%rax, %0;" : "=a"(prev_task->regs.rax));
+    	__asm__ volatile("movq %%rbx, %0;" : "=a"(prev_task->regs.rbx));
+    	__asm__ volatile("movq %%rbp, %0;" : "=a"(prev_task->regs.rbp));
+        
+     	__asm__ volatile ("movq %%rsp, %0;" : "=a"(prev_task->kern_rsp));
+//        __asm__ volatile ("movq %%rip, %0;" : "=a"((prev_task->rip)));      
+
+        __asm__ volatile ("movq %0, %%cr3;" :: "a"(curr_process->cr3));
+        __asm__ volatile ("movq %0, %%rsp;" :: "a"(curr_process->rsp));
+        __asm__ volatile ("movq %0, %%rax;" :: "a"(val));
+        __asm__ volatile ("iretq");
     }
+    return;
 }
 
 uint64_t get_pid(){
@@ -545,6 +598,7 @@ void execve(char *filename, char *argv) {
 	i++;
     } */
     
+    kprintf("argv in sys: %s\n",argv);
     i = 0;
     while(argv[k] != '\0') {
 	j = 0;
@@ -557,8 +611,16 @@ void execve(char *filename, char *argv) {
 	argc++;
 	k++;
     }
+  
+    /* Incase of empty string, populate with space */
+    if (argc == 0) {
+        strcpy(" ", kernel_args[0]);
+//	kernel_args[0][0] = " ";
+//	kernel_args[0][1] = "\0";
+    }
 
     argc = i - 1;
+    kprintf("argc here: %d\n",argc);
 
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
@@ -593,11 +655,11 @@ void execve(char *filename, char *argv) {
     user_pcb->init_kernel = (uint64_t)(user_pcb + PAGE_SIZE - 8);
 
     user_pcb->state = TASK_READY;
-    user_pcb->next_proc = curr_process->next_proc;
+    //user_pcb->next_proc = curr_process->next_proc;
     pointer = curr_process;
-    while(pointer->next_proc != curr_process) {
+/*    while(pointer->next_proc != curr_process) {
 	pointer = pointer->next_proc;
-    }
+    } */
     pointer->next_proc = user_pcb;
 
     /* Free the current user space */
@@ -607,14 +669,11 @@ void execve(char *filename, char *argv) {
 
     /*Set user stack to contain argc and argv values */
     i = sizeof(kernel_args);  
-    kprintf("size here: %d\n",i);
     char *ptr = (char *)(user_pcb->user_stack - sizeof(kernel_args));
     memcpy((void *)kernel_args, (void *)ptr, sizeof(kernel_args));
     ptr = ptr - 8;
     *((int *)ptr) = argc+1;
     user_pcb->rsp = user_pcb->user_stack - sizeof(kernel_args) - 8;
-
-//    switch_to_ring3(user_pcb);
 
     execve_switch_to_ring3(user_pcb);
 }
@@ -626,4 +685,36 @@ void print_allPID(){
        kprintf("%d",proc->pid);
         proc = proc->next_proc;
   } 
+}
+
+
+/* 
+ * Handles exit syscall
+ */
+void sys_exit() {
+    pcb_t     *prev_task;
+
+    prev_task = curr_process;
+    curr_process->state = TASK_STOPPED;
+//    free_vma(curr_process->mm);
+//    free_page(curr_process->user_stack);
+//    delete_pagetable(curr_process->cr3);
+    while (prev_task->next_proc->pid != curr_process->pid) {
+    	prev_task = prev_task->next_proc;
+    }
+    prev_task->next_proc = first_process;
+    curr_process = prev_task;
+//    curr_process = curr_process->next_proc;
+//    next_process = next_process->next_proc;
+//    curr_process->next_proc = next_process->next_proc;
+//    curr_process->state = TASK_RUNNING;
+    if (curr_process->pid == 1) {
+	prev_task->init_kernel = prev_task->kern_rsp = (uint64_t)prev_task + PAGE_SIZE - 8;
+	memset((void*)prev_task, 0, (uint32_t)PAGE_SIZE);
+        *(uint64_t *)(prev_task->kern_rsp) = (uint64_t)&initial_ret_function;       
+	user_switchBack(prev_task);
+        
+    }
+
+    user_switchTask(prev_task->next_proc, curr_process);
 }

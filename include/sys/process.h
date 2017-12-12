@@ -59,6 +59,9 @@ struct process_ctrl_blk {
     uint64_t      init_kernel;
     uint64_t      user_stack;
     uint64_t      rsp;
+    uint64_t      kern_rsp;
+    tarfile_t     fd[20];
+    uint64_t      file_count;
     uint64_t      rip;
     uint64_t      cr3;
     int           state;
@@ -80,6 +83,7 @@ extern void test_user_thread();
 extern void scheduler();
 extern void switchTask(pcb_t *current, pcb_t *next);
 extern void switchBack(pcb_t *current, pcb_t *next);
+extern void user_switchBack(pcb_t *current);
 extern void initial_ret_function();
 extern void switch_to_ring3(pcb_t *pcb);
 extern void set_user_space(pcb_t *user_process, uint64_t offset);
@@ -90,4 +94,7 @@ extern void wait(uint64_t pid);
 extern void execve(char *filename, char *argv);
 extern void execve_switch_to_ring3(pcb_t *proc);
 extern void print_allPID();
+extern void sys_exit();
+extern void user_switchTask(pcb_t *current, pcb_t *next);
+
 #endif

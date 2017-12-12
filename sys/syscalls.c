@@ -14,6 +14,8 @@
 #include <sys/tarfs.h>
 #include <sys/syscalls.h>
 
+int size = 0;
+
 /* Start syscall handler */
 void init_syscalls() {
 //    irq_set_with_return(128, syscall_handler);
@@ -49,9 +51,14 @@ uint64_t syscall_handler (regis  reg) {
 	ret_val = open((char *)reg.rcx, (int)reg.rdx);
 	return ret_val;
     }
+    /* Handle size of file to read */
+    else if(reg.rbx == 50) {
+        size = reg.rcx;
+        return 0;
+    }
     /* Handle read files */
     else if (reg.rbx == 2) {
-	read((int)reg.rcx, (char *)reg.rdx, (int) reg.rdi);
+	read((int)reg.rcx, (char *)reg.rdx, (int)size);
 	//kprintf("%s\n",(char*)reg->rdx);
 	return 0;
     }
@@ -95,6 +102,7 @@ uint64_t syscall_handler (regis  reg) {
          __asm__ volatile("sti");  
         sleep((int) reg.rcx);
     }
+    /* Handle execve syscall */
     else if (reg.rbx == 59) {
         execve((char *)reg.rcx, (char *)reg.rdx);
         return 0;
@@ -102,6 +110,12 @@ uint64_t syscall_handler (regis  reg) {
           get_cwd((char *)reg.rcx);
     }else if (reg.rbx == 270){
           print_allPID();
+    }
+    /* Handle exit syscall */
+    else if (reg.rbx == 60)
+    {
+	sys_exit();
+	return 0;
     }
     return 0;
 }
