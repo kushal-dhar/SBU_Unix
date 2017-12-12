@@ -138,7 +138,6 @@ int open(char *filename, int permission) {
     int     iterator    = 3;
 
     fd_count = curr_process->file_count;
-    kprintf("file count: %d\n", file_count);
     while (iterator < file_count) {
 	if (strcmp(filename, global_tarfs[iterator-3].name) == 0) {
             strcpy(filename, curr_process->fd[fd_count].name);
@@ -247,7 +246,7 @@ void read_dir(int fd) {
     int      iterator    = 3;
 
     iterator = 3;
-    kprintf("List of files: \n");
+//    kprintf("List of files: \n");
     while (iterator < file_count) {
 	if (global_tarfs[iterator-3].p_inode == fd) {
 	    kprintf("%s     \n",global_tarfs[iterator-3].name);

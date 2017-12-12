@@ -3,6 +3,7 @@
 #include <string.h>
 #include <libc.h>
 #include <test.h>
+#include <stdlib.h>
 
 int test(int x) {
     printf("I am inside test and going to return %d\n",x);

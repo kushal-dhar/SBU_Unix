@@ -203,6 +203,8 @@ void  cwd2(char * buf ) {
     printf("\nSomething fishy");
   }
 }
+
+#if 0
 void  printAllProcess(){
     uint64_t syscall = 270;
     uint64_t ret_val = syscall_1((uint64_t)syscall);
@@ -210,6 +212,7 @@ void  printAllProcess(){
         printf("\nSomething is fishy");
    }
 }
+#endif
 
 
 void exit() {

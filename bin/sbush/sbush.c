@@ -3,11 +3,8 @@
 #include <unistd.h>
 #include <cd.h>
 #include <string.h>
-#include <binaryoper.h>
 #include <scripts.h>
-#include <stdlib.h>
-#include "exec_sh.h"
-#include  <get_cmd.h>
+#include <get_cmd.h>
 #include <libc.h>
 
 char str[100];
@@ -82,13 +79,24 @@ while(1){
                else{
                     if(*(str+2) == ' ' && len > 2){
     			   addDelimiter(str+3);
-                    }
+                    } 
                     execve("bin/ls\0\0",str+3);
               }
         } 
         // Check for ps
         else if (*str=='p' && *(str+1) == 's'){
-              printAllProcess();
+//              printAllProcess();
+//               int len = strlen(str);
+               uint64_t pid = fork();
+               if(pid != 0){
+                   wait_pid(pid);
+               }
+               else{
+/*                    if(*(str+2) == ' ' && len > 2){
+                           addDelimiter(str+3);
+                    } */
+                    execve("bin/ps\0\0",str);
+              }
         }
         // Check for sbush
   	else if (*str == '.' && *(str+1) == '/' && *(str+2) == 's' && *(str+3) == 'b' && *(str+4) == 'u' && *(str+5) == 's' && *(str+6) == 'h') {
@@ -103,6 +111,10 @@ while(1){
                     }
                     execve("bin/sbush\0\0",str+7);
               }
+	}
+	// Incase of exit command, just exit from here
+        else if (*str == 'e' && *(str+1) == 'x' && *(str+2) == 'i' && *(str+3) == 't' ) {
+	    exit();
 	}
         else{
              printf("%s",":sbush : --command not found");

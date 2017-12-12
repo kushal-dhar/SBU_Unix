@@ -50,6 +50,7 @@ int get_next_processID() {
 void create_kernel_thread() {
     pcb_t *k_pcb = (pcb_t *)kmalloc((int)6000);
     
+    strcpy("init", k_pcb->p_name);
     k_pcb->pid = get_next_processID();
     k_pcb->ppid = 0;
     k_pcb->cr3 = (uint64_t)get_CR3_address();
@@ -126,6 +127,7 @@ pcb_t* create_user_process(char *filename) {
     user_pcb->pid = get_next_processID();
     user_pcb->ppid = 0;
     user_pcb->cr3 = (uint64_t)create_user_address_space();
+    strcpy(filename, user_pcb->p_name);
     strcpy(ROOT, user_pcb->curr_dir);
     strcpy(ROOT, user_pcb->temp_curr_dir);
 //    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | user_pcb->cr3);
@@ -607,6 +609,7 @@ void execve(char *filename, char *argv) {
 
     argc = i;
 
+    strcpy(file, user_pcb->p_name);
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
 
@@ -664,11 +667,11 @@ void execve(char *filename, char *argv) {
 }
 
 void print_allPID(){
-  kprintf("\nPID\n");
-  pcb_t * proc=  curr_process;
-  while(proc != NULL){
-       kprintf("%d",proc->pid);
-        proc = proc->next_proc;
+    kprintf("PID           Process\n");
+    pcb_t *proc=  first_process;
+    while(proc->next_proc != first_process){
+       kprintf("%d             %s\n",proc->pid,proc->p_name);
+       proc = proc->next_proc;
   } 
 }
 
