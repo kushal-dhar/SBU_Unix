@@ -135,7 +135,7 @@ void chdir(char * dir) {
     /* System call for pipe is 80 */
    r =  syscall_2(80,(uint64_t) dir);
    if(r != 0){
-   printf("Something is not right");
+       printf("Something is not right");
    }
 }
 void  cwd() {

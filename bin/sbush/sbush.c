@@ -31,7 +31,7 @@ while(1){
          // check the current ditectory 
          if (strcmp(str, "pwd\0\0\0") ==0){
             cwd2(temp);
-            printf("\n%s",temp);
+            printf("%s",temp);
         }
         // check the change dir command cd
         else if( *(str) == 'c' && *(str+1) == 'd' && *(str+2) == ' '){
@@ -41,7 +41,7 @@ while(1){
         }
         // check echo $PATH
         else if (strcmp(str, "echo $PATH\0\0\0")== 0){
-               printf("\n%s",path);
+               printf("%s",path);
         }
         else if (*str =='e' && *(str+1) == 'c' && *(str+2) == 'h' && *(str+3) =='o' && *(str+4) == ' '){
                   int len = strlen(str);
@@ -52,7 +52,7 @@ while(1){
                   }else {
                       strcpy(temp,str+5);
                   }
-                  printf("\n%s",temp);
+                  printf("%s",temp);
         }
         // check for sleep
 //	else if (strstr(str, "sleep") != 0) {
@@ -89,9 +89,23 @@ while(1){
         // Check for ps
         else if (*str=='p' && *(str+1) == 's'){
               printAllProcess();
-        } 
+        }
+        // Check for sbush
+  	else if (*str == '.' && *(str+1) == '/' && *(str+2) == 's' && *(str+3) == 'b' && *(str+4) == 'u' && *(str+5) == 's' && *(str+6) == 'h') {
+               int len = strlen(str);
+               uint64_t pid = fork();
+               if(pid != 0){
+                   wait_pid(pid);
+               }
+               else{
+                    if(*(str+2) == ' ' && len > 2){
+                           addDelimiter(str+7);
+                    }
+                    execve("bin/sbush\0\0",str+7);
+              }
+	}
         else{
-             printf("\n%s",":sbush : --command not found");
+             printf("%s",":sbush : --command not found");
         }
 
 }

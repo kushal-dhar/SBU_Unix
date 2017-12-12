@@ -309,16 +309,15 @@ if(len > 0){
         }
        strcat(dirname, "\0"); 
 	if (flag != 1){
-   		len = strlen(dirname);
-   	if(dirname[len-1] != '/'){
+   	    len = strlen(dirname);
+     	    if(dirname[len-1] != '/'){
       		strcat(dirname, "/");
-   	}
-        int ret = changedir(dirname);
-        if(ret == 999){
-   		kprintf("\n%s","-sbush: cd:  No such file or directory");
+   	    }  
+            int ret = changedir(dirname);
+            if(ret == 999){
+   	        kprintf("-sbush: cd: %s: No such file or directory",dir);
+            }
         }
-        }
-
    }
 }
 
