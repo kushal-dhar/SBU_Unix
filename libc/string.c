@@ -77,11 +77,11 @@ char ** split_string(char str[], char delim, char **s){
     return s;
 }
 
-char* strstr(char *str, char *search) {
+uint64_t strstr(char *str, char *search) {
   int len1, len2;
   int i = 0, j = 0;
   int  found = 0;
-  char *tmp;
+//  char *tmp;
 
   len1 = strlen(str);
   len2 = strlen(search);
@@ -103,7 +103,7 @@ char* strstr(char *str, char *search) {
     }
     if (found == 1) {
       found = 1;
-      break;
+      return 1;
     }
   }
 
@@ -126,11 +126,11 @@ char* strstr(char *str, char *search) {
       i++;
     }
   }
-#endif
 
   if (found == 1) {
     return tmp;
   }
+#endif
   return 0;;
 }
 

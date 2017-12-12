@@ -3,6 +3,7 @@
 #include <string.h>
 #include <libc.h>
 
+
 int main(int argc, char *argv[], char *envp[]) {
 #if 0
     char str[5][50];
@@ -27,30 +28,10 @@ int main(int argc, char *argv[], char *envp[]) {
     }
 #endif
     cwd();
-    int i = 0;
-    int b = getpid();
-    printf("PID in execve %d\n",b);
-        int pid = fork();
-        if (pid != 0) {
-        //cwd();
-	        printf("\nInside parent %d",b);
-        	wait_pid(pid);
-	        printf("    I came bacl here i   %d",b);
-        	exit();
-        }
-
-        else {
-//        int b = getpid();
-//        printf("Child pid is: %d\n",b);
-        	chdir("bin/");
-	        cwd();
-        	char *str = (char *)mallocc(sizeof(char) * 100);
-	        strcpy(str, "Hello");
-        	strcat(str, "\n");
-	        strcat(str, "World\n");
-        	strcat(str, "Again\n\0");
-        	printf("     Printf is also working %d ",str,i);
-	        execve("bin/temp", (char *)str);
-         }
+    printf("Argc here:%d\n ",argc);
+    for (int i = 0; i < argc; i++) {
+	printf("Arg: %s\n",argv[i]);
+    }
+//    exit();
     return 0;
 }

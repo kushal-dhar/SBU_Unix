@@ -477,24 +477,10 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     child_pcb->cr3 = (uint64_t)allocate_virt_page();
     user_virt = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)child_pcb->cr3);
     map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3);
-//    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3, (uint64_t *)child_pcb->cr3);
-//    create_child_pagetables((uint64_t *)child_pcb->cr3);
+    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     copy_parent_tables((uint64_t *)child_pcb->cr3);
 
-/*    user_stack = (uint64_t *)allocate_virt_page();
-    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)user_stack);
-    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)user_stack);
-    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3, (uint64_t *)child_pcb->cr3);
-    kprintf("addr: %d  ",user_virt);
-    set_CR3((uint64_t)child_pcb->cr3);
-    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
-    set_CR3((uint64_t)curr_process->cr3);
-    child_pcb->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
-    memcpy((void *)parent_proc->user_stack + 8 - PAGE_SIZE, (void *)child_pcb->user_stack + 8 - PAGE_SIZE, PAGE_SIZE); */
-    
     child_pcb->init_kernel = (uint64_t)(child_pcb + PAGE_SIZE - 8);
-
-//    set_CR3((uint64_t)child_pcb->cr3);
 
     child_pcb->mm = (mm_struct_t *)kmalloc(PAGE_SIZE);
     memcpy(parent_proc->mm, child_pcb->mm, sizeof(mm_struct_t));
@@ -527,6 +513,7 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     memcpy((void *)parent_proc->init_kernel + 8 - PAGE_SIZE, (void *)child_pcb->init_kernel + 8 - PAGE_SIZE, PAGE_SIZE);
     child_pcb->user_stack = (uint64_t)parent_proc->user_stack;
     child_pcb->rsp = (uint64_t)(child_pcb->init_kernel - (parent_proc->init_kernel - rsp_pointer));
+    
   
     set_CR3(curr_process->cr3);
                                                                                             
@@ -598,11 +585,10 @@ void execve(char *filename, char *argv) {
 	i++;
     } */
     
-    kprintf("argv in sys: %s\n",argv);
     i = 0;
     while(argv[k] != '\0') {
 	j = 0;
-	while (argv[k] != '\n') {
+	while (argv[k] != ' ' && argv[k] != '\0' && argv[k] != '\n') {
 	    kernel_args[i][j++] = (char)argv[k++]; 
 	}
 	kernel_args[i][j] = '\0';
@@ -619,8 +605,7 @@ void execve(char *filename, char *argv) {
 //	kernel_args[0][1] = "\0";
     }
 
-    argc = i - 1;
-    kprintf("argc here: %d\n",argc);
+    argc = i;
 
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
@@ -672,7 +657,7 @@ void execve(char *filename, char *argv) {
     char *ptr = (char *)(user_pcb->user_stack - sizeof(kernel_args));
     memcpy((void *)kernel_args, (void *)ptr, sizeof(kernel_args));
     ptr = ptr - 8;
-    *((int *)ptr) = argc+1;
+    *((int *)ptr) = argc;
     user_pcb->rsp = user_pcb->user_stack - sizeof(kernel_args) - 8;
 
     execve_switch_to_ring3(user_pcb);

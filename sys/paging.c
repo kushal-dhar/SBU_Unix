@@ -163,6 +163,8 @@ void setup_page_tables(uint64_t phys_base, uint64_t phys_free) {
 	pt[pt_index] = address_ptr;
     }
 
+    kprintf("physfree_start: %x  \n",physfree_start);
+
     vAddress = (uint64_t)&kernmem;
     vAddress &= 0xFFFFF000000;
     vAddress |= VIDEO_PHYS_ADDR;
@@ -255,6 +257,7 @@ void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys) {
     uint64_t pdpt_addr;
     uint64_t pd_addr;
     uint64_t pt_addr;
+    uint64_t *virt_page;
 
     if (pml4_addr & PT_PR) {
         pml4_addr = (uint64_t )remove_flag(pml4_addr);
@@ -264,6 +267,8 @@ void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys) {
     else {
     /* If pdpt entry is not allocated yet, allocate a new entry */
         pdpt = (uint64_t *)allocate_virt_page();
+        virt_page = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)pdpt);
+        memset((void*)virt_page, 0, (uint32_t)PAGE_SIZE);
         pml4[pml4_index] = (uint64_t)pdpt | (PT_PR | PT_WR );
 	pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t)pdpt);
     }
@@ -276,6 +281,8 @@ void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys) {
     else {
     /* If page descriptor entry is not allocated yet, allocate a new entry */
         pd = (uint64_t *)allocate_virt_page();
+	virt_page = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)pd);
+        memset((void*)virt_page, 0, (uint32_t)PAGE_SIZE);
         pdpt[pdpt_index] = (uint64_t)pd | (PT_PR | PT_WR );
 	pd = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t )pd);
     }
@@ -287,6 +294,8 @@ void map_phys_to_virt_addr(uint64_t vAddress, uint64_t phys) {
     else {
     /* If page table entry is not allocated yet, allocate a new entry */
         pt = (uint64_t *)allocate_virt_page();
+        virt_page = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)pt);
+        memset((void*)virt_page, 0, (uint32_t)PAGE_SIZE);
         pd[pd_index]=(uint64_t)pt | (PT_PR | PT_WR );
 	pt =  (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )pt);
     }
@@ -424,6 +433,8 @@ void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_
     else {
     /* If pdpt entry is not allocated yet, allocate a new entry */
         pdpt = (uint64_t *)allocate_virt_page();
+ 	virt_page_addr = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)pdpt);
+	memset((void *)virt_page_addr, 0, PAGE_SIZE);
 //	cr3_addr = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t)cr3_addr);
         cr3_addr[pml4_index] = (uint64_t)pdpt | (PT_PR | PT_WR | PT_U);
         pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t)pdpt);
@@ -437,6 +448,8 @@ void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_
     else {
     /* If page descriptor entry is not allocated yet, allocate a new entry */
         pd = (uint64_t *)allocate_virt_page();
+        virt_page_addr = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)pd);
+        memset((void *)virt_page_addr, 0, PAGE_SIZE);
         pdpt[pdpt_index] = (uint64_t)pd | (PT_PR | PT_WR | PT_U);
         pd = (uint64_t *)((uint64_t)KERNEL_ADDR |(uint64_t )pd);
     }
@@ -448,12 +461,15 @@ void map_phys_to_user_virt_addr(uint64_t vAddress, uint64_t phys, uint64_t* cr3_
     else {
     /* If page table entry is not allocated yet, allocate a new entry */
         pt = (uint64_t *)allocate_virt_page();
+        virt_page_addr = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)pt);
+        memset((void *)virt_page_addr, 0, PAGE_SIZE);
         pd[pd_index]=(uint64_t)pt | (PT_PR | PT_WR | PT_U);
         pt =  (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )pt);
     }
 
     page_addr = (uint64_t *)allocate_virt_page();
     virt_page_addr = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )page_addr);
+    memset((void *)virt_page_addr, 0, PAGE_SIZE);
     physical = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )phys);
 //    phys = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t )phys);
     memcpy ((void *)physical, (void *)virt_page_addr, PAGE_SIZE);
@@ -557,17 +573,18 @@ void  init_mmap(pcb_t *process){
     	vma_mmap = (vma_t*)vma_mmap->vm_next;
     }
     vma_mmap->vm_start = (uint64_t) virt_addr;
-    vma_mmap->vm_end = (uint64_t) virt_addr+PAGE_SIZE; 
+    vma_mmap->vm_end = (uint64_t) HEAP_END; 
     process->mm->mmap_start_addr = (uint64_t) virt_addr;
-    process->mm->mmap_end_addr =  (uint64_t) virt_addr+PAGE_SIZE;
+    process->mm->mmap_end_addr =  (uint64_t) HEAP_END;
+    process->mm->mmap_alloc_addr = (uint64_t)virt_addr;
 }
 
 uint64_t mmap(int  size){
     uint64_t ending_addr = curr_process->mm->mmap_end_addr;
-    uint64_t starting_addr = curr_process->mm->mmap_start_addr;
+    uint64_t starting_addr = curr_process->mm->mmap_alloc_addr;
     if( (ending_addr - starting_addr) >= size){
         memset((void*)starting_addr, 0, (uint32_t)size); 
-        curr_process->mm->mmap_start_addr += size;
+        curr_process->mm->mmap_alloc_addr += size;
     }
     return starting_addr;
 }

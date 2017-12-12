@@ -25,13 +25,13 @@ struct mm_struct {
     uint64_t  start_brk, stack_start;
     uint64_t  arg_start, arg_end;
     uint64_t  env_start, env_end;
-    uint64_t  rss;
     uint64_t  rip;
-    uint64_t  vm_total, vm_locked;
+    uint64_t  vm_total;
     vma_t    *vma;
     uint64_t  vma_count;
     uint64_t  mmap_start_addr;
     uint64_t  mmap_end_addr;
+    uint64_t  mmap_alloc_addr;
 }__attribute__((packed));
 
 struct vma {

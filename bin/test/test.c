@@ -28,6 +28,7 @@ int main(int argc, char *argv[], char *envp[]) {
     }
 #endif
     cwd();
+    printf("argc: %d\n",argc);
     for (int i = 0; i < argc; i++) {
 	printf("Arg: %s\n",argv[i]);
     }

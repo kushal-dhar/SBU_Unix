@@ -6,7 +6,7 @@
 #include <sys/pic.h>
 
 #define KERNEL_ADDR      0xFFFFFFFF80000000UL
-#define KERNEL_BASE      0xFFFFFFFF80100000UL
+#define KERNEL_BASE      0xFFFFFFFF80000000UL
 #define USER_VIRT_ADDR   0x888ff000000UL
 #define PHYS_ADDR        0x0UL
 #define VIDEO_ADDR       0xFFFFFFFF800B8000
@@ -15,6 +15,7 @@
 #define STACK_ADDR       0x444ff000000UL
 #define STACK_END        0x444ff010000UL
 #define HEAP_ADDR        0x400ee000000UL
+#define HEAP_END         0x400ee010000UL
 
 #define PAGE_SIZE 4096
 

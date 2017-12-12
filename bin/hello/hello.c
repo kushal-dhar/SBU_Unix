@@ -114,12 +114,12 @@ int main(int argc, char *argv[], char *envp[]) {
 
     else {
 	char *str = (char *)mallocc(sizeof(char) * 100);
-	strcpy(str, "Hello");
+	strcpy(str, "bin/");
 	strcat(str, "\n");
-	strcat(str, "World\n");
-        strcat(str, "Again\n\0");
+//	strcat(str, "World\n");
+//        strcat(str, "Again\n\0");
         printf("Printf is also working %s    \n",str);
-        execve("bin/test", (char *)str);
+        execve("bin/ls", (char *)str);
     }
 /*    char s[100];
     scan("%s",s);

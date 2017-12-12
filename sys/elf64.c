@@ -83,6 +83,8 @@ int load_binaries(pcb_t *proc, uint64_t *elf_start) {
 	    //size = ((size % PAGE_SIZE) == 0) ? size : ((size / PAGE_SIZE) + 1) * PAGE_SIZE;
 	    while (phdr_start <= phdr_end) {
   	        uint64_t *page = (uint64_t *)allocate_virt_page();
+		uint64_t *virt_page = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)page);
+		memset((void*)virt_page, 0, (uint32_t)PAGE_SIZE);
 		map_phys_to_user_virt_addr((uint64_t)phdr_start, (uint64_t)page, (uint64_t *)proc->cr3);
 // 	        map_phys_to_virt_addr((uint64_t)phdr_start, (uint64_t)page);
 		phdr_start += PAGE_SIZE;

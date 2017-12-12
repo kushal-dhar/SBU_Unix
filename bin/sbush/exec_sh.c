@@ -15,7 +15,7 @@ void exec_shell(char *cmd) {
        char str2[100] = "/bin/";
 //strcat(str2,cmd);
 
-  if(strstr(cmd, "&") != NULL) {
+  if(strstr(cmd, "&") != 0) {
 
     pid = fork();
     if (pid == -1) {

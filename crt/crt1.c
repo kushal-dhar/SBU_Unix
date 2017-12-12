@@ -8,27 +8,23 @@ void  _start(){
   uint64_t *argc = 0;
   char **argv = NULL;
   char **envp = NULL;
+  char str[5][50];
+  char temp_str[50];
+  char *str1;
+  int i = 0;
+  int j = 0;
 
   __asm__ volatile(
     "movq %%rsp, %0;"
     : "=a"(rsp)
     :
     :"memory"
-  );
+  ); 
+ 
+  rsp = (uint64_t *)((char*)rsp + 336);
 
   argc = ((uint64_t *)rsp+1);
   argv = ((char **)rsp + 2);
-/*  }
-  else {
-    envp = argv + 2;
-  }
-
-  global_envp = envp; */
-  char str[5][50];
-  char temp_str[50];
-  int i = 0;
-  int j = 0;
-  char *str1;
   while(j < *argc) {
       str1 = (char *)argv+(j*64);
       i = 0;

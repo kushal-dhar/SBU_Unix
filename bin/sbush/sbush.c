@@ -9,6 +9,8 @@
 #include "exec_sh.h"
 #include  <get_cmd.h>
 #include <libc.h>
+
+char str[100];
 int main(int argc, char *argv[], char *envp[]) {
 /*char ** str = (char **)mallocc(sizeof(char *) * 10);
 str[0] = (char*) mallocc(sizeof(char)*50);
@@ -17,7 +19,7 @@ printf("%s",str[0]);
 while(1);
 */
 char path[100] = "rootfs/bin/\0\0\0";
-char *str =  (char *) mallocc(100);
+//char *str =  (char *) mallocc(100);
 char temp[100];
 clear();
 while(1){
@@ -66,7 +68,7 @@ while(1){
              if(pid != 0){
                 wait_pid(pid);
              }else{
-                   addDelimiter(str+4);  
+//                   addDelimiter(str+4);  
                    execve("bin/cat\0\0",str+4);
              }
         }
