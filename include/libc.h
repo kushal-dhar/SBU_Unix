@@ -29,4 +29,5 @@ extern void syscall_2next(uint64_t syscall);
 extern void syscall_2_1(uint64_t syscall, uint64_t ch);
 extern void syscall_2_char(uint64_t syscall);
 extern uint64_t syscall_pid();
+extern void kill(uint64_t pid);
 #endif	

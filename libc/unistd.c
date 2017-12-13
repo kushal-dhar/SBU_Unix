@@ -250,3 +250,15 @@ if ( *(str+len-1) != '/' &&  *(str+len-3) != '.' && *(str+len-2) != 's' && *(str
 
 }
 
+void kill(uint64_t pid) {
+    int syscall = 62;
+    int ret     = 0;
+
+    ret = syscall_2((uint64_t)syscall, (uint64_t)pid);
+    if (ret != 0) {
+	printf("Process Kill unsuccessful\n");
+    }
+
+    return;
+}
+

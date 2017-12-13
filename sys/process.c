@@ -277,6 +277,13 @@ void scheduler() {
     switchTask(curr_process, next_process);
 }
 
+void schedule_sbush() {
+    pcb_t *user_process = create_user_process("bin/sbush");
+    enable_page_fault();
+//    create_user_process("bin/hello");
+    switch_to_ring3((pcb_t *)user_process);
+}
+
 
 /*
  * Process to switch from 1st to 2nd process
@@ -656,6 +663,7 @@ void execve(char *filename, char *argv) {
     if (pointer == NULL) {
 	pointer = curr_process;
 	curr_process->next_proc = NULL;
+	forked_process = curr_process;
     }
     else {
 	while (pointer->next_proc != NULL) {
@@ -715,6 +723,7 @@ void sys_exit() {
     pcb_t     *prev_task;
     pcb_t     *iterator;
     pcb_t     *stopped_list;
+//    uint64_t   new_page;
 
     prev_task = curr_process;
     curr_process->state = TASK_STOPPED;
@@ -734,8 +743,14 @@ void sys_exit() {
     }
     else {
 	while(stopped_list->next_proc != NULL) {
+	    iterator = stopped_list;
 	    stopped_list = stopped_list->next_proc;
+//            free_vma(stopped_list->mm, stopped_list->cr3);
+//            free_page(stopped_list->user_stack, stopped_list->cr3);
+//            delete_pagetable(stopped_list->cr3);
+//            free_page((uint64_t)stopped_list, curr_process->cr3);
 	}
+//	stopped_process = curr_process;
 	stopped_list->next_proc = curr_process;
 	curr_process->next_proc = NULL;
     }
@@ -744,12 +759,17 @@ void sys_exit() {
     while(iterator != NULL) {
 	stopped_list = iterator;
 	iterator = iterator->next_proc;
-        free_vma(stopped_list->mm, stopped_list->cr3);
+//        free_vma(stopped_list->mm, stopped_list->cr3);
 //        free_page(stopped_list->user_stack, stopped_list->cr3);
-        delete_pagetable(stopped_list->cr3);
-        free_page((uint64_t)stopped_list, curr_process->cr3);
+//        delete_pagetable(stopped_list->cr3);
+//        free_page((uint64_t)stopped_list, curr_process->cr3);
     }
-
+    
+    set_CR3(curr_process->cr3);
+//    new_page = (uint64_t)allocate_virt_page();
+//    kprintf("new_page: %x\n",new_page);
+    
+    
     curr_process = prev_task;
 /*
     while (iterator->next_proc->pid != prev_task->pid) {
@@ -763,7 +783,9 @@ void sys_exit() {
     if (curr_process->pid == 1) {
 	prev_task->init_kernel = prev_task->kern_rsp = (uint64_t)prev_task + PAGE_SIZE - 8;
 	memset((void*)prev_task, 0, (uint32_t)PAGE_SIZE);
-        *(uint64_t *)(prev_task->kern_rsp) = (uint64_t)&initial_ret_function;       
+	kprintf("\n\n\n******************Terminal terminated******************\n\n\n");
+	clear_console();
+        *(uint64_t *)(prev_task->kern_rsp) = (uint64_t)&schedule_sbush;       
 	user_switchBack(prev_task);
         
     }
@@ -775,4 +797,49 @@ void sys_exit() {
  * Handle kill syscall 
  */
 void kill(uint64_t pid) {
+    pcb_t     *iterator;
+    pcb_t     *prev_task      = NULL;
+    pcb_t     *stopped_list;
+    uint64_t   deleted        = 0;
+
+    if (pid == curr_process->pid) {
+	sys_exit();
+    }
+    else {
+	iterator = first_process;
+ 	while(iterator->pid != pid && iterator->next_proc != first_process) {
+	    prev_task = iterator;
+	    iterator = iterator->next_proc;
+	}
+	iterator = prev_task;
+ 	if (iterator->next_proc->pid == pid) {
+	    stopped_list = stopped_process;
+	    if (stopped_list == NULL) {
+		stopped_process = iterator->next_proc;
+		iterator->next_proc = stopped_process->next_proc;
+		stopped_process->next_proc = NULL;
+		kprintf("Killed %d",pid);
+		deleted = 1;
+	    }
+	    else {
+		prev_task = stopped_list;
+   	        while(stopped_list != NULL) {
+		    prev_task = stopped_list;
+		    stopped_list = stopped_list->next_proc;
+		}
+		prev_task->next_proc = iterator->next_proc;
+		iterator->next_proc = prev_task->next_proc->next_proc;
+		prev_task->next_proc->next_proc = NULL;
+		kprintf("Killed %d",pid);
+		deleted = 1;
+	    }
+	}
+	
+	/* Process to be deleted is not in ready process */
+	if (deleted == 0) {
+	    kprintf("Killed %d",pid);
+	}
+    }
+    return;
+    
 }

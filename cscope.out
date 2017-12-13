@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 cscope 15 $HOME/final_sahil2/os-project               0000258737
+=======
+cscope 15 $HOME/update_course/os-project               0000259581
+>>>>>>> Stashed changes
 	@bin/cat/cat.c
 
 1 
@@ -382,6 +386,78 @@ pid
 ();
 
 133 
+	}
+}
+
+	@bin/kill/kill.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<libc.h
+>
+
+3 
+	~<¡ršg.h
+>
+
+7 
+	$maš
+(
+¬gc
+, *
+¬gv
+[], *
+’vp
+[]) {
+
+8 
+sysÿÎ
+ = 62;
+
+9 
+»t
+ = 0;
+
+10 
+ušt64_t
+ 
+pid
+ = 0;
+
+12 
+pid
+ = (
+ušt64_t
+)
+	`©oi
+(
+¬gv
+[1]);
+
+13 
+»t
+ = 
+	`sysÿÎ_2
+((
+ušt64_t
+)
+sysÿÎ
+, (ušt64_t)
+pid
+);
+
+14 ià(
+»t
+ != 0) {
+
+15 
+	`´štf
+("Process Kill unsuccessful\n");
+
+19 
 	}
 }
 
@@ -1577,17 +1653,14 @@ pid
 
 107 && *(
 ¡r
+<<<<<<< Updated upstream
 +5) == 's' && *(str+6) == 'h') {
 
 108 
-Ën
- = 
-	`¡¾’
-(
-¡r
-);
+=======
+=='k' && *(str+1) == 'i' && *(str+2) == 'l' && *(str+3) == 'l' && *(str+5) == '-' && *(str+6) == '9' ){
 
-109 
+114 
 ušt64_t
  
 pid
@@ -1595,34 +1668,96 @@ pid
 	`fÜk
 ();
 
-110 if(
+115 if(
 pid
  != 0){
 
-111 
+116 
 	`wa™_pid
 (
 pid
 );
 
+119 
+	`execve
+("bš/kl\0\0",
+¡r
++7);
+
+124 ià(*
+¡r
+ == '.' && *(str+1) == '/' && *(str+2) == 's' && *(str+3) == 'b' && *(str+4) == 'u' && *(str+5) == 's' && *(str+6) == 'h') {
+
+125 
+>>>>>>> Stashed changes
+Ën
+ = 
+	`¡¾’
+(
+¡r
+);
+
+<<<<<<< Updated upstream
+109 
+=======
+126 
+>>>>>>> Stashed changes
+ušt64_t
+ 
+pid
+ = 
+	`fÜk
+();
+
+<<<<<<< Updated upstream
+110 if(
+pid
+ != 0){
+
+111 
+=======
+127 if(
+pid
+ != 0){
+
+128 
+>>>>>>> Stashed changes
+	`wa™_pid
+(
+pid
+);
+
+<<<<<<< Updated upstream
 114 if(*(
+=======
+131 if(*(
+>>>>>>> Stashed changes
 ¡r
 +2è=ğ' ' && 
 Ën
  > 2){
 
+<<<<<<< Updated upstream
 115 
+=======
+132 
+>>>>>>> Stashed changes
 	`addD–im™”
 (
 ¡r
 +7);
 
+<<<<<<< Updated upstream
 117 
+=======
+134 
+>>>>>>> Stashed changes
 	`execve
 ("bš/sbush\0\0",
 ¡r
 +7);
 
+<<<<<<< Updated upstream
 121 ià(*
 ¡r
  == '.' && *(str+1) == '/' &&
@@ -1646,20 +1781,23 @@ pid
 );
 
 127 ià(*
+=======
+138 ià(*
+>>>>>>> Stashed changes
 ¡r
  == 'e' && *(str+1) == 'x' && *(str+2) == 'i' && *(str+3) == 't' ) {
 
-128 
+139 
 	`ex™
 ();
 
-131 
+142 
 	`´štf
 (":sbush : % --commªd‚Ù found", 
 ¡r
 );
 
-136 
+147 
 	}
 }
 
@@ -2936,6 +3074,14 @@ ušt64_t
  
 sysÿÎ_pid
 ();
+
+32 
+kl
+(
+ušt64_t
+ 
+pid
+);
 
 	@include/scripts.h
 
@@ -6642,6 +6788,10 @@ ušt64_t
  
 pid
 );
+
+101 
+scheduË_sbush
+();
 
 	@include/sys/string.h
 
@@ -10952,6 +11102,46 @@ fd
 ("-sbush: No such file or directory");
 
 238 
+	}
+}
+
+219 
+	$kl
+(
+ušt64_t
+ 
+pid
+) {
+
+220 
+sysÿÎ
+ = 62;
+
+221 
+»t
+ = 0;
+
+223 
+»t
+ = 
+	`sysÿÎ_2
+((
+ušt64_t
+)
+sysÿÎ
+, (ušt64_t)
+pid
+);
+
+224 ià(
+»t
+ != 0) {
+
+225 
+	`´štf
+("Process Kill unsuccessful\n");
+
+229 
 	}
 }
 
@@ -18367,10 +18557,13 @@ __asm__
 çuÉ_addr
 ));
 
+<<<<<<< Updated upstream
 495 
 	`k´štf
 ("%s"," ");
 
+=======
+>>>>>>> Stashed changes
 497 
 çuÉ_addr
  = (
@@ -19591,11 +19784,15 @@ KERNEL_ADDR
 ±_šdex
 ];
 
+<<<<<<< Updated upstream
 712 ià(
+=======
+712 ià(!(
+>>>>>>> Stashed changes
 bË_’Œy
- & 
+ & (0x1 << 9)è&& (bË_’Œy & 
 PT_PR
- ) {
+)) {
 
 713 
 bË_’Œy
@@ -19611,15 +19808,25 @@ ušt64_t
 ä“_m­
 , 
 bË_’Œy
+/
+PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 715 
+=======
+716 
+>>>>>>> Stashed changes
 ±
 [
 ±_šdex
 ] = 0;
 
+<<<<<<< Updated upstream
 716 
+=======
+717 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -19627,7 +19834,11 @@ ušt64_t
 KERNEL_ADDR
  |able_entry);
 
+<<<<<<< Updated upstream
 717 
+=======
+718 
+>>>>>>> Stashed changes
 	`mem£t
 ((*)
 bË_’Œy
@@ -19635,11 +19846,19 @@ KERNEL_ADDR
 PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 723 
 	}
 }
 
 725 
+=======
+724 
+	}
+}
+
+726 
+>>>>>>> Stashed changes
 	$ä“_k”Ãl_·ge
 (
 ušt64_t
@@ -19647,37 +19866,61 @@ ušt64_t
 vAdd»ss
 ) {
 
+<<<<<<< Updated upstream
 726 
+=======
+727 
+>>>>>>> Stashed changes
 ušt64_t
  *
 pml4
  ;
 
+<<<<<<< Updated upstream
 727 
+=======
+728 
+>>>>>>> Stashed changes
 ušt64_t
  *
 pd±
 ;
 
+<<<<<<< Updated upstream
 728 
+=======
+729 
+>>>>>>> Stashed changes
 ušt64_t
  *
 pd
 ;
 
+<<<<<<< Updated upstream
 729 
+=======
+730 
+>>>>>>> Stashed changes
 ušt64_t
  *
 ±
 ;
 
+<<<<<<< Updated upstream
 730 
+=======
+731 
+>>>>>>> Stashed changes
 ušt64_t
  
 bË_’Œy
 ;
 
+<<<<<<< Updated upstream
 731 
+=======
+732 
+>>>>>>> Stashed changes
 ušt64_t
  
 pml4_šdex
@@ -19687,7 +19930,11 @@ vAdd»ss
 PML4_INDEX
 ) & 0x1FF;
 
+<<<<<<< Updated upstream
 732 
+=======
+733 
+>>>>>>> Stashed changes
 ušt64_t
  
 pd±_šdex
@@ -19697,7 +19944,11 @@ vAdd»ss
 PDPT_INDEX
 ) & 0x1FF;
 
+<<<<<<< Updated upstream
 733 
+=======
+734 
+>>>>>>> Stashed changes
 ušt64_t
  
 pd_šdex
@@ -19707,7 +19958,11 @@ vAdd»ss
 PD_INDEX
 ) & 0x1FF;
 
+<<<<<<< Updated upstream
 734 
+=======
+735 
+>>>>>>> Stashed changes
 ušt64_t
  
 ±_šdex
@@ -19717,13 +19972,21 @@ vAdd»ss
 PT_INDEX
 ) & 0x1FF;
 
+<<<<<<< Updated upstream
 736 
+=======
+737 
+>>>>>>> Stashed changes
 __asm__
  vŞ©e("mov %%ü3, %0" : "÷" (
 pml4
 ));
 
+<<<<<<< Updated upstream
 737 
+=======
+738 
+>>>>>>> Stashed changes
 pml4
  = (
 ušt64_t
@@ -19731,7 +19994,11 @@ ušt64_t
 KERNEL_ADDR
  | (uint64_t)pml4);
 
+<<<<<<< Updated upstream
 738 
+=======
+739 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pml4
@@ -19739,13 +20006,21 @@ pml4
 pml4_šdex
 ];
 
+<<<<<<< Updated upstream
 740 if(
+=======
+741 if(
+>>>>>>> Stashed changes
 bË_’Œy
  & 
 PT_PR
 ) {
 
+<<<<<<< Updated upstream
 741 
+=======
+742 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -19753,7 +20028,11 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 742 
+=======
+743 
+>>>>>>> Stashed changes
 pd±
  = (
 ušt64_t
@@ -19763,7 +20042,11 @@ KERNEL_ADDR
 bË_’Œy
 );
 
+<<<<<<< Updated upstream
 743 
+=======
+744 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pd±
@@ -19771,13 +20054,21 @@ pd±
 pd±_šdex
 ];
 
+<<<<<<< Updated upstream
 745 ià(
+=======
+746 ià(
+>>>>>>> Stashed changes
 bË_’Œy
  & 
 PT_PR
 ) {
 
+<<<<<<< Updated upstream
 746 
+=======
+747 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -19785,7 +20076,11 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 747 
+=======
+748 
+>>>>>>> Stashed changes
 pd
  = (
 ušt64_t
@@ -19795,7 +20090,11 @@ KERNEL_ADDR
 bË_’Œy
 );
 
+<<<<<<< Updated upstream
 748 
+=======
+749 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pd
@@ -19803,13 +20102,21 @@ pd
 pd_šdex
 ];
 
+<<<<<<< Updated upstream
 750 ià(
+=======
+751 ià(
+>>>>>>> Stashed changes
 bË_’Œy
  & 
 PT_PR
 ) {
 
+<<<<<<< Updated upstream
 751 
+=======
+752 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -19817,7 +20124,11 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 752 
+=======
+753 
+>>>>>>> Stashed changes
 ±
  = (
 ušt64_t
@@ -19827,7 +20138,11 @@ KERNEL_ADDR
 bË_’Œy
 );
 
+<<<<<<< Updated upstream
 753 
+=======
+754 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 ±
@@ -19835,13 +20150,21 @@ KERNEL_ADDR
 ±_šdex
 ];
 
+<<<<<<< Updated upstream
 755 ià(
+=======
+756 ià(
+>>>>>>> Stashed changes
 bË_’Œy
  & 
 PT_PR
  ) {
 
+<<<<<<< Updated upstream
 756 
+=======
+757 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -19849,15 +20172,25 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 757 
+=======
+758 
+>>>>>>> Stashed changes
 	`£t_b™
 (
 ä“_m­
 , 
 bË_’Œy
+/
+PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 759 
+=======
+760 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -19865,7 +20198,11 @@ ušt64_t
 KERNEL_ADDR
  |able_entry);
 
+<<<<<<< Updated upstream
 760 
+=======
+761 
+>>>>>>> Stashed changes
 	`mem£t
 ((*)
 bË_’Œy
@@ -19873,11 +20210,19 @@ KERNEL_ADDR
 PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 766 
 	}
 }
 
 768 
+=======
+767 
+	}
+}
+
+769 
+>>>>>>> Stashed changes
 	$d–‘e_·g‘abË
 (
 ušt64_t
@@ -19885,61 +20230,101 @@ ušt64_t
 pml4_addr
 ) {
 
+<<<<<<< Updated upstream
 769 
+=======
+770 
+>>>>>>> Stashed changes
 ušt64_t
  
 bË_’Œy
 ;
 
+<<<<<<< Updated upstream
 770 
+=======
+771 
+>>>>>>> Stashed changes
 ušt64_t
  
 pml4_šdex
 ;
 
+<<<<<<< Updated upstream
 771 
+=======
+772 
+>>>>>>> Stashed changes
 ušt64_t
  
 pd±_šdex
 ;
 
+<<<<<<< Updated upstream
 772 
+=======
+773 
+>>>>>>> Stashed changes
 ušt64_t
  
 pd_šdex
 ;
 
+<<<<<<< Updated upstream
 773 
+=======
+774 
+>>>>>>> Stashed changes
 ušt64_t
  
 ±_šdex
 ;
 
+<<<<<<< Updated upstream
 774 
+=======
+775 
+>>>>>>> Stashed changes
 ušt64_t
  *
 pml4
 ;
 
+<<<<<<< Updated upstream
 775 
+=======
+776 
+>>>>>>> Stashed changes
 ušt64_t
  *
 pd±
 ;
 
+<<<<<<< Updated upstream
 776 
+=======
+777 
+>>>>>>> Stashed changes
 ušt64_t
  *
 pd
 ;
 
+<<<<<<< Updated upstream
 777 
+=======
+778 
+>>>>>>> Stashed changes
 ušt64_t
  *
 ±
 ;
 
+<<<<<<< Updated upstream
 779 
+=======
+780 
+>>>>>>> Stashed changes
 pml4
  = (
 ušt64_t
@@ -19949,11 +20334,19 @@ KERNEL_ADDR
 pml4_addr
 );
 
+<<<<<<< Updated upstream
 781 
 pml4_šdex
  = 0;…ml4_index < 511;…ml4_index++) {
 
 782 
+=======
+782 
+pml4_šdex
+ = 0;…ml4_index < 511;…ml4_index++) {
+
+783 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pml4
@@ -19961,13 +20354,21 @@ pml4
 pml4_šdex
 ];
 
+<<<<<<< Updated upstream
 783 ià(
+=======
+784 ià(
+>>>>>>> Stashed changes
 bË_’Œy
  & 
 PT_PR
 ) {
 
+<<<<<<< Updated upstream
 784 
+=======
+785 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -19975,7 +20376,11 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 785 
+=======
+786 
+>>>>>>> Stashed changes
 pd±
  = (
 ušt64_t
@@ -19985,11 +20390,19 @@ KERNEL_ADDR
 bË_’Œy
 );
 
+<<<<<<< Updated upstream
 787 
 pd±_šdex
  = 0;…dpt_index < 512;…dpt_index ++) {
 
 788 
+=======
+788 
+pd±_šdex
+ = 0;…dpt_index < 512;…dpt_index ++) {
+
+789 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pd±
@@ -19997,13 +20410,21 @@ pd±
 pd±_šdex
 ];
 
+<<<<<<< Updated upstream
 789 ià(
+=======
+790 ià(
+>>>>>>> Stashed changes
 bË_’Œy
  & 
 PT_PR
 ) {
 
+<<<<<<< Updated upstream
 790 
+=======
+791 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20011,7 +20432,11 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 791 
+=======
+792 
+>>>>>>> Stashed changes
 pd
  = (
 ušt64_t
@@ -20021,11 +20446,19 @@ KERNEL_ADDR
 bË_’Œy
 );
 
+<<<<<<< Updated upstream
 793 
 pd_šdex
  = 0;…d_index < 512;…d_index++) {
 
 794 
+=======
+794 
+pd_šdex
+ = 0;…d_index < 512;…d_index++) {
+
+795 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pd
@@ -20033,13 +20466,21 @@ pd
 pd_šdex
 ];
 
+<<<<<<< Updated upstream
 795 ià(
+=======
+796 ià(
+>>>>>>> Stashed changes
 bË_’Œy
  & 
 PT_PR
 ) {
 
+<<<<<<< Updated upstream
 796 
+=======
+797 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20047,7 +20488,11 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 797 
+=======
+798 
+>>>>>>> Stashed changes
 ±
  = (
 ušt64_t
@@ -20057,11 +20502,19 @@ KERNEL_ADDR
 bË_’Œy
 );
 
+<<<<<<< Updated upstream
 799 
 ±_šdex
  = 0;…t_index < 512;…t_index ++) {
 
 800 
+=======
+800 
+±_šdex
+ = 0;…t_index < 512;…t_index ++) {
+
+801 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 ±
@@ -20069,17 +20522,21 @@ KERNEL_ADDR
 ±_šdex
 ];
 
+<<<<<<< Updated upstream
 801 ià(
+=======
+802 ià(!(
+>>>>>>> Stashed changes
 bË_’Œy
- & (
+ & (0x1 << 9è&& (bË_’Œy & 
 PT_PR
- | 
-PT_WR
- | 
-PT_U
-)) {
+))) {
 
+<<<<<<< Updated upstream
 802 
+=======
+803 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20087,25 +20544,43 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 803 ià(
 bË_’Œy
  != 0) {
 
 804 
+=======
+804 ià(
+bË_’Œy
+ != 0) {
+
+805 
+>>>>>>> Stashed changes
 	`£t_b™
 (
 ä“_m­
 , 
 bË_’Œy
+/
+PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 805 
+=======
+806 
+>>>>>>> Stashed changes
 ±
 [
 ±_šdex
 ] = 0;
 
+<<<<<<< Updated upstream
 806 
+=======
+807 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20113,6 +20588,7 @@ ušt64_t
 KERNEL_ADDR
  |able_entry);
 
+<<<<<<< Updated upstream
 807 
 	`mem£t
 ((*)
@@ -20122,6 +20598,9 @@ PAGE_SIZE
 );
 
 811 
+=======
+812 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pd
@@ -20129,7 +20608,11 @@ pd
 pd_šdex
 ];
 
+<<<<<<< Updated upstream
 812 
+=======
+813 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20137,21 +20620,35 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 813 
+=======
+814 
+>>>>>>> Stashed changes
 	`£t_b™
 (
 ä“_m­
 , 
 bË_’Œy
+/
+PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 814 
+=======
+815 
+>>>>>>> Stashed changes
 pd
 [
 pd_šdex
 ] = 0;
 
+<<<<<<< Updated upstream
 815 
+=======
+816 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20159,6 +20656,7 @@ ušt64_t
 KERNEL_ADDR
  |able_entry);
 
+<<<<<<< Updated upstream
 816 
 	`mem£t
 ((*)
@@ -20168,6 +20666,9 @@ PAGE_SIZE
 );
 
 819 
+=======
+820 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pd±
@@ -20175,7 +20676,11 @@ pd±
 pd±_šdex
 ];
 
+<<<<<<< Updated upstream
 820 
+=======
+821 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20183,21 +20688,35 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 821 
+=======
+822 
+>>>>>>> Stashed changes
 	`£t_b™
 (
 ä“_m­
 , 
 bË_’Œy
+/
+PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 822 
+=======
+823 
+>>>>>>> Stashed changes
 pd±
 [
 pd±_šdex
 ] = 0;
 
+<<<<<<< Updated upstream
 823 
+=======
+824 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20205,6 +20724,7 @@ ušt64_t
 KERNEL_ADDR
  |able_entry);
 
+<<<<<<< Updated upstream
 824 
 	`mem£t
 ((*)
@@ -20214,6 +20734,9 @@ PAGE_SIZE
 );
 
 827 
+=======
+828 
+>>>>>>> Stashed changes
 bË_’Œy
  = 
 pml4
@@ -20221,7 +20744,11 @@ pml4
 pml4_šdex
 ];
 
+<<<<<<< Updated upstream
 828 
+=======
+829 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20229,21 +20756,35 @@ ušt64_t
 	`»move_æag
 (table_entry);
 
+<<<<<<< Updated upstream
 829 
+=======
+830 
+>>>>>>> Stashed changes
 	`£t_b™
 (
 ä“_m­
 , 
 bË_’Œy
+/
+PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 830 
+=======
+831 
+>>>>>>> Stashed changes
 pml4
 [
 pml4_šdex
 ] = 0;
 
+<<<<<<< Updated upstream
 831 
+=======
+832 
+>>>>>>> Stashed changes
 bË_’Œy
  = (
 ušt64_t
@@ -20251,6 +20792,7 @@ ušt64_t
 KERNEL_ADDR
  |able_entry);
 
+<<<<<<< Updated upstream
 832 
 	`mem£t
 ((*)
@@ -20258,6 +20800,11 @@ KERNEL_ADDR
 , 0, 
 PAGE_SIZE
 );
+=======
+837 
+	}
+}
+>>>>>>> Stashed changes
 
 836 
 	}
@@ -22285,7 +22832,35 @@ cu¼_´oûss
 	}
 }
 
-284 
+280 
+	$scheduË_sbush
+() {
+
+281 
+pcb_t
+ *
+u£r_´oûss
+ = 
+	`ü—‹_u£r_´oûss
+("bin/sbush");
+
+282 
+	`’abË_·ge_çuÉ
+();
+
+284 
+	`sw™ch_to_ršg3
+((
+pcb_t
+ *)
+u£r_´oûss
+);
+
+285 
+	}
+}
+
+291 
 	$sw™chTask
 (
 pcb_t
@@ -22295,7 +22870,7 @@ cu¼’t
 Ãxt
 ) {
 
-286 
+293 
 __asm__
  vŞ©e("movq %%rdi, %0;" : "÷"(
 cu¼’t
@@ -22305,7 +22880,7 @@ cu¼’t
 rdi
 ));
 
-287 
+294 
 __asm__
  vŞ©e("movq %%rsi, %0;" : "÷"(
 cu¼’t
@@ -22315,7 +22890,7 @@ cu¼’t
 rsi
 ));
 
-288 
+295 
 __asm__
  vŞ©e("movq %%¿x, %0;" : "÷"(
 cu¼’t
@@ -22325,7 +22900,7 @@ cu¼’t
 ¿x
 ));
 
-289 
+296 
 __asm__
  vŞ©e("movq %%rbx, %0;" : "÷"(
 cu¼’t
@@ -22335,7 +22910,7 @@ cu¼’t
 rbx
 ));
 
-290 
+297 
 __asm__
  vŞ©e("movq %%rbp, %0;" : "÷"(
 cu¼’t
@@ -22345,7 +22920,7 @@ cu¼’t
 rbp
 ));
 
-292 
+299 
 __asm__
  vŞ©("movq %%r¥, %0;":"÷"(
 cu¼’t
@@ -22353,7 +22928,7 @@ cu¼’t
 r¥
 ));
 
-293 
+300 
 __asm__
  vŞ©("movq %0, %%r¥;"::"a"(
 Ãxt
@@ -22361,7 +22936,7 @@ __asm__
 r¥
 ));
 
-295 
+302 
 __asm__
  vŞ©("movq %0, %%rdi;" :: "a"(
 Ãxt
@@ -22371,7 +22946,7 @@ __asm__
 rdi
 ));
 
-296 
+303 
 __asm__
  vŞ©("movq %0, %%¿x;" :: "a"(
 Ãxt
@@ -22381,7 +22956,7 @@ __asm__
 ¿x
 ));
 
-297 
+304 
 __asm__
  vŞ©("movq %0, %%rbx;" :: "a"(
 Ãxt
@@ -22391,7 +22966,7 @@ __asm__
 rbx
 ));
 
-298 
+305 
 __asm__
  vŞ©("movq %0, %%rbp;" :: "a"(
 Ãxt
@@ -22401,7 +22976,7 @@ __asm__
 rbp
 ));
 
-299 
+306 
 __asm__
  vŞ©("movq %0, %%rsi;" :: "a"(
 Ãxt
@@ -22411,11 +22986,11 @@ __asm__
 rsi
 ));
 
-301 
+308 
 	}
 }
 
-305 
+312 
 	$u£r_sw™chTask
 (
 pcb_t
@@ -22425,7 +23000,7 @@ cu¼’t
 Ãxt
 ) {
 
-307 
+314 
 	`£t_tss_r¥
 ((*)
 Ãxt
@@ -22433,7 +23008,7 @@ cu¼’t
 š™_k”Ãl
 );
 
-309 
+316 
 __asm__
  vŞ©("movq %0, %%ü3;" :: "a"(
 Ãxt
@@ -22441,7 +23016,7 @@ __asm__
 ü3
 ));
 
-310 
+317 
 __asm__
  vŞ©("movq %%r¥, %0;":"÷"(
 cu¼’t
@@ -22449,7 +23024,7 @@ cu¼’t
 k”n_r¥
 ));
 
-311 
+318 
 __asm__
  vŞ©("movq %0, %%r¥;"::"a"(
 Ãxt
@@ -22457,19 +23032,19 @@ __asm__
 k”n_r¥
 ));
 
-313 
+320 
 __asm__
  volatile ("addq $8, %rsp;");
 
-314 
+321 
 __asm__
  volatile("ret");
 
-316 
+323 
 	}
 }
 
-322 
+329 
 	$sw™chBack
 (
 pcb_t
@@ -22479,7 +23054,7 @@ cu¼’t
 Ãxt
 ) {
 
-324 
+331 
 __asm__
  vŞ©("movq %%r¥, %0;" : "÷"((
 cu¼’t
@@ -22487,7 +23062,7 @@ cu¼’t
 š™_k”Ãl
 )));
 
-325 
+332 
 __asm__
  vŞ©("movq %0, %%r¥;" :: "a"((
 Ãxt
@@ -22495,7 +23070,7 @@ __asm__
 š™_k”Ãl
 )));
 
-327 
+334 
 Ãxt
 ->
 š™_k”Ãl
@@ -22503,7 +23078,7 @@ __asm__
 ušt64_t
 )next->init_kernel;
 
-328 
+335 
 	`£t_tss_r¥
 ((*)
 Ãxt
@@ -22511,15 +23086,15 @@ ušt64_t
 š™_k”Ãl
 );
 
-330 
+337 
 __asm__
  volatile ("ret");
 
-332 
+339 
 	}
 }
 
-337 
+344 
 	$u£r_sw™chBack
 (
 pcb_t
@@ -22527,7 +23102,7 @@ pcb_t
 Ãxt
 ) {
 
-338 
+345 
 Ãxt
 ->
 ¡©e
@@ -22535,7 +23110,7 @@ pcb_t
 TASK_RUNNING
 ;
 
-340 
+347 
 	`£t_tss_r¥
 ((*)
 Ãxt
@@ -22543,7 +23118,7 @@ TASK_RUNNING
 š™_k”Ãl
 );
 
-343 
+350 
 __asm__
  vŞ©("movq %0, %%r¥;" :: "a"((
 Ãxt
@@ -22551,7 +23126,7 @@ __asm__
 k”n_r¥
 )));
 
-345 
+352 
 __asm__
  vŞ©("movq %0, %%ü3;" :: "a"(
 Ãxt
@@ -22559,15 +23134,15 @@ __asm__
 ü3
 ));
 
-350 
+357 
 __asm__
  volatile ("ret");
 
-352 
+359 
 	}
 }
 
-358 
+365 
 	$sw™ch_to_ršg3
 (
 pcb_t
@@ -22575,13 +23150,13 @@ pcb_t
 ´oc
 ) {
 
-359 
+366 
 cu¼_´oûss
  = cu¼_´oûss->
 Ãxt_´oc
 ;
 
-360 
+367 
 Ãxt_´oûss
  = 
 cu¼_´oûss
@@ -22589,13 +23164,13 @@ cu¼_´oûss
 Ãxt_´oc
 ;
 
-361 
+368 
 	`k´štf
 ("´oûss: %d",
 cu¼_´oûss
 );
 
-363 
+370 
 ´oc
 ->
 ¡©e
@@ -22603,7 +23178,7 @@ cu¼_´oûss
 TASK_RUNNING
 ;
 
-364 
+371 
 fœ¡_´oûss
 ->
 ¡©e
@@ -22611,13 +23186,13 @@ fœ¡_´oûss
 TASK_READY
 ;
 
-365 
+372 
 cu¼_´oûss
  = 
 ´oc
 ;
 
-368 
+375 
 	`£t_tss_r¥
 ((*)
 ´oc
@@ -22625,11 +23200,11 @@ cu¼_´oûss
 š™_k”Ãl
 );
 
-370 
+377 
 __asm__
  volatile ("cli" ::);
 
-371 
+378 
 __asm__
  vŞ©("movq %%r¥, %0;" : "÷"((
 fœ¡_´oûss
@@ -22637,7 +23212,7 @@ fœ¡_´oûss
 k”n_r¥
 )));
 
-372 
+379 
 __asm__
  vŞ©("movq %0, %%ü3;" :: "a"(
 ´oc
@@ -22645,27 +23220,27 @@ __asm__
 ü3
 ));
 
-373 
+380 
 __asm__
  volatile ("mov $0x23, %%ax" ::);
 
-374 
+381 
 __asm__
  volatile ("mov %%ax, %%ds;" ::);
 
-375 
+382 
 __asm__
  volatile ("mov %%ax, %%es;" ::);
 
-376 
+383 
 __asm__
  volatile ("mov %%ax, %%fs;" ::);
 
-377 
+384 
 __asm__
  volatile ("mov %%ax, %%gs;" ::);
 
-378 
+385 
 __asm__
  vŞ©("movq %0, %%¿x;"::"a"(
 ´oc
@@ -22673,35 +23248,35 @@ __asm__
 r¥
 ));
 
-379 
+386 
 __asm__
  volatile ("pushq $0x23" ::);
 
-380 
+387 
 __asm__
  volatile ("pushq %%rax" ::);
 
-381 
+388 
 __asm__
  volatile ("pushfq" ::);
 
-382 
+389 
 __asm__
  volatile ("popq %%rax" ::);
 
-383 
+390 
 __asm__
  volatile ("orq $0x200, %%rax;" ::);
 
-384 
+391 
 __asm__
  volatile ("pushq %%rax" ::);
 
-385 
+392 
 __asm__
  volatile ("pushq $0x2B" ::);
 
-386 
+393 
 __asm__
  vŞ©("pushq %0;" :: "a"(
 ´oc
@@ -22709,23 +23284,23 @@ __asm__
 r
 ));
 
-387 
+394 
 __asm__
  volatile ("movq $0x0, %%rdi" ::);
 
-388 
+395 
 __asm__
  volatile ("movq $0x0, %%rsi" ::);
 
-389 
+396 
 __asm__
  volatile ("iretq" ::);
 
-391 
+398 
 	}
 }
 
-396 
+403 
 	$execve_sw™ch_to_ršg3
 (
 pcb_t
@@ -22733,7 +23308,7 @@ pcb_t
 ´oc
 ) {
 
-397 
+404 
 ´oc
 ->
 ¡©e
@@ -22741,13 +23316,13 @@ pcb_t
 TASK_RUNNING
 ;
 
-398 
+405 
 cu¼_´oûss
  = 
 ´oc
 ;
 
-400 
+407 
 	`£t_tss_r¥
 ((*)
 ´oc
@@ -22755,11 +23330,11 @@ cu¼_´oûss
 š™_k”Ãl
 );
 
-402 
+409 
 __asm__
  volatile ("cli" ::);
 
-403 
+410 
 __asm__
  vŞ©("movq %0, %%ü3;" :: "a"(
 ´oc
@@ -22767,27 +23342,27 @@ __asm__
 ü3
 ));
 
-405 
+412 
 __asm__
  volatile ("mov $0x23, %%ax" ::);
 
-406 
+413 
 __asm__
  volatile ("mov %%ax, %%ds;" ::);
 
-407 
+414 
 __asm__
  volatile ("mov %%ax, %%es;" ::);
 
-408 
+415 
 __asm__
  volatile ("mov %%ax, %%fs;" ::);
 
-409 
+416 
 __asm__
  volatile ("mov %%ax, %%gs;" ::);
 
-410 
+417 
 __asm__
  vŞ©("movq %0, %%¿x;"::"a"(
 ´oc
@@ -22795,35 +23370,35 @@ __asm__
 r¥
 ));
 
-411 
+418 
 __asm__
  volatile ("pushq $0x23" ::);
 
-412 
+419 
 __asm__
  volatile ("pushq %%rax" ::);
 
-413 
+420 
 __asm__
  volatile ("pushfq" ::);
 
-414 
+421 
 __asm__
  volatile ("popq %%rax" ::);
 
-415 
+422 
 __asm__
  volatile ("orq $0x200, %%rax;" ::);
 
-416 
+423 
 __asm__
  volatile ("pushq %%rax" ::);
 
-417 
+424 
 __asm__
  volatile ("pushq $0x2B" ::);
 
-418 
+425 
 __asm__
  vŞ©("pushq %0;" :: "a"(
 ´oc
@@ -22831,23 +23406,23 @@ __asm__
 r
 ));
 
-419 
+426 
 __asm__
  volatile ("movq $0x0, %%rdi" ::);
 
-420 
+427 
 __asm__
  volatile ("movq $0x0, %%rsi" ::);
 
-421 
+428 
 __asm__
  volatile ("iretq" ::);
 
-423 
+430 
 	}
 }
 
-426 
+433 
 	$£t_u£r_¥aû
 (
 pcb_t
@@ -22859,7 +23434,7 @@ ušt64_t
 off£t
 ) {
 
-427 
+434 
 ušt64_t
 * 
 u£r_·ge
@@ -22869,19 +23444,19 @@ u£r_´oûss
 r
 ;
 
-428 
+435 
 ušt64_t
 * 
 u£r_vœtu®_addr
 ;
 
-431 
+438 
 u£r_·ge
  = (
 ušt64_t
  *)(0x000000000FFFF000UL & (uint64_t)user_page);
 
-432 
+439 
 u£r_vœtu®_addr
  = (
 ušt64_t
@@ -22891,7 +23466,7 @@ USER_VIRT_ADDR
 u£r_·ge
 );
 
-434 
+441 
 	`m­_phys_to_vœt_addr
 ((
 ušt64_t
@@ -22901,7 +23476,7 @@ u£r_vœtu®_addr
 u£r_·ge
 );
 
-435 
+442 
 	`m­_phys_to_u£r_vœt_addr
 ((
 ušt64_t
@@ -22915,7 +23490,7 @@ u£r_´oûss
 ü3
 );
 
-436 
+443 
 u£r_´oûss
 ->
 r
@@ -22927,23 +23502,23 @@ u£r_vœtu®_addr
 off£t
 ;
 
-438 
+445 
 	}
 }
 
-440 
+447 
 pid_t
  
 	$fÜk_chd
 () {
 
-441 
+448 
 pcb_t
  *
 c_pcb
 ;
 
-445 
+452 
 c_pcb
  = (
 pcb_t
@@ -22953,7 +23528,7 @@ pcb_t
 cu¼_´oûss
 );
 
-448 
+455 
 c_pcb
 ->
 Ãxt_´oc
@@ -22961,7 +23536,7 @@ c_pcb
 cu¼_´oûss
 ->next_proc;
 
-449 
+456 
 cu¼_´oûss
 ->
 Ãxt_´oc
@@ -22969,17 +23544,17 @@ cu¼_´oûss
 c_pcb
 ;
 
-450  
+457  
 c_pcb
 ->
 pid
 ;
 
-451 
+458 
 	}
 }
 
-454 
+461 
 pcb_t
 * 
 	$cİy_·»Á_¡ruùu»
@@ -22989,7 +23564,7 @@ pcb_t
 ·»Á_´oc
 ) {
 
-458 vŞ©
+465 vŞ©
 vma_t
  *
 ·»Á_vma
@@ -22997,7 +23572,7 @@ vma_t
 NULL
 ;
 
-459 
+466 
 vma_t
  *
 chd_vma
@@ -23005,13 +23580,13 @@ chd_vma
 NULL
 ;
 
-460 
+467 
 ušt64_t
  
 couÁ
  = 0;
 
-461 
+468 
 pcb_t
  *
 chd_pcb
@@ -23019,7 +23594,7 @@ chd_pcb
 	`km®loc
 (6000);
 
-463 
+470 
 chd_pcb
 ->
 pid
@@ -23027,7 +23602,7 @@ pid
 	`g‘_Ãxt_´oûssID
 ();
 
-464 
+471 
 chd_pcb
 ->
 µid
@@ -23037,7 +23612,7 @@ cu¼_´oûss
 pid
 ;
 
-465 
+472 
 	`¡rıy
 (
 cu¼_´oûss
@@ -23047,7 +23622,7 @@ p_Çme
 chd_pcb
 ->p_name);
 
-466 
+473 
 chd_pcb
 ->
 Ãxt_´oc
@@ -23055,7 +23630,7 @@ chd_pcb
 NULL
 ;
 
-467 
+474 
 chd_pcb
 ->
 mm
@@ -23063,19 +23638,19 @@ mm
 NULL
 ;
 
-469 
+476 
 cu¼_´oûss
 ->
 n_chd
  += 1;
 
-470 
+477 
 chd_pcb
 ->
 n_chd
  = 0;
 
-472 
+479 
 chd_pcb
 ->
 ü3
@@ -23085,7 +23660,7 @@ ušt64_t
 	`ü—‹_u£r_add»ss_¥aû
 ();
 
-473 
+480 
 __asm__
  vŞ©e("mov %%ü3, %0" : "÷" (
 cu¼_´oûss
@@ -23093,7 +23668,7 @@ cu¼_´oûss
 ü3
 ));
 
-478 
+485 
 	`cİy_·»Á_bËs
 ((
 ušt64_t
@@ -23103,7 +23678,7 @@ chd_pcb
 ü3
 );
 
-480 
+487 
 chd_pcb
 ->
 š™_k”Ãl
@@ -23113,7 +23688,7 @@ ušt64_t
 PAGE_SIZE
  - 8);
 
-482 
+489 
 chd_pcb
 ->
 mm
@@ -23125,7 +23700,7 @@ mm_¡ruù_t
 PAGE_SIZE
 );
 
-483 
+490 
 	`memıy
 (
 ·»Á_´oc
@@ -23137,7 +23712,7 @@ chd_pcb
 mm_¡ruù_t
 ));
 
-485 
+492 
 ·»Á_vma
  = 
 ·»Á_´oc
@@ -23147,23 +23722,23 @@ mm
 vma
 ;
 
-487 
+494 
 ·»Á_vma
  !ğ
 NULL
 ) {
 
-488 ià(
+495 ià(
 chd_vma
  =ğ
 NULL
 ) {
 
-489 
+496 
 couÁ
  = 1;
 
-491 
+498 
 chd_vma
  = (
 vma_t
@@ -23173,7 +23748,7 @@ vma_t
 PAGE_SIZE
 );
 
-492 
+499 
 	`memıy
 (
 ·»Á_vma
@@ -23183,7 +23758,7 @@ chd_vma
 vma_t
 ));
 
-493 
+500 
 chd_vma
 ->
 vm_Ãxt
@@ -23191,7 +23766,7 @@ vm_Ãxt
 NULL
 ;
 
-494 
+501 
 chd_vma
 ->
 vm_mm
@@ -23201,7 +23776,7 @@ chd_pcb
 mm
 ;
 
-496 ià(
+503 ià(
 ·»Á_vma
 ->
 fe
@@ -23209,7 +23784,7 @@ fe
 NULL
 ) {
 
-497 
+504 
 chd_vma
 ->
 fe
@@ -23221,7 +23796,7 @@ fe
 PAGE_SIZE
 );
 
-498 
+505 
 	`memıy
 (
 ·»Á_vma
@@ -23233,11 +23808,11 @@ chd_vma
 rfe_t
 ));
 
-500 ià(
+507 ià(
 couÁ
  == 1) {
 
-501 
+508 
 chd_pcb
 ->
 mm
@@ -23247,11 +23822,11 @@ vma
 chd_vma
 ;
 
-502 
+509 
 couÁ
  = 0;
 
-505 
+512 
 	`add_mm¡ruù
 (
 chd_pcb
@@ -23261,13 +23836,13 @@ mm
 chd_vma
 );
 
-507 
+514 
 ·»Á_vma
  =…¬’t_vma->
 vm_Ãxt
 ;
 
-510 
+517 
 	`memıy
 ((*)
 ·»Á_´oc
@@ -23279,7 +23854,7 @@ PAGE_SIZE
 chd_pcb
 ->init_kernel + 8 - PAGE_SIZE, PAGE_SIZE);
 
-511 
+518 
 chd_pcb
 ->
 u£r_¡ack
@@ -23289,7 +23864,7 @@ ušt64_t
 ·»Á_´oc
 ->user_stack;
 
-512 
+519 
 chd_pcb
 ->
 r¥
@@ -23303,7 +23878,7 @@ ušt64_t
 r¥_poš‹r
 ));
 
-515 
+522 
 	`£t_CR3
 (
 cu¼_´oûss
@@ -23311,15 +23886,15 @@ cu¼_´oûss
 ü3
 );
 
-517  
+524  
 chd_pcb
 ;
 
-518 
+525 
 	}
 }
 
-520 
+527 
 	$wa™
 (
 ušt64_t
@@ -23327,25 +23902,25 @@ ušt64_t
 pid
 ) {
 
-521 
+528 
 ušt64_t
  
 v®
  = 0;
 
-522 
+529 
 pcb_t
  *
 ´ev_sk
 ;
 
-524 
+531 
 ´ev_sk
  = 
 cu¼_´oûss
 ;
 
-525 
+532 
 cu¼_´oûss
 ->
 k”n_r¥
@@ -23353,7 +23928,7 @@ k”n_r¥
 r¥_poš‹r
 ;
 
-526 
+533 
 cu¼_´oûss
 ->
 ¡©e
@@ -23361,13 +23936,13 @@ cu¼_´oûss
 TASK_READY
 ;
 
-527 
+534 
 cu¼_´oûss
  = cu¼_´oûss->
 Ãxt_´oc
 ;
 
-528 
+535 
 Ãxt_´oûss
  = 
 cu¼_´oûss
@@ -23375,7 +23950,7 @@ cu¼_´oûss
 Ãxt_´oc
 ;
 
-529 
+536 
 cu¼_´oûss
 ->
 ¡©e
@@ -23383,13 +23958,13 @@ cu¼_´oûss
 TASK_RUNNING
 ;
 
-531 ià(
+538 ià(
 cu¼_´oûss
 ->
 pid
  ==…id) {
 
-532 
+539 
 	`£t_tss_r¥
 ((*)
 cu¼_´oûss
@@ -23397,7 +23972,7 @@ cu¼_´oûss
 š™_k”Ãl
 );
 
-534 
+541 
 __asm__
  vŞ©e("movq %%rdi, %0;" : "÷"(
 ´ev_sk
@@ -23407,7 +23982,7 @@ __asm__
 rdi
 ));
 
-535 
+542 
 __asm__
  vŞ©e("movq %%rsi, %0;" : "÷"(
 ´ev_sk
@@ -23417,7 +23992,7 @@ __asm__
 rsi
 ));
 
-536 
+543 
 __asm__
  vŞ©e("movq %%¿x, %0;" : "÷"(
 ´ev_sk
@@ -23427,7 +24002,7 @@ __asm__
 ¿x
 ));
 
-537 
+544 
 __asm__
  vŞ©e("movq %%rbx, %0;" : "÷"(
 ´ev_sk
@@ -23437,7 +24012,7 @@ __asm__
 rbx
 ));
 
-538 
+545 
 __asm__
  vŞ©e("movq %%rbp, %0;" : "÷"(
 ´ev_sk
@@ -23447,7 +24022,7 @@ __asm__
 rbp
 ));
 
-540 
+547 
 __asm__
  vŞ©("movq %%r¥, %0;" : "÷"(
 ´ev_sk
@@ -23455,7 +24030,7 @@ __asm__
 k”n_r¥
 ));
 
-543 
+550 
 __asm__
  vŞ©("movq %0, %%ü3;" :: "a"(
 cu¼_´oûss
@@ -23463,7 +24038,7 @@ cu¼_´oûss
 ü3
 ));
 
-544 
+551 
 __asm__
  vŞ©("movq %0, %%r¥;" :: "a"(
 cu¼_´oûss
@@ -23471,27 +24046,27 @@ cu¼_´oûss
 r¥
 ));
 
-545 
+552 
 __asm__
  vŞ©("movq %0, %%¿x;" :: "a"(
 v®
 ));
 
-546 
+553 
 __asm__
  volatile ("iretq");
 
-549 
+556 
 	}
 }
 
-551 
+558 
 ušt64_t
  
 	$g‘_pid
 (){
 
-552  (
+559  (
 ušt64_t
 è
 cu¼_´oûss
@@ -23499,11 +24074,11 @@ cu¼_´oûss
 pid
 ;
 
-553 
+560 
 	}
 }
 
-556 
+563 
 	$execve
 (*
 f’ame
@@ -23511,7 +24086,7 @@ f’ame
 ¬gv
 ) {
 
-557 
+564 
 pcb_t
  *
 u£r_pcb
@@ -23519,69 +24094,69 @@ u£r_pcb
 	`km®loc
 (()6000);
 
-558 
+565 
 pcb_t
  *
 poš‹r
 ;
 
-559 
+566 
 ušt64_t
  *
 u£r_vœt
 ;
 
-560 
+567 
 ušt64_t
  *
 u£r_¡ack
 ;
 
-561 
+568 
 ušt64_t
  *
 fe_±
 ;
 
-562 
+569 
 fe
 [100];
 
-563 
+570 
 k”Ãl_¬gs
 [5][64];
 
-564 
+571 
 »t_v®
 ;
 
-565 
+572 
 i
  = 0;
 
-566 
+573 
 ¬gc
  = 0;
 
-567 
+574 
 j
  = 0;
 
-568 
+575 
 k
  = 0;
 
-569 
+576 
 mm_¡ruù_t
  *
 mm
 ;
 
-571 *
+578 *
 f’ame
  != '\0') {
 
-572 
+579 
 fe
 [
 i
@@ -23589,41 +24164,41 @@ i
 f’ame
 ;
 
-573 
+580 
 f’ame
 ++;
 
-575 
+582 
 fe
 [
 i
 ] = '\0';
 
-577 
+584 
 i
  = 0;
 
-585 
+592 
 i
  = 0;
 
-586 
+593 
 ¬gv
 [
 k
 ] != '\0') {
 
-587 
+594 
 j
  = 0;
 
-588 
+595 
 ¬gv
 [
 k
 ] != ' ' &&‡rgv[k] != '\0' &&‡rgv[k] != '\n') {
 
-589 
+596 
 k”Ãl_¬gs
 [
 i
@@ -23635,7 +24210,7 @@ j
 k
 ++];
 
-591 
+598 
 k”Ãl_¬gs
 [
 i
@@ -23643,35 +24218,35 @@ i
 j
 ] = '\0';
 
-592 
+599 
 i
 ++;
 
-594 
+601 
 ¬gc
 ++;
 
-595 
+602 
 k
 ++;
 
-599 ià(
+606 ià(
 ¬gc
  == 0) {
 
-600 
+607 
 	`¡rıy
 (" ", 
 k”Ãl_¬gs
 [0]);
 
-605 
+612 
 ¬gc
  = 
 i
 ;
 
-607 
+614 
 	`¡rıy
 (
 fe
@@ -23681,7 +24256,7 @@ u£r_pcb
 p_Çme
 );
 
-608 
+615 
 	`¡rıy
 (
 ROOT
@@ -23691,7 +24266,7 @@ u£r_pcb
 cu¼_dœ
 );
 
-609 
+616 
 	`¡rıy
 (
 ROOT
@@ -23701,7 +24276,7 @@ u£r_pcb
 ‹mp_cu¼_dœ
 );
 
-610 
+617 
 u£r_pcb
 ->
 pid
@@ -23709,7 +24284,7 @@ pid
 cu¼_´oûss
 ->pid;
 
-611 
+618 
 u£r_pcb
 ->
 µid
@@ -23717,7 +24292,7 @@ u£r_pcb
 cu¼_´oûss
 ->ppid;
 
-612 
+619 
 u£r_pcb
 ->
 ¡©e
@@ -23725,7 +24300,7 @@ u£r_pcb
 TASK_RUNNING
 ;
 
-614 
+621 
 u£r_pcb
 ->
 ü3
@@ -23735,7 +24310,7 @@ ušt64_t
 	`ü—‹_u£r_add»ss_¥aû
 ();
 
-616 
+623 
 u£r_¡ack
  = (
 ušt64_t
@@ -23743,7 +24318,7 @@ ušt64_t
 	`®loÿ‹_vœt_·ge
 ();
 
-617 
+624 
 u£r_vœt
  = (
 ušt64_t
@@ -23753,7 +24328,7 @@ STACK_END
 PAGE_SIZE
 );
 
-618 
+625 
 	`m­_phys_to_vœt_addr
 ((
 ušt64_t
@@ -23763,7 +24338,7 @@ u£r_vœt
 u£r_¡ack
 );
 
-619 
+626 
 	`m­_phys_to_u£r_vœt_addr
 ((
 ušt64_t
@@ -23777,55 +24352,7 @@ u£r_pcb
 ü3
 );
 
-620 
-	`£t_CR3
-((
-ušt64_t
-)
-u£r_pcb
-->
-ü3
-);
-
-621 
-	`mem£t
-((*)
-u£r_vœt
-, 0, (
-ušt32_t
-)
-PAGE_SIZE
-);
-
-622 
-	`£t_CR3
-((
-ušt64_t
-)
-fœ¡_´oûss
-->
-ü3
-);
-
-624 
-mm
- = (
-mm_¡ruù_t
- *)
-	`km®loc
-(
-PAGE_SIZE
-);
-
-625 
-u£r_pcb
-->
-mm
- = (
-mm_¡ruù_t
- *)mm;
-
-626 
+627 
 	`£t_CR3
 ((
 ušt64_t
@@ -23836,6 +24363,54 @@ u£r_pcb
 );
 
 628 
+	`mem£t
+((*)
+u£r_vœt
+, 0, (
+ušt32_t
+)
+PAGE_SIZE
+);
+
+629 
+	`£t_CR3
+((
+ušt64_t
+)
+fœ¡_´oûss
+->
+ü3
+);
+
+631 
+mm
+ = (
+mm_¡ruù_t
+ *)
+	`km®loc
+(
+PAGE_SIZE
+);
+
+632 
+u£r_pcb
+->
+mm
+ = (
+mm_¡ruù_t
+ *)mm;
+
+633 
+	`£t_CR3
+((
+ušt64_t
+)
+u£r_pcb
+->
+ü3
+);
+
+635 
 fe_±
  = (
 ušt64_t
@@ -23845,7 +24420,7 @@ ušt64_t
 fe
 );
 
-629 
+636 
 »t_v®
  = 
 	`lßd_bš¬›s
@@ -23857,15 +24432,15 @@ ušt64_t
 fe_±
 );
 
-630 ià(
+637 ià(
 »t_v®
  == -1) {
 
-631 
+638 
 	`k´štf
 ("Unableo†oad binaries\n");
 
-635 
+642 
 	`£t_CR3
 (
 fœ¡_´oûss
@@ -23873,7 +24448,7 @@ fœ¡_´oûss
 ü3
 );
 
-637 
+644 
 u£r_pcb
 ->
 ¡©e
@@ -23881,7 +24456,7 @@ u£r_pcb
 TASK_READY
 ;
 
-638 
+645 
 u£r_pcb
 ->
 Ãxt_´oc
@@ -23889,7 +24464,7 @@ u£r_pcb
 fœ¡_´oûss
 ;
 
-640 
+647 
 u£r_pcb
 ->
 r¥
@@ -23903,7 +24478,7 @@ u£r_vœt
 PAGE_SIZE
  - 8);
 
-641 
+648 
 u£r_pcb
 ->
 š™_k”Ãl
@@ -23913,13 +24488,13 @@ ušt64_t
 PAGE_SIZE
  - 8);
 
-644 
+651 
 poš‹r
  = 
 cu¼_´oûss
 ;
 
-645 
+652 
 poš‹r
 ->
 Ãxt_´oc
@@ -23927,13 +24502,13 @@ poš‹r
 cu¼_´oûss
 ) {
 
-646 
+653 
 poš‹r
  =…oš‹r->
 Ãxt_´oc
 ;
 
-648 
+655 
 poš‹r
 ->
 Ãxt_´oc
@@ -23941,7 +24516,7 @@ poš‹r
 u£r_pcb
 ;
 
-649 
+656 
 u£r_pcb
 ->
 Ãxt_´oc
@@ -23949,11 +24524,16 @@ u£r_pcb
 cu¼_´oûss
 ->next_proc;
 
+<<<<<<< Updated upstream
 651 
+=======
+658 
+>>>>>>> Stashed changes
 poš‹r
  = 
 fÜked_´oûss
 ;
+<<<<<<< Updated upstream
 
 652 ià(
 poš‹r
@@ -23968,9 +24548,40 @@ cu¼_´oûss
 ;
 
 654 
+=======
+
+659 ià(
+poš‹r
+ =ğ
+NULL
+) {
+
+660 
+poš‹r
+ = 
+cu¼_´oûss
+;
+
+661 
 cu¼_´oûss
 ->
 Ãxt_´oc
+ = 
+NULL
+;
+
+662 
+fÜked_´oûss
+ = 
+>>>>>>> Stashed changes
+cu¼_´oûss
+;
+
+665 
+poš‹r
+->
+Ãxt_´oc
+<<<<<<< Updated upstream
  = 
 NULL
 ;
@@ -23984,12 +24595,23 @@ NULL
 ) {
 
 658 
+=======
+ !ğ
+NULL
+) {
+
+666 
+>>>>>>> Stashed changes
 poš‹r
  =…oš‹r->
 Ãxt_´oc
 ;
 
+<<<<<<< Updated upstream
 660 
+=======
+668 
+>>>>>>> Stashed changes
 poš‹r
 ->
 Ãxt_´oc
@@ -23997,7 +24619,11 @@ poš‹r
 cu¼_´oûss
 ;
 
+<<<<<<< Updated upstream
 661 
+=======
+669 
+>>>>>>> Stashed changes
 cu¼_´oûss
 ->
 Ãxt_´oc
@@ -24005,7 +24631,11 @@ cu¼_´oûss
 NULL
 ;
 
+<<<<<<< Updated upstream
 667 
+=======
+675 
+>>>>>>> Stashed changes
 	`£t_CR3
 (
 u£r_pcb
@@ -24013,13 +24643,13 @@ u£r_pcb
 ü3
 );
 
-675 
+683 
 i
  = (
 k”Ãl_¬gs
 );
 
-676 *
+684 *
 ±r
  = (*)(
 u£r_pcb
@@ -24029,7 +24659,7 @@ u£r_¡ack
 k”Ãl_¬gs
 ));
 
-677 
+685 
 	`memıy
 ((*)
 k”Ãl_¬gs
@@ -24037,17 +24667,17 @@ k”Ãl_¬gs
 ±r
 , (kernel_args));
 
-678 
+686 
 ±r
  =…tr - 8;
 
-679 *((*)
+687 *((*)
 ±r
 èğ
 ¬gc
 ;
 
-680 
+688 
 u£r_pcb
 ->
 r¥
@@ -24057,25 +24687,25 @@ u£r_¡ack
 k”Ãl_¬gs
 ) - 8;
 
-682 
+690 
 	`execve_sw™ch_to_ršg3
 (
 u£r_pcb
 );
 
-683 
+691 
 	}
 }
 
-685 
+693 
 	$´št_®lPID
 (){
 
-686 
+694 
 	`k´štf
 ("PID Process\tStatus\n");
 
-687 
+695 
 pcb_t
  *
 ´oc
@@ -24083,7 +24713,7 @@ pcb_t
 fœ¡_´oûss
 ;
 
-688 
+696 
 ´oc
 ->
 Ãxt_´oc
@@ -24091,7 +24721,7 @@ fœ¡_´oûss
 fœ¡_´oûss
 ){
 
-689 
+697 
 	`k´štf
 ("%d %s",
 ´oc
@@ -24101,7 +24731,7 @@ pid
 p_Çme
 );
 
-690 ià(
+698 ià(
 ´oc
 ->
 ¡©e
@@ -24109,11 +24739,11 @@ p_Çme
 TASK_READY
 ) {
 
-691 
+699 
 	`k´štf
 ("\t%s\n","Ready");
 
-693 ià(
+701 ià(
 ´oc
 ->
 ¡©e
@@ -24121,23 +24751,23 @@ TASK_READY
 TASK_RUNNING
 ) {
 
-694 
+702 
 	`k´štf
 ("\t%s\n","Running");
 
-696 
+704 
 ´oc
  =…roc->
 Ãxt_´oc
 ;
 
-699 
+707 
 ´oc
  = 
 ¡İ³d_´oûss
 ;
 
-700 
+708 
 ´oc
 ->
 Ãxt_´oc
@@ -24145,7 +24775,7 @@ TASK_RUNNING
 NULL
 ) {
 
-701 
+709 
 	`k´štf
 ("%d %s\t%s\n",
 ´oc
@@ -24155,45 +24785,53 @@ pid
 p_Çme
 , "Stopped");
 
-702 
+710 
 ´oc
  =…roc->
 Ãxt_´oc
 ;
 
-704 
+712 
 	}
 }
 
-710 
+718 
 	$sys_ex™
 () {
 
-711 
+719 
 pcb_t
  *
 ´ev_sk
 ;
 
+<<<<<<< Updated upstream
 712 
+=======
+720 
+>>>>>>> Stashed changes
 pcb_t
  *
 ™”©Ü
 ;
 
+<<<<<<< Updated upstream
 713 
+=======
+721 
+>>>>>>> Stashed changes
 pcb_t
  *
 ¡İ³d_li¡
 ;
 
-715 
+724 
 ´ev_sk
  = 
 cu¼_´oûss
 ;
 
-716 
+725 
 cu¼_´oûss
 ->
 ¡©e
@@ -24201,7 +24839,7 @@ cu¼_´oûss
 TASK_STOPPED
 ;
 
-720 
+729 
 ´ev_sk
 ->
 Ãxt_´oc
@@ -24211,13 +24849,13 @@ pid
 cu¼_´oûss
 ->pid) {
 
-721 
+730 
 ´ev_sk
  =…»v_sk->
 Ãxt_´oc
 ;
 
-723 
+732 
 ´ev_sk
 ->
 Ãxt_´oc
@@ -24225,25 +24863,25 @@ cu¼_´oûss
 fœ¡_´oûss
 ;
 
-726 
+735 
 ¡İ³d_li¡
  = 
 ¡İ³d_´oûss
 ;
 
-727 ià(
+736 ià(
 ¡İ³d_li¡
  =ğ
 NULL
 ) {
 
-728 
+737 
 ¡İ³d_´oûss
  = 
 cu¼_´oûss
 ;
 
-729 
+738 
 cu¼_´oûss
 ->
 Ãxt_´oc
@@ -24251,7 +24889,7 @@ cu¼_´oûss
 NULL
 ;
 
-732 
+741 
 ¡İ³d_li¡
 ->
 Ãxt_´oc
@@ -24259,13 +24897,19 @@ NULL
 NULL
 ) {
 
-733 
+742 
+™”©Ü
+ = 
+¡İ³d_li¡
+;
+
+743 
 ¡İ³d_li¡
  = stİ³d_li¡->
 Ãxt_´oc
 ;
 
-735 
+750 
 ¡İ³d_li¡
 ->
 Ãxt_´oc
@@ -24273,7 +24917,7 @@ NULL
 cu¼_´oûss
 ;
 
-736 
+751 
 cu¼_´oûss
 ->
 Ãxt_´oc
@@ -24281,30 +24925,47 @@ cu¼_´oûss
 NULL
 ;
 
+<<<<<<< Updated upstream
 739 
+=======
+754 
+>>>>>>> Stashed changes
 ™”©Ü
  = 
 fÜked_´oûss
 ;
 
+<<<<<<< Updated upstream
 740 
+=======
+755 
+>>>>>>> Stashed changes
 ™”©Ü
  !ğ
 NULL
 ) {
 
+<<<<<<< Updated upstream
 741 
+=======
+756 
+>>>>>>> Stashed changes
 ¡İ³d_li¡
  = 
 ™”©Ü
 ;
 
+<<<<<<< Updated upstream
 742 
+=======
+757 
+>>>>>>> Stashed changes
 ™”©Ü
  = i‹¿tÜ->
 Ãxt_´oc
 ;
 
+<<<<<<< Updated upstream
 743 
 	`ä“_vma
 (
@@ -24316,6 +24977,9 @@ mm
 );
 
 745 
+=======
+760 
+>>>>>>> Stashed changes
 	`d–‘e_·g‘abË
 (
 ¡İ³d_li¡
@@ -24323,6 +24987,7 @@ mm
 ü3
 );
 
+<<<<<<< Updated upstream
 746 
 	`ä“_·ge
 ((
@@ -24330,24 +24995,41 @@ ušt64_t
 )
 ¡İ³d_li¡
 , 
+=======
+764 
+	`£t_CR3
+(
+>>>>>>> Stashed changes
 cu¼_´oûss
 ->
 ü3
 );
 
+<<<<<<< Updated upstream
 749 
+=======
+769 
+>>>>>>> Stashed changes
 cu¼_´oûss
  = 
 ´ev_sk
 ;
 
+<<<<<<< Updated upstream
 759 ià(
+=======
+779 ià(
+>>>>>>> Stashed changes
 cu¼_´oûss
 ->
 pid
  == 1) {
 
+<<<<<<< Updated upstream
 760 
+=======
+780 
+>>>>>>> Stashed changes
 ´ev_sk
 ->
 š™_k”Ãl
@@ -24359,7 +25041,11 @@ ušt64_t
 PAGE_SIZE
  - 8;
 
+<<<<<<< Updated upstream
 761 
+=======
+781 
+>>>>>>> Stashed changes
 	`mem£t
 ((*)
 ´ev_sk
@@ -24369,23 +25055,39 @@ ušt32_t
 PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 762 *(
+=======
+782 
+	`k´štf
+("\n\n\n******************Terminalerminated******************\n\n\n");
+
+783 *(
+>>>>>>> Stashed changes
 ušt64_t
  *)(
 ´ev_sk
 ->
 k”n_r¥
 èğ(ušt64_t)&
-š™Ÿl_»t_funùiÚ
+scheduË_sbush
 ;
 
+<<<<<<< Updated upstream
 763 
+=======
+784 
+>>>>>>> Stashed changes
 	`u£r_sw™chBack
 (
 ´ev_sk
 );
 
+<<<<<<< Updated upstream
 767 
+=======
+788 
+>>>>>>> Stashed changes
 	`u£r_sw™chTask
 (
 ´ev_sk
@@ -24395,11 +25097,19 @@ k”n_r¥
 cu¼_´oûss
 );
 
+<<<<<<< Updated upstream
 768 
 	}
 }
 
 773 
+=======
+789 
+	}
+}
+
+794 
+>>>>>>> Stashed changes
 	$kl
 (
 ušt64_t
@@ -24407,7 +25117,189 @@ ušt64_t
 pid
 ) {
 
+<<<<<<< Updated upstream
 774 
+=======
+795 
+pcb_t
+ *
+™”©Ü
+;
+
+796 
+pcb_t
+ *
+´ev_sk
+;
+
+797 
+pcb_t
+ *
+¡İ³d_li¡
+;
+
+798 
+ušt64_t
+ 
+d–‘ed
+ = 0;
+
+800 ià(
+pid
+ =ğ
+cu¼_´oûss
+->pid) {
+
+801 
+	`sys_ex™
+();
+
+804 
+™”©Ü
+ = 
+fœ¡_´oûss
+;
+
+805 
+™”©Ü
+->
+Ãxt_´oc
+->
+pid
+ !ğpid || i‹¿tÜ->Ãxt_´oø!ğ
+fœ¡_´oûss
+) {
+
+806 
+™”©Ü
+ = i‹¿tÜ->
+Ãxt_´oc
+;
+
+808 ià(
+™”©Ü
+->
+Ãxt_´oc
+->
+pid
+ ==…id) {
+
+809 
+¡İ³d_li¡
+ = 
+¡İ³d_´oûss
+;
+
+810 ià(
+¡İ³d_li¡
+ =ğ
+NULL
+) {
+
+811 
+¡İ³d_´oûss
+ = 
+™”©Ü
+->
+Ãxt_´oc
+;
+
+812 
+™”©Ü
+->
+Ãxt_´oc
+ = 
+¡İ³d_´oûss
+->next_proc;
+
+813 
+¡İ³d_´oûss
+->
+Ãxt_´oc
+ = 
+NULL
+;
+
+814 
+	`k´štf
+("KËd %d\n",
+pid
+);
+
+815 
+d–‘ed
+ = 1;
+
+818 
+´ev_sk
+ = 
+¡İ³d_li¡
+;
+
+819 
+¡İ³d_li¡
+ !ğ
+NULL
+) {
+
+820 
+´ev_sk
+ = 
+¡İ³d_li¡
+;
+
+821 
+¡İ³d_li¡
+ = stİ³d_li¡->
+Ãxt_´oc
+;
+
+823 
+´ev_sk
+->
+Ãxt_´oc
+ = 
+™”©Ü
+->next_proc;
+
+824 
+™”©Ü
+->
+Ãxt_´oc
+ = 
+´ev_sk
+->next_proc->next_proc;
+
+825 
+´ev_sk
+->
+Ãxt_´oc
+->Ãxt_´oøğ
+NULL
+;
+
+826 
+	`k´štf
+("KËd %d\n",
+pid
+);
+
+827 
+d–‘ed
+ = 1;
+
+832 ià(
+d–‘ed
+ == 0) {
+
+833 
+	`k´štf
+("KËd %d\n",
+pid
+);
+
+838 
+>>>>>>> Stashed changes
 	}
 }
 
@@ -48650,10 +49542,16 @@ __END_DECLS
 .
 1
 /usr/include
+<<<<<<< Updated upstream
 94
 1640
+=======
+93
+1612
+>>>>>>> Stashed changes
 bin/cat/cat.c
 bin/hello/hello.c
+bin/kill/kill.c
 bin/ls/ls.c
 bin/ps/ps.c
 bin/sbush/binaryoper.c

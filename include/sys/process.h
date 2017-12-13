@@ -98,5 +98,6 @@ extern void print_allPID();
 extern void sys_exit();
 extern void user_switchTask(pcb_t *current, pcb_t *next);
 extern void kill(uint64_t pid);
+extern void schedule_sbush();
 
 #endif

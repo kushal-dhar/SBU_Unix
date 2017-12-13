@@ -9,6 +9,8 @@ int            colour=  7;
 
 volatile int x_pos = 0;
 volatile int y_pos = 0;
+volatile int global_x = 0;
+volatile int global_y = 0;
 unsigned char control;
 unsigned char shift;
 void  memcpyy( volatile void *src, volatile void *dest, uint32_t n) {
@@ -295,6 +297,10 @@ void kprintf(char *string, ...)
     if (ch == '\n') {
 	x_pos = 0;
 	y_pos ++;
+	if (y_pos == 23) {
+	    update_screen();
+	    y_pos --;
+	}
 #if 0
         video[x_pos++ + (y_pos * 160)] = '^';
         video[x_pos++ + (y_pos * 160)] = colour;
@@ -348,11 +354,13 @@ void kprintf(char *string, ...)
             video[x_pos++ + (y_pos * 160)] = colour;
 	}
 	else if (ch == 0x68) {
-	    /* Backspace has been pressed, display ^H */
-            x_pos =x_pos-2;
-            video[x_pos++ + (y_pos * 160)] = ' ';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            x_pos =x_pos-2; 
+	    /* Backspace has been pressed, go back */
+	    if (x_pos - 2 >= global_x) {
+                x_pos =x_pos-2;
+                video[x_pos++ + (y_pos * 160)] = ' ';
+                video[x_pos++ + (y_pos * 160)] = colour;
+                x_pos =x_pos-2; 
+	    }
        }
 	else {
 	    /* For all other control characters, display their Ctrl-characters */

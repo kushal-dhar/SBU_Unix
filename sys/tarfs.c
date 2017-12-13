@@ -15,6 +15,11 @@
 #define ROOT "rootfs/" 
 
 extern pcb_t *curr_process;
+extern volatile int x_pos ;
+extern volatile int y_pos ;
+extern volatile int global_x ;
+extern volatile int global_y ;
+
  
 tarfile_t global_tarfs[100];
 int file_count = 3;
@@ -342,6 +347,8 @@ int  changedir( char* filename){
 }
 void  getcwd(){
   kprintf("\n<%s>",curr_process->curr_dir);
+  global_x = x_pos;
+  global_y = y_pos;
 }
 
 void  get_cwd(char * buf){

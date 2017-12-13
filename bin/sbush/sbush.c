@@ -118,6 +118,17 @@ while(1){
                     execve("bin/ps\0\0",str);
               }
         }
+	// Check for kill -9
+        else if (*str=='k' && *(str+1) == 'i' && *(str+2) == 'l' && *(str+3) == 'l' && *(str+5) == '-' && *(str+6) == '9' ){
+               uint64_t pid = fork();
+               if(pid != 0){
+                   wait_pid(pid);
+               }
+               else{
+                    execve("bin/kill\0\0",str+7);
+              }
+        }
+
         // Check for sbush
   	else if (*str == '.' && *(str+1) == '/' && *(str+2) == 's'
 		 && *(str+3) == 'b' && *(str+4) == 'u' 
