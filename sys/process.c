@@ -25,6 +25,11 @@ uint64_t rsp_pointer = 0;
 pcb_t *first_process;
 pcb_t *curr_process;
 pcb_t *next_process;
+pcb_t *zombie_process   = NULL;
+pcb_t *sleep_process    = NULL;
+pcb_t *orphan_process   = NULL;
+pcb_t *stopped_process  = NULL;
+pcb_t *forked_process   = NULL;
 
 
 /* 
@@ -209,7 +214,7 @@ void initial_ret_function() {
 
     init_syscalls();
     
-    pcb_t *user_process = create_user_process("bin/temp");
+    pcb_t *user_process = create_user_process("bin/sbush");
     enable_page_fault();
 //    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);
@@ -301,25 +306,10 @@ void user_switchTask(pcb_t *current, pcb_t *next) {
 
     set_tss_rsp((void *)next->init_kernel);
 
-#if 0
-    __asm__ volatile("movq %%rdi, %0;" : "=a"(current->regs.rdi));
-    __asm__ volatile("movq %%rsi, %0;" : "=a"(current->regs.rsi));
-    __asm__ volatile("movq %%rax, %0;" : "=a"(current->regs.rax));
-    __asm__ volatile("movq %%rbx, %0;" : "=a"(current->regs.rbx));
-    __asm__ volatile("movq %%rbp, %0;" : "=a"(current->regs.rbp));
-#endif
-
     __asm__ volatile ("movq %0, %%cr3;" :: "a"(next->cr3));
     __asm__ volatile ("movq  %%rsp, %0;":"=a"(current->kern_rsp));
     __asm__ volatile ("movq %0, %%rsp;"::"a"(next->kern_rsp));
 
-#if 0
-    __asm__ volatile ("movq %0, %%rdi;" :: "a"(next->regs.rdi));
-    __asm__ volatile ("movq %0, %%rax;" :: "a"(next->regs.rax));
-    __asm__ volatile ("movq %0, %%rbx;" :: "a"(next->regs.rbx));
-    __asm__ volatile ("movq %0, %%rbp;" :: "a"(next->regs.rbp));
-    __asm__ volatile ("movq %0, %%rsi;" :: "a"(next->regs.rsi));
-#endif
     __asm__ volatile ("addq $8, %rsp;");
     __asm__ volatile("ret");
 
@@ -345,6 +335,7 @@ void switchBack(pcb_t *current, pcb_t *next) {
  * Stub to switch back from user to kernel process
  */
 void user_switchBack(pcb_t *next) {
+    next->state = TASK_RUNNING;
 
     set_tss_rsp((void *)next->init_kernel);
 
@@ -370,6 +361,7 @@ void switch_to_ring3(pcb_t *proc) {
     kprintf("process: %d",curr_process);
 
     proc->state = TASK_RUNNING;
+    first_process->state = TASK_READY;
     curr_process = proc;
     
 
@@ -470,6 +462,7 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
 
     child_pcb->pid = get_next_processID();
     child_pcb->ppid = curr_process->pid;
+    strcpy(curr_process->p_name, child_pcb->p_name);
     child_pcb->next_proc = NULL;
     child_pcb->mm = NULL;
     
@@ -610,8 +603,11 @@ void execve(char *filename, char *argv) {
     argc = i;
 
     strcpy(file, user_pcb->p_name);
+    strcpy(ROOT, user_pcb->curr_dir);
+    strcpy(ROOT, user_pcb->temp_curr_dir);
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
+    user_pcb->state = TASK_RUNNING;
 
     user_pcb->cr3 = (uint64_t)create_user_address_space();
 
@@ -642,18 +638,35 @@ void execve(char *filename, char *argv) {
     user_pcb->rsp = user_pcb->user_stack = ((uint64_t)user_virt +PAGE_SIZE - 8);
     user_pcb->init_kernel = (uint64_t)(user_pcb + PAGE_SIZE - 8);
 
-    user_pcb->state = TASK_READY;
     //user_pcb->next_proc = curr_process->next_proc;
     pointer = curr_process;
-/*    while(pointer->next_proc != curr_process) {
+    while(pointer->next_proc != curr_process) {
 	pointer = pointer->next_proc;
-    } */
+    }
     pointer->next_proc = user_pcb;
+    user_pcb->next_proc = curr_process->next_proc;
+
+    pointer = forked_process;
+    if (pointer == NULL) {
+	pointer = curr_process;
+	curr_process->next_proc = NULL;
+    }
+    else {
+	while (pointer->next_proc != NULL) {
+	    pointer = pointer->next_proc;
+	}
+	pointer->next_proc = curr_process;
+	curr_process->next_proc = NULL;
+    }
 
     /* Free the current user space */
     //free_vma(curr_process->mm);
 
     set_CR3(user_pcb->cr3);
+
+//    free_vma(curr_process->mm);
+//    free_page(curr_process->user_stack);
+//    delete_pagetable(curr_process->cr3);
 
     /*Set user stack to contain argc and argv values */
     i = sizeof(kernel_args);  
@@ -667,12 +680,24 @@ void execve(char *filename, char *argv) {
 }
 
 void print_allPID(){
-    kprintf("PID           Process\n");
+    kprintf("PID           Process\tStatus\n");
     pcb_t *proc=  first_process;
     while(proc->next_proc != first_process){
-       kprintf("%d             %s\n",proc->pid,proc->p_name);
-       proc = proc->next_proc;
-  } 
+        kprintf("%d             %s",proc->pid,proc->p_name);
+	if (proc->state == TASK_READY) {
+	    kprintf("\t%s\n","Ready");
+	}
+	else if (proc->state == TASK_RUNNING) {
+	    kprintf("\t%s\n","Running");
+	}
+	proc = proc->next_proc;
+	
+    } 
+    proc = stopped_process;
+    while(proc->next_proc != NULL) {
+	kprintf("%d             %s\t%s\n",proc->pid,proc->p_name, "Stopped");
+	proc = proc->next_proc;
+    }
 }
 
 
@@ -681,6 +706,8 @@ void print_allPID(){
  */
 void sys_exit() {
     pcb_t     *prev_task;
+//    pcb_t     *iterator;
+    pcb_t     *stopped_list;
 
     prev_task = curr_process;
     curr_process->state = TASK_STOPPED;
@@ -691,7 +718,28 @@ void sys_exit() {
     	prev_task = prev_task->next_proc;
     }
     prev_task->next_proc = first_process;
+
+//    iterator = curr_process;
+    stopped_list = stopped_process;
+    if (stopped_list == NULL) {
+	stopped_process = curr_process;
+	curr_process->next_proc = NULL;
+    }
+    else {
+	while(stopped_list->next_proc != NULL) {
+	    stopped_list = stopped_list->next_proc;
+	}
+	stopped_list->next_proc = curr_process;
+	curr_process->next_proc = NULL;
+    }
+
+
     curr_process = prev_task;
+/*
+    while (iterator->next_proc->pid != prev_task->pid) {
+	iterator = iterator->next_proc;
+    } 
+*/
 //    curr_process = curr_process->next_proc;
 //    next_process = next_process->next_proc;
 //    curr_process->next_proc = next_process->next_proc;
@@ -705,4 +753,10 @@ void sys_exit() {
     }
 
     user_switchTask(prev_task->next_proc, curr_process);
+}
+
+/*
+ * Handle kill syscall 
+ */
+void kill(uint64_t pid) {
 }

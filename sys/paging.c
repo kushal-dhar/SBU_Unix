@@ -534,29 +534,7 @@ void pagefault_handler(regis reg) {
 	/* Segmentation fault. Exit from the child now */
 	kprintf("Segmentation fault\n");
 	sys_exit();
-//	__asm__ volatile("hlt");
     }
-#if 0
-    while(1);
-	new_page = (uint64_t)umalloc((pcb_t *)curr_process, 4096);
-	fault_addr = fault_addr & (uint64_t)GET_PAGE_ADDR;
-	phys_addr = (uint64_t)new_page & 0x000000000FFFF000UL;
-	set_CR3(first_process->cr3);
-	map_phys_to_user_virt_addr((uint64_t)fault_addr, (uint64_t)phys_addr, (uint64_t *)curr_process->cr3);
-//	map_phys_to_user_virt_addr((uint64_t *)fault_addr, (uint64_t *)page_addr, curr_process->cr3);
-	set_CR3(curr_process->cr3);
-	return;
-//    }
-#endif
-
-#if 0
-    while (vma) {
-	if (vma->type == HEAP && (fault_addr >= vma->start && fault_addr <= vma->end)) {
-	    uint64_t *heap = 
-	}
-    }
-#endif
-//    while(1);
 
     set_CR3((uint64_t)curr_process->cr3);
 

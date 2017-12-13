@@ -94,8 +94,8 @@ uint64_t strstr(char *str, char *search) {
   }
 
   for (i = 0; i < len1 - len2; i++) {
+    found = 1;
     for (j = i; j < i + len2; j++) {
-      found = 1;
       if (str[j] != search[j-i]) {
 	found = 0;
 	break;
@@ -107,30 +107,6 @@ uint64_t strstr(char *str, char *search) {
     }
   }
 
-#if 0
-  while (i < len1 && j < len2) {
-    if (search[j] == str[i]) {
-      if (found == 0) {
-        tmp = str+i;
-      }
-      i++;
-      j++;
-      found = 1;
-    }
-    else if (found == 1) {
-      j = 0;
-      i++;
-      found = 0;
-    }
-    else {
-      i++;
-    }
-  }
-
-  if (found == 1) {
-    return tmp;
-  }
-#endif
   return 0;;
 }
 

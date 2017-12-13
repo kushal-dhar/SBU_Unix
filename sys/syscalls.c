@@ -117,6 +117,11 @@ uint64_t syscall_handler (regis  reg) {
 	sys_exit();
 	return 0;
     }
+    /* Handle kill syscall */
+    else if (reg.rbx == 62) {
+	kill((uint64_t)reg.rcx);
+	return 0;
+    }
     return 0;
 }
 

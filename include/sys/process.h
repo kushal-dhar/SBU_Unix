@@ -13,6 +13,7 @@
 #define  TASK_WAITING     4
 #define  TASK_STOPPED     5
 #define  TASK_ZOMBIE      6
+
 #define ROOT "rootfs/"
 
 typedef struct process_ctrl_blk pcb_t;
@@ -96,5 +97,6 @@ extern void execve_switch_to_ring3(pcb_t *proc);
 extern void print_allPID();
 extern void sys_exit();
 extern void user_switchTask(pcb_t *current, pcb_t *next);
+extern void kill(uint64_t pid);
 
 #endif
