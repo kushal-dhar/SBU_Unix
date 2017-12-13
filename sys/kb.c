@@ -15,7 +15,6 @@
 #define KB_DATA_PORT   0x60
 #define KB_STATUS_PORT 0x64
 
-extern int sleep_flag;
 unsigned char control    = 0;
 unsigned char shift      = 0;
 int       count      = 0;
@@ -128,9 +127,7 @@ void kb_handler(regis reg) {
 	/* Up arrow has been pressed, display '^[[A' */
 	    control = 1;
 	    shift = 1;
-	    if (sleep_flag != 1) {
    	        kprintf_kb(0x48);
-	    }
 	    control = 0;
 	    shift = 0;
 	    return;
@@ -139,9 +136,7 @@ void kb_handler(regis reg) {
         /* Left arrow has been pressed, display '^[[D' */
             control = 1;
 	    shift = 1;
-	    if (sleep_flag != 1) {
                 kprintf_kb(0x4B);
-	    }
             control = 0;
 	    shift = 0;
 	    return;
@@ -150,9 +145,7 @@ void kb_handler(regis reg) {
 	/* Down arrow has been pressed, display '^[[B' */
             control = 1;
             shift = 1;
-            if (sleep_flag != 1) {
                 kprintf_kb(0x50);
-	    }
             control = 0;
             shift = 0;
 	    return;
@@ -161,9 +154,7 @@ void kb_handler(regis reg) {
 	/* Right arrow has been pressed, display '^[[C' */
             control = 1;
             shift = 1;
-            if (sleep_flag != 1) {
                  kprintf_kb(0x4D);
-	    }
             control = 0;
             shift = 0;
 	    return;
@@ -182,9 +173,7 @@ void kb_handler(regis reg) {
 	else if (scancode == 0x53) {
 	/* Delete has been pressed, display ^? */
 	    control = 1;
-            if (sleep_flag != 1) {
-  	        kprintf_kb('?');
-	    }
+  	    kprintf_kb('?');
 	    control = 0;
 	    return;
 	}
@@ -195,9 +184,7 @@ void kb_handler(regis reg) {
 	    /* If shift is pressed previously, read from the upper keyboard map */
             status = keyboard_upper_map[(int)scancode];
  	    pressed[count++] = status;
-            if (sleep_flag != 1) {
      	        kprintf_kb(status);
-	    }
 	    //shift = 0;
 #if 0
 	} else if (control == 1) {
@@ -218,9 +205,7 @@ void kb_handler(regis reg) {
 		control = 1;
 		return;
 	    } */
-            if (sleep_flag != 1) {
 	        kprintf_kb(status);
-	    }
 	}
     }
     return;

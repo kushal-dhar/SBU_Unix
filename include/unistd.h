@@ -33,7 +33,7 @@ char *getcwd(char *buf, long  size);
 extern int waitpid(int pid, int *wstatus, int options);
 extern int execvp(char *file, char *argv[]);
 //extern pid_t fork();
-//extern void chdir( char *path);
+extern void chdir( char *path);
 extern int open(char *pathname, int flags);
 extern int pipe(int fd[]);
 extern int close(int fd) ;
@@ -51,5 +51,6 @@ extern void execve(char *filename, char *ex_argv);
 extern void  cwd2(char * buf);
 extern void  printAllProcess();
 extern void exit();
-
+extern void executeSbang(char * str);
+extern void addParent(char *parent, char *str);
 #endif

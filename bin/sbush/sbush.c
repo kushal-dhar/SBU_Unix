@@ -25,6 +25,8 @@ while(1){
           temp[0] ='\0';
           cwd();
           scan("%s",(void *)str);
+         int slen = strlen(str);
+         removespace(str); 
          // check the current ditectory 
          if (strcmp(str, "pwd\0\0\0") ==0){
             cwd2(temp);
@@ -32,16 +34,10 @@ while(1){
         }
         // check the change dir command cd
         else if( *(str) == 'c' && *(str+1) == 'd' && *(str+2) == ' '){
-//             for(int i =0; i <100;i++)   *(temp+i) = '\0';
-//             strcpy(temp,str+3);
-             uint64_t pid = fork();
-             if(pid != 0){
-                wait_pid(pid);
-             }else{
-//                   addDelimiter(str+4);
-                   execve("bin/cd\0\0",str+3);
-             }
-        }
+             for(int i =0; i <100;i++)   *(temp+i) = '\0';
+             strcpy(temp,str+3);
+              chdir(temp);
+         }
         // check echo $PATH
         else if (strcmp(str, "echo $PATH\0\0\0")== 0){
                printf("%s",path);
@@ -58,7 +54,6 @@ while(1){
                   printf("%s",temp);
         }
         // check for sleep
-//	else if (strstr(str, "sleep") != 0) {
         else if (*str =='s' && *(str+1) == 'l' && *(str+2) == 'e' && *(str+3) =='e' &&
 		 *(str+4) == 'p'&& *(str+5) == ' '){
              uint64_t pid = fork();
@@ -70,28 +65,42 @@ while(1){
 
         }
         // check for Cat
-//        else if (strstr(str, "sleeping") != 0) {
         else if (*str == 'c' && *(str+1) == 'a' && *(str+2) == 't' && *(str+3) == ' ') {
+             cwd2(temp);
              uint64_t pid = fork();
              if(pid != 0){
                 wait_pid(pid);
              }else{
-//                   addDelimiter(str+4);  
-                   execve("bin/cat\0\0",str+4);
+                   char *tp = str;
+                   tp = tp + 4;
+                   addParent(temp,tp);
+                   strcpy(str,tp);
+                   execve("bin/cat\0\0",str);
              }
         }
         // check for ls
         else if (*str == 'l' && *(str+1) == 's'){
-               int len = strlen(str);
+               cwd2(temp);
                uint64_t pid = fork();
                if(pid != 0){
                    wait_pid(pid);
                }
                else{
-                    if(*(str+2) == ' ' && len > 2){
-    			   addDelimiter(str+3);
-                    } 
-                    execve("bin/ls\0\0",str+3);
+                   char *tp = str;
+                    if (*(str+3) == ' '){
+                        tp=tp+3;
+                  	addParent(temp,tp);
+ 			strcpy(str,tp); 
+                        execve("bin/ls\0\0",str);
+                    } else {
+                         tp=tp+2;
+                         addParent(temp,tp);
+                         strcpy(str,tp);
+                         if (strlen(str) == 0){
+                               str[0]= '\0';
+                         }
+                         execve("bin/ls\0\0",str);
+                    }
               }
         } 
         // Check for ps
@@ -110,7 +119,9 @@ while(1){
               }
         }
         // Check for sbush
-  	else if (*str == '.' && *(str+1) == '/' && *(str+2) == 's' && *(str+3) == 'b' && *(str+4) == 'u' && *(str+5) == 's' && *(str+6) == 'h') {
+  	else if (*str == '.' && *(str+1) == '/' && *(str+2) == 's'
+		 && *(str+3) == 'b' && *(str+4) == 'u' 
+		&& *(str+5) == 's' && *(str+6) == 'h') {
                int len = strlen(str);
                uint64_t pid = fork();
                if(pid != 0){
@@ -123,12 +134,27 @@ while(1){
                     execve("bin/sbush\0\0",str+7);
               }
 	}
+        // Check for sbang
+        else if (*str == '.' &&  *(str+1) == '/' && 
+ 		*(str+slen-3) == '.'  &&  *(str+slen-2) == 's'
+		 &&  *(str+slen-1) == 'h') {
+                 char *tp = str;
+                 cwd2(temp);
+                 tp= tp+ 2;
+                 addParent(temp,tp);
+ 		 strcpy(str,tp);
+                 executeSbang(str);
+        }
 	// Incase of exit command, just exit from here
         else if (*str == 'e' && *(str+1) == 'x' && *(str+2) == 'i' && *(str+3) == 't' ) {
 	    exit();
 	}
+        // clear screen 
+        else if (strcmp(str,"clear\0\0") == 0){
+          clear();
+        }
         else{
-             printf("%s",":sbush : --command not found");
+             printf(":sbush : %s --command not found", str);
         }
 
 }

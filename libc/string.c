@@ -189,3 +189,16 @@ void addDelimiter(char *str){
     *temp++ = '\n';
     *temp ='\0';
 }
+
+void removespace(char * str){
+char *temp = str;
+while(*temp != '\0' && *temp != ' ') temp++;
+if(*temp == ' '){
+  temp++;
+  char *ch = temp;
+  while(*ch != '\0' && *ch == ' ') ch++;
+  if(*ch != '\0'){
+  strcpy(temp,ch);
+  }  
+}
+}

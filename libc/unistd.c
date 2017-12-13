@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <unibinary.h>
 #define ROOT 'rootfs/'
 extern uint64_t global_val;
 extern int temp_val;
@@ -131,7 +132,6 @@ void read(uint64_t fd, char *buf, int size) {
     return;
 }
 
-#if 0
 void chdir(char * dir) {
    uint64_t r =0;
     /* System call for pipe is 80 */
@@ -140,7 +140,6 @@ void chdir(char * dir) {
        printf("Something is not right");
    }
 }
-#endif
 
 void  cwd() {
   /* System call for pipe is 79 */
@@ -214,5 +213,40 @@ void exit() {
 	printf("Error in exiting \n");
     }
     return;
+}
+void executeSbang(char * str){
+ uint64_t  fd = open(str, 0);
+ str[0] = '\0';
+ read(fd,str, 1000) ;
+ if ( str[0] == '#' && str[1] == '!'){
+      char *temp = str;
+      while(*temp != '\n') temp++;
+      temp++;
+      str = temp;
+      while(*temp != '\0'){
+    	char *temp2 = temp;
+        while(*temp != '\n') temp++;
+        *temp = '\0';
+        temp++;
+        checkingForBinary(temp2);  
+      }
+      
+ }
+ else{
+	printf("-sbush:  No such file or directory");
+ }
+}
+
+void addParent(char *parent, char *str){
+char temp[100];
+strcpy(temp,parent+7);
+strcat(temp,str);
+strcpy(str,temp);
+int len = strlen(str);
+if ( *(str+len-1) != '/' &&  *(str+len-3) != '.' && *(str+len-2) != 's' && *(str+len-1) != 'h' ){
+     *(str+len)= '/';
+     *(str+len+1) = '\0';
+} 
+
 }
 

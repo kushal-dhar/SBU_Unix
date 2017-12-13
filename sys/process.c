@@ -463,6 +463,8 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     child_pcb->pid = get_next_processID();
     child_pcb->ppid = curr_process->pid;
     strcpy(curr_process->p_name, child_pcb->p_name);
+    strcpy(curr_process->curr_dir, child_pcb->curr_dir);
+    strcpy(curr_process->temp_curr_dir, child_pcb->temp_curr_dir);
     child_pcb->next_proc = NULL;
     child_pcb->mm = NULL;
     
@@ -605,11 +607,13 @@ void execve(char *filename, char *argv) {
     argc = i;
 
     strcpy(file, user_pcb->p_name);
-    strcpy(ROOT, user_pcb->curr_dir);
-    strcpy(ROOT, user_pcb->temp_curr_dir);
+//    strcpy(ROOT, user_pcb->curr_dir);
+//    strcpy(ROOT, user_pcb->temp_curr_dir);
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
     user_pcb->state = TASK_RUNNING;
+    strcpy(curr_process->curr_dir, user_pcb->curr_dir);
+    strcpy(curr_process->temp_curr_dir, user_pcb->temp_curr_dir);
 
     user_pcb->cr3 = (uint64_t)create_user_address_space();
 

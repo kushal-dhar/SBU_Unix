@@ -175,7 +175,7 @@ int read(int fd, char *buf, int size) {
     }
 
     if (found == 0) {
-	kprintf("File not opened for reading\n");
+kprintf("File not opened for reading\n");
 	return 0;
     }
     length = curr_process->fd[i].size;
@@ -221,19 +221,14 @@ uint64_t checkCorrectParent(char *file){
  */
 uint64_t opendir(char *filename) {
     int     iterator    = 3;
-    uint64_t ret = 0;
-    if (strlen(filename) == 0){
-        strcpy(curr_process->curr_dir,filename);
-    }else{
-     ret =  checkCorrectParent(filename);
-   }
-    if(ret == 1){
+    if (strlen(filename) == 0 || (strcmp(filename, "/")==0)){
+        return 0;
+    }
     while (iterator < file_count) {
         if ((global_tarfs[iterator-3].type == DIRECTORY) && (strcmp(filename, global_tarfs[iterator-3].name) == 0)) {
             return global_tarfs[iterator-3].inode;
         }
         iterator ++;
-    }
     }
     return 999;
 

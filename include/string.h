@@ -14,5 +14,5 @@ extern   void*  memset(void *ptr, int x, uint32_t n);
 extern int  substr_tillchar(char *s, char c);
 extern int atoi(char *str);
 extern void addDelimiter(char *str);
-
+extern void removespace(char * str);
 #endif
