@@ -492,21 +492,12 @@ void pagefault_handler(regis reg) {
     vma_t       *vma;
     
     __asm__ volatile ("mov %%cr2, %0" : "=a" (fault_addr));
+    kprintf("%s"," ");
 
     fault_addr = (uint64_t)remove_flag(fault_addr);
     phys_addr = virt_to_phys(fault_addr);
     vma = curr_process->mm->vma;
     
-//    kprintf("%d\n",fault_addr);
-//    while(1);
-#if 0
-    if (reg != NULL) {
-        err_code = reg->err_code & 0xF;
-    }
-    //curr = curr_process->mm->vma;
-
-    if (err_code & (PT_PR | PT_WR)) {
-#endif
     if (phys_addr != 999 && phys_addr != 0) {
         new_page = (uint64_t)allocate_virt_page();
         virt_addr = (uint64_t)(KERNEL_ADDR | new_page);
@@ -685,7 +676,7 @@ uint64_t virt_to_phys(uint64_t vAddress) {
     return pAddr;
 }
 
-void free_page(uint64_t vAddress) {
+void free_page(uint64_t vAddress, uint64_t cr3_addr) {
     uint64_t    *pml4 ;
     uint64_t    *pdpt;
     uint64_t    *pd;
@@ -698,7 +689,8 @@ void free_page(uint64_t vAddress) {
     uint64_t     pd_index   = (vAddress >> PD_INDEX) & 0x1FF;
     uint64_t     pt_index   = (vAddress >> PT_INDEX) & 0x1FF;
 
-    __asm__ volatile("mov %%cr3, %0" : "=a" (pml4));
+//    __asm__ volatile("mov %%cr3, %0" : "=a" (pml4));
+    pml4 = (uint64_t *)cr3_addr;
     pml4 = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)pml4);
     table_entry = pml4[pml4_index];
 
@@ -806,15 +798,18 @@ void delete_pagetable(uint64_t pml4_addr) {
 
                             for (pt_index = 0; pt_index < 512; pt_index ++) {
                                 table_entry = pt[pt_index];
-                                if (table_entry & PT_PR) {
+                                if (table_entry & (PT_PR | PT_WR | PT_U)) {
                                     table_entry = (uint64_t )remove_flag(table_entry);
-                                    set_bit(free_map, table_entry);
-                                    pt[pt_index] = 0;
-                                    table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
-                                    memset((void *)table_entry, 0, PAGE_SIZE);
+				    if (table_entry != 0) {
+                                        set_bit(free_map, table_entry);
+                                        pt[pt_index] = 0;
+                                        table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
+                                        memset((void *)table_entry, 0, PAGE_SIZE);
+				    }
                                 }
                             }
 			    table_entry = pd[pd_index];
+			    table_entry = (uint64_t )remove_flag(table_entry);
 			    set_bit(free_map, table_entry);
 			    pd[pd_index] = 0;
                             table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
@@ -822,6 +817,7 @@ void delete_pagetable(uint64_t pml4_addr) {
                         }
                     }
                     table_entry = pdpt[pdpt_index];
+		    table_entry = (uint64_t )remove_flag(table_entry);
                     set_bit(free_map, table_entry);
                     pdpt[pdpt_index] = 0;
                     table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
@@ -829,6 +825,7 @@ void delete_pagetable(uint64_t pml4_addr) {
 		}
 	    }
             table_entry = pml4[pml4_index];
+	    table_entry = (uint64_t )remove_flag(table_entry);
             set_bit(free_map, table_entry);
             pml4[pml4_index] = 0;
             table_entry = (uint64_t)(KERNEL_ADDR | table_entry);

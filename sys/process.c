@@ -452,7 +452,7 @@ pid_t fork_child() {
 
 
 pcb_t* copy_parent_structure(pcb_t *parent_proc) {
-    uint64_t  *user_virt;
+    //uint64_t  *user_virt;
     //uint64_t  *user_stack;
     //uint64_t   current_rsp;
     volatile vma_t     *parent_vma     = NULL;
@@ -469,10 +469,12 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     curr_process->n_child += 1;
     child_pcb->n_child = 0;
 
-    child_pcb->cr3 = (uint64_t)allocate_virt_page();
-    user_virt = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)child_pcb->cr3);
-    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3);
-    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
+    child_pcb->cr3 = (uint64_t)create_user_address_space();
+    __asm__ volatile("mov %%cr3, %0" : "=a" (curr_process->cr3));
+//    child_pcb->cr3 = (uint64_t)allocate_virt_page();
+//    user_virt = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)child_pcb->cr3);
+//    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3);
+//    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     copy_parent_tables((uint64_t *)child_pcb->cr3);
 
     child_pcb->init_kernel = (uint64_t)(child_pcb + PAGE_SIZE - 8);
@@ -657,16 +659,17 @@ void execve(char *filename, char *argv) {
 	}
 	pointer->next_proc = curr_process;
 	curr_process->next_proc = NULL;
-    }
+    } 
 
     /* Free the current user space */
     //free_vma(curr_process->mm);
 
     set_CR3(user_pcb->cr3);
 
-//    free_vma(curr_process->mm);
-//    free_page(curr_process->user_stack);
+//    free_vma(curr_process->mm, curr_process->cr3);
+//    free_page(curr_process->user_stack, curr_process->cr3);
 //    delete_pagetable(curr_process->cr3);
+//    free_page((uint64_t)curr_process, user_pcb->cr3);
 
     /*Set user stack to contain argc and argv values */
     i = sizeof(kernel_args);  
@@ -706,7 +709,7 @@ void print_allPID(){
  */
 void sys_exit() {
     pcb_t     *prev_task;
-//    pcb_t     *iterator;
+    pcb_t     *iterator;
     pcb_t     *stopped_list;
 
     prev_task = curr_process;
@@ -733,6 +736,15 @@ void sys_exit() {
 	curr_process->next_proc = NULL;
     }
 
+    iterator = forked_process;
+    while(iterator != NULL) {
+	stopped_list = iterator;
+	iterator = iterator->next_proc;
+        free_vma(stopped_list->mm, stopped_list->cr3);
+//        free_page(stopped_list->user_stack, stopped_list->cr3);
+        delete_pagetable(stopped_list->cr3);
+        free_page((uint64_t)stopped_list, curr_process->cr3);
+    }
 
     curr_process = prev_task;
 /*
