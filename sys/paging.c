@@ -616,8 +616,10 @@ void copy_parent_tables(uint64_t* cr3_addr) {
                                 table_entry = pt[pt_index];
                                 if (table_entry & PT_PR) {
                                     table_entry = (uint64_t )remove_flag(table_entry);
-				    pt[pt_index] = (uint64_t)table_entry | (PT_PR | PT_U | (0x1 << 9));
+				    pt[pt_index] = 0;
+//				    pt[pt_index] = (uint64_t)table_entry | (PT_PR | PT_U | (0x1 << 9));
                                     table_entry = (uint64_t)table_entry | (PT_PR | PT_U | (0x1 << 9));
+				    pt[pt_index] = table_entry;
                                     c_pt[pt_index] = table_entry;
                                 }
                             }
@@ -663,7 +665,7 @@ uint64_t virt_to_phys(uint64_t vAddress) {
 		pt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
 		table_entry = pt[pt_index];
 
-		if (table_entry & (PT_PR | (0x1 << 9))) {
+		if ((table_entry & (0x1 << 9)) && (table_entry & PT_PR)) {
 		    table_entry = (uint64_t)remove_flag(table_entry);
 		    pAddr = (uint64_t)table_entry;
 		}
@@ -712,10 +714,9 @@ void free_page(uint64_t vAddress, uint64_t cr3_addr) {
                 if (!(table_entry & (0x1 << 9)) && (table_entry & PT_PR)) {
                     table_entry = (uint64_t)remove_flag(table_entry);
 		    set_bit(free_map, table_entry/PAGE_SIZE);
-//		    free_map[table_entry / 64] |= (1ull << (table_entry % 64));
 		    pt[pt_index] = 0;
-		    table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
-		    memset((void *)table_entry, 0, PAGE_SIZE);
+//		    table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
+//		    memset((void *)table_entry, 0, PAGE_SIZE);
                 }
             }
         }

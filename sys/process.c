@@ -773,7 +773,7 @@ void sys_exit() {
 //        free_vma(stopped_list->mm, stopped_list->cr3);
 //        free_page(stopped_list->user_stack, stopped_list->cr3);
 //        delete_pagetable(stopped_list->cr3);
-//        free_page((uint64_t)stopped_list, curr_process->cr3);
+//        free_kernel_page((uint64_t)stopped_list);
     }
     
     set_CR3(curr_process->cr3);
