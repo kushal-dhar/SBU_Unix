@@ -3,6 +3,10 @@
 #include <sys/defs.h>
 #include <sys/kb.h>
 #include <sys/paging.h>
+#include <sys/paging_helper.h>
+#include <sys/process.h>
+
+extern pcb_t *curr_process;
 
 volatile char *video = ( char*)VIDEO_ADDR;
 int            colour=  7;
@@ -575,12 +579,23 @@ void kprintf_timer(int time) {
 }
 
 void clear_console() {
-    int count = 0;
+//    int count = 0;
+    int x_axis = 0;
+    int y_axis = 0;
 
-    while (count < 80 * 24 *24) {
+    set_CR3(curr_process->cr3);
+
+    for (y_axis = 0; y_axis < 24; y_axis++) {
+	for (x_axis = 0; x_axis < 160; ) {
+            video[x_axis++ + (y_axis * 160)] = ' ';
+            video[x_axis++ + (y_axis * 160)] = colour;
+	}
+    }
+
+/*    while (count < 160 * 24 *24) {
 	*(video + count++) = ' ';
 	*(video + count++) = colour;
-    }
+    } */
 
     x_pos = 0;
     y_pos = 0;

@@ -706,13 +706,24 @@ void print_allPID(){
 	    kprintf("\t%s\n","Running");
 	}
 	proc = proc->next_proc;
+	if (proc->next_proc == first_process) {
+            kprintf("%d             %s",proc->pid,proc->p_name);
+    	    if (proc->state == TASK_READY) {
+                kprintf("\t%s\n","Ready");
+            }
+            else if (proc->state == TASK_RUNNING) {
+                kprintf("\t%s\n","Running");
+            }
+	}
 	
     } 
+#if 0
     proc = stopped_process;
     while(proc->next_proc != NULL) {
 	kprintf("%d             %s\t%s\n",proc->pid,proc->p_name, "Stopped");
 	proc = proc->next_proc;
     }
+#endif
 }
 
 
