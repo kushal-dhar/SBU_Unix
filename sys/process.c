@@ -734,37 +734,28 @@ void sys_exit() {
     pcb_t     *prev_task;
     pcb_t     *iterator;
     pcb_t     *stopped_list;
-//    uint64_t   new_page;
+    uint64_t   new_page;
 
     prev_task = curr_process;
     curr_process->state = TASK_STOPPED;
-//    free_vma(curr_process->mm);
-//    free_page(curr_process->user_stack);
-//    delete_pagetable(curr_process->cr3);
+
     while (prev_task->next_proc->pid != curr_process->pid) {
     	prev_task = prev_task->next_proc;
     }
     prev_task->next_proc = first_process;
 
-//    iterator = curr_process;
     stopped_list = stopped_process;
-    if (stopped_list == NULL) {
-	stopped_process = curr_process;
-	curr_process->next_proc = NULL;
+    while(stopped_list != NULL) {
+	iterator = stopped_list->next_proc;
+        free_vma(stopped_list->mm, stopped_list->cr3);
+        free_page(stopped_list->user_stack, stopped_list->cr3);
+        delete_pagetable(stopped_list->cr3);
+//        free_page((uint64_t)stopped_list, curr_process->cr3);
+	stopped_list = iterator;
     }
-    else {
-	while(stopped_list->next_proc != NULL) {
-	    iterator = stopped_list;
-	    stopped_list = stopped_list->next_proc;
-            free_vma(stopped_list->mm, stopped_list->cr3);
-            free_page(stopped_list->user_stack, stopped_list->cr3);
-//            delete_pagetable(stopped_list->cr3);
-//            free_page((uint64_t)stopped_list, curr_process->cr3);
-	}
-//	stopped_process = curr_process;
-	stopped_list->next_proc = curr_process;
-	curr_process->next_proc = NULL;
-    }
+    stopped_process = NULL;
+    stopped_process = curr_process;
+    curr_process->next_proc = NULL;
 
     iterator = forked_process;
     while(iterator != NULL) {
@@ -772,14 +763,16 @@ void sys_exit() {
 	iterator = iterator->next_proc;
         free_vma(stopped_list->mm, stopped_list->cr3);
         free_page(stopped_list->user_stack, stopped_list->cr3);
-//        delete_pagetable(stopped_list->cr3);
+        delete_pagetable(stopped_list->cr3);
 //        free_kernel_page((uint64_t)stopped_list);
     }
     forked_process = NULL;
     
     set_CR3(curr_process->cr3);
-//    new_page = (uint64_t)allocate_virt_page();
-//    kprintf("new_page: %x\n",new_page);
+    new_page = (uint64_t)allocate_virt_page();
+    if (new_page != 0x0) {
+        kprintf("%s","");
+    }
     
     
     curr_process = prev_task;
@@ -788,10 +781,6 @@ void sys_exit() {
 	iterator = iterator->next_proc;
     } 
 */
-//    curr_process = curr_process->next_proc;
-//    next_process = next_process->next_proc;
-//    curr_process->next_proc = next_process->next_proc;
-//    curr_process->state = TASK_RUNNING;
     if (curr_process->pid == 1) {
 	prev_task->init_kernel = prev_task->kern_rsp = (uint64_t)prev_task + PAGE_SIZE - 8;
 	memset((void*)prev_task, 0, (uint32_t)PAGE_SIZE);
