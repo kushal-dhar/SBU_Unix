@@ -55,7 +55,7 @@ int get_next_processID() {
 void create_kernel_thread() {
     pcb_t *k_pcb = (pcb_t *)kmalloc((int)6000);
     
-    strcpy("init", k_pcb->p_name);
+    strcpy("init/kernel", k_pcb->p_name);
     k_pcb->pid = get_next_processID();
     k_pcb->ppid = 0;
     k_pcb->cr3 = (uint64_t)get_CR3_address();
@@ -216,7 +216,7 @@ void initial_ret_function() {
 
     init_syscalls();
     
-    pcb_t *user_process = create_user_process("bin/sbush");
+    pcb_t *user_process = create_user_process("bin/init");
     enable_page_fault();
 //    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);
@@ -758,7 +758,7 @@ void sys_exit() {
 	iterator = stopped_list->next_proc;
         free_vma(stopped_list->mm, stopped_list->cr3);
         free_page(stopped_list->user_stack, stopped_list->cr3);
-   //     delete_pagetable(stopped_list->cr3);
+//        delete_pagetable(stopped_list->cr3);
 //        free_page((uint64_t)stopped_list, curr_process->cr3);
 	stopped_list = iterator;
     }
@@ -772,7 +772,7 @@ void sys_exit() {
 	iterator = iterator->next_proc;
         free_vma(stopped_list->mm, stopped_list->cr3);
         free_page(stopped_list->user_stack, stopped_list->cr3);
- //       delete_pagetable(stopped_list->cr3);
+//        delete_pagetable(stopped_list->cr3);
 //        free_kernel_page((uint64_t)stopped_list);
     }
     forked_process = NULL;
