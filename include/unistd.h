@@ -53,4 +53,6 @@ extern void  printAllProcess();
 extern void exit();
 extern void executeSbang(char * str);
 extern void addParent(char *parent, char *str);
+extern void printEchoVar(char * s);
+extern void setEchoValue(char * s);
 #endif

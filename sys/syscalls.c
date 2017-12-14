@@ -35,7 +35,7 @@ uint64_t syscall_handler (regis  reg) {
 	scanf((char *)reg.rcx);
 	return 0;
     }
-    /* Handle open dir */
+   /* Handle open dir */
     else if (reg.rbx == 89) {
 	int ret_val = opendir((char *)reg.rcx);
 	return ret_val;
@@ -121,6 +121,16 @@ uint64_t syscall_handler (regis  reg) {
     else if (reg.rbx == 62) {
 	kill((uint64_t)reg.rcx);
 	return 0;
+    }
+   /* Handle set environment */
+    else if (reg.rbx == 5) {
+        setEnv((char *)reg.rcx);
+        return 0;
+    }
+    /* print  environment */
+    else if (reg.rbx == 6) {
+        printEnv((char *)reg.rcx);
+        return 0;
     }
     return 0;
 }

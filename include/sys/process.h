@@ -69,6 +69,8 @@ struct process_ctrl_blk {
     int           n_child;
     char          curr_dir[100];
     char          temp_curr_dir[100];
+    char          echo_var[5][100];
+    int           echo_count;
     pcb_t        *next_proc;
     mm_struct_t  *mm;
     register_t    regs;
@@ -99,5 +101,6 @@ extern void sys_exit();
 extern void user_switchTask(pcb_t *current, pcb_t *next);
 extern void kill(uint64_t pid);
 extern void schedule_sbush();
-
+extern void setEnv(char *s);
+extern void printEnv(char *s);
 #endif

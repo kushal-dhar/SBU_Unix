@@ -243,7 +243,8 @@ strcpy(temp,parent+7);
 strcat(temp,str);
 strcpy(str,temp);
 int len = strlen(str);
-if ( *(str+len-1) != '/' &&  *(str+len-3) != '.' && *(str+len-2) != 's' && *(str+len-1) != 'h' ){
+if ( *(str+len-1) != '/' &&  *(str+len-3) != '.' && *(str+len-2) != 's' && *(str+len-1) != 'h' && 
+      *(str+len-4) != '.' && *(str+len-3) != 't' && *(str+len-2) != 'x' && *(str+len-1) != 't'){
      *(str+len)= '/';
      *(str+len+1) = '\0';
 } 
@@ -262,3 +263,44 @@ void kill(uint64_t pid) {
     return;
 }
 
+void setEchoValue(char * s){
+    int flag =0;
+   // Number of quotes (")
+   int qcount = 0;
+   // Number of equal to sign (=)
+   int eqcount =0;
+   char * temp = s;
+   while(*temp != '\0'){
+        if (*temp == '='){ 
+           eqcount++;
+          
+        }
+        if (*temp =='\"' || *temp == '\''){
+           qcount++;
+           flag =1;
+        }
+       if (flag ==1){
+          *temp = *(temp+1);
+       }
+         temp++;
+   }
+   
+   if (eqcount == 1 && qcount == 2)
+   {   int len = strlen(s);
+       s[len-1] ='\0';
+       uint64_t ret =  syscall_2(5,(uint64_t) s);
+       if (ret == 999)
+           printf("Some issue with Echo");
+
+   }
+   else
+       printf("-sbush: wrong export statement");
+}
+
+void printEchoVar(char * s){
+  uint64_t ret =  syscall_2(6,(uint64_t) s);
+  if (ret == 999){
+      printf("Some issue with Echo");
+   }
+}
+   

@@ -135,6 +135,8 @@ pcb_t* create_user_process(char *filename) {
     strcpy(filename, user_pcb->p_name);
     strcpy(ROOT, user_pcb->curr_dir);
     strcpy(ROOT, user_pcb->temp_curr_dir);
+    strcpy("PATH=rootfs/bin/kachara", user_pcb->echo_var[0]);
+    user_pcb->echo_count =1;
 //    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | user_pcb->cr3);
 
     user_stack = (uint64_t *)allocate_virt_page();
@@ -472,6 +474,10 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     strcpy(curr_process->p_name, child_pcb->p_name);
     strcpy(curr_process->curr_dir, child_pcb->curr_dir);
     strcpy(curr_process->temp_curr_dir, child_pcb->temp_curr_dir);
+    child_pcb->echo_count= curr_process-> echo_count;
+    for (int i =0; i < 5 ;i++){
+      strcpy(curr_process->echo_var[i], child_pcb->echo_var[i]);
+    }   
     child_pcb->next_proc = NULL;
     child_pcb->mm = NULL;
     
@@ -621,7 +627,10 @@ void execve(char *filename, char *argv) {
     user_pcb->state = TASK_RUNNING;
     strcpy(curr_process->curr_dir, user_pcb->curr_dir);
     strcpy(curr_process->temp_curr_dir, user_pcb->temp_curr_dir);
-
+    user_pcb->echo_count = curr_process-> echo_count;;
+    for (int i =0; i <5 ;i++){
+     strcpy(curr_process->echo_var[i], user_pcb->echo_var[i]);
+     }
     user_pcb->cr3 = (uint64_t)create_user_address_space();
 
     user_stack = (uint64_t *)allocate_virt_page();
@@ -853,4 +862,35 @@ void kill(uint64_t pid) {
     }
     return;
     
+}
+
+/** Set ECHO environment" **/
+void setEnv(char *s){
+ int index = curr_process-> echo_count;
+  strcpy(s,curr_process->echo_var[index-1]);
+  if (index > 4){
+        curr_process-> echo_count = 0;
+  }
+  curr_process-> echo_count = index+1;
+ }
+
+void printEnv(char *s){
+ for(int i =0; i <5; i++){
+     char buf [100];
+     strcpy(curr_process->echo_var[i], buf);
+     char * temp = buf;
+//     int len = strlen(buf);
+     while(*temp != '\0' && *temp != '=') temp++;
+     char * first = temp;
+     if (*temp == '=')
+          temp++;
+         *first='\0';
+          first = buf;
+        if (strcmp(first,s) == 0){
+     //     *(temp+len-1) = '\0';
+          kprintf("\n%s",temp);
+          return;
+        }
+     }
+ kprintf("%s","sbush: No such environment variable");
 }
