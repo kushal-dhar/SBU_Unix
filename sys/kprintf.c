@@ -312,7 +312,19 @@ void kprintf(char *string, ...)
         video[x_pos++ + (y_pos * 160)] = colour;
 #endif
     }
-    else if (control == 1) {
+    else if (control == 1) { 
+
+     if (ch == 0x68) {
+            /* Backspace has been pressed, go back */
+            if (x_pos - 2 >= global_x) {
+                x_pos =x_pos-2;
+                video[x_pos++ + (y_pos * 160)] = ' ';
+                video[x_pos++ + (y_pos * 160)] = colour;
+                x_pos =x_pos-2;
+            }
+       }
+
+#if 0
 	if (ch == 0x48 && shift == 1) {
 	/* Up arrow has been pressed, display '^[[A' */
             video[x_pos++ + (y_pos * 160)] = '^';
@@ -373,6 +385,7 @@ void kprintf(char *string, ...)
             video[x_pos++ + (y_pos * 160)] = ch;
             video[x_pos++ + (y_pos * 160)] = colour;	
 	}
+#endif
     }
 #if 0
     else if (ch == 30) {

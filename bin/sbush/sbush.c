@@ -65,7 +65,7 @@ while(1){
 
         }
         // check for Cat
-        else if (*str == 'c' && *(str+1) == 'a' && *(str+2) == 't' && *(str+3) == ' ') {
+        else if (*str == 'c' && *(str+1) == 'a' && *(str+2) == 't') {
              cwd2(temp);
              uint64_t pid = fork();
              if(pid != 0){

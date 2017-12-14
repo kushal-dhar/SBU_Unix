@@ -605,11 +605,11 @@ void execve(char *filename, char *argv) {
     }
   
     /* Incase of empty string, populate with space */
-    if (argc == 0) {
-        strcpy(" ", kernel_args[0]);
+//    if (argc == 0) {
+//        strcpy(" ", kernel_args[0]);
 //	kernel_args[0][0] = " ";
 //	kernel_args[0][1] = "\0";
-    }
+//    }
 
     argc = i;
 
@@ -848,7 +848,7 @@ void kill(uint64_t pid) {
 	
 	/* Process to be deleted is not in ready process */
 	if (deleted == 0) {
-	    kprintf("Killed %d",pid);
+	    kprintf("kill: (%d) - No such process",pid);
 	}
     }
     return;

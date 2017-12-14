@@ -21,6 +21,13 @@ void cat(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[], char *envp[]) {
-  cat(argc,argv);
-  return 0;
+
+    if (argc == 0) {
+        printf("cat: Invalid arguments <usage: cat filename1 filename2 ...");
+        return 0;
+    }
+
+
+    cat(argc,argv);
+    return 0;
 }

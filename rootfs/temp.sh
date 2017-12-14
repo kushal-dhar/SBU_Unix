@@ -1,3 +1,3 @@
 #!
-ls            bin/
-sleep           5
+ls bin/
+sleep 5
