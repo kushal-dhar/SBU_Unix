@@ -756,8 +756,8 @@ void sys_exit() {
 	while(stopped_list->next_proc != NULL) {
 	    iterator = stopped_list;
 	    stopped_list = stopped_list->next_proc;
-//            free_vma(stopped_list->mm, stopped_list->cr3);
-//            free_page(stopped_list->user_stack, stopped_list->cr3);
+            free_vma(stopped_list->mm, stopped_list->cr3);
+            free_page(stopped_list->user_stack, stopped_list->cr3);
 //            delete_pagetable(stopped_list->cr3);
 //            free_page((uint64_t)stopped_list, curr_process->cr3);
 	}
@@ -770,11 +770,12 @@ void sys_exit() {
     while(iterator != NULL) {
 	stopped_list = iterator;
 	iterator = iterator->next_proc;
-//        free_vma(stopped_list->mm, stopped_list->cr3);
-//        free_page(stopped_list->user_stack, stopped_list->cr3);
+        free_vma(stopped_list->mm, stopped_list->cr3);
+        free_page(stopped_list->user_stack, stopped_list->cr3);
 //        delete_pagetable(stopped_list->cr3);
 //        free_kernel_page((uint64_t)stopped_list);
     }
+    forked_process = NULL;
     
     set_CR3(curr_process->cr3);
 //    new_page = (uint64_t)allocate_virt_page();

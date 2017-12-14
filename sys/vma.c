@@ -27,7 +27,7 @@ vma_t* create_vma(uint64_t vm_start, uint64_t vm_end, int p_flags) {
 
 void free_vma(mm_struct_t *mm, uint64_t cr3_addr) {
     vma_t      *curr;
-    vma_t      *next;
+//    vma_t      *next;
     uint64_t    start_addr;
     uint64_t    end_addr;
     uint64_t    physfree;
@@ -45,6 +45,7 @@ void free_vma(mm_struct_t *mm, uint64_t cr3_addr) {
 	curr = curr->vm_next;
     }
 
+#if 0
     curr = mm->vma;
     next = curr->vm_next;
     while (curr != NULL) {
@@ -53,6 +54,7 @@ void free_vma(mm_struct_t *mm, uint64_t cr3_addr) {
 	curr = next;
     }
     mm->vma = NULL;
+#endif
 
     return;
 }
