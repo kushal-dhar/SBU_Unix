@@ -696,27 +696,27 @@ void free_page(uint64_t vAddress, uint64_t cr3_addr) {
     pml4 = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)pml4);
     table_entry = pml4[pml4_index];
 
-    if(table_entry & PT_PR) {
+    if((table_entry & PT_PR) && !(table_entry & (0x1 << 9))) {
         table_entry = (uint64_t)remove_flag(table_entry);
         pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
         table_entry = pdpt[pdpt_index];
 
-        if (table_entry & PT_PR) {
+        if ((table_entry & PT_PR) && !(table_entry & (0x1 << 9))) {
             table_entry = (uint64_t)remove_flag(table_entry);
             pd = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
             table_entry = pd[pd_index];
 
-            if (table_entry & PT_PR) {
+            if ((table_entry & PT_PR) && !(table_entry & (0x1 << 9))) {
                 table_entry = (uint64_t)remove_flag(table_entry);
                 pt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
                 table_entry = pt[pt_index];
 
-                if (!(table_entry & (0x1 << 9)) && (table_entry & PT_PR)) {
+                if (!(table_entry & (0x1 << 9)) && (table_entry & PT_PR) && (table_entry < 0x989680)) {
                     table_entry = (uint64_t)remove_flag(table_entry);
 		    set_bit(free_map, table_entry/PAGE_SIZE);
 		    pt[pt_index] = 0;
-//		    table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
-//		    memset((void *)table_entry, 0, PAGE_SIZE);
+		    table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
+		    memset((void *)table_entry, 0, PAGE_SIZE);
                 }
             }
         }
@@ -757,7 +757,7 @@ void free_kernel_page(uint64_t vAddress) {
                 if (table_entry & PT_PR ) {
                     table_entry = (uint64_t)remove_flag(table_entry);
                     set_bit(free_map, table_entry/PAGE_SIZE);
-//                    pt[pt_index] = 0;
+                    pt[pt_index] = 0;
                     table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
                     memset((void *)table_entry, 0, PAGE_SIZE);
                 }
@@ -782,29 +782,29 @@ void delete_pagetable(uint64_t pml4_addr) {
 
     for (pml4_index = 0; pml4_index < 511; pml4_index++) {
         table_entry = pml4[pml4_index];
-        if (table_entry & PT_PR) {
+        if (!(table_entry & (0x1 << 9)) && (table_entry & PT_PR) && (table_entry < 0x989680)) {
             table_entry = (uint64_t )remove_flag(table_entry);
             pdpt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
 
             for (pdpt_index = 0; pdpt_index < 512; pdpt_index ++) {
                 table_entry = pdpt[pdpt_index];
-                if (table_entry & PT_PR) {
+                if (!(table_entry & (0x1 << 9)) && (table_entry & PT_PR)&& (table_entry < 0x989680)) {
                     table_entry = (uint64_t )remove_flag(table_entry);
                     pd = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
 
                     for (pd_index = 0; pd_index < 512; pd_index++) {
                         table_entry = pd[pd_index];
-                        if (table_entry & PT_PR) {
+                        if (!(table_entry & (0x1 << 9)) && (table_entry & PT_PR)&& (table_entry < 0x989680)) {
                             table_entry = (uint64_t )remove_flag(table_entry);
                             pt = (uint64_t *)((uint64_t)KERNEL_ADDR | (uint64_t)table_entry);
 
                             for (pt_index = 0; pt_index < 512; pt_index ++) {
                                 table_entry = pt[pt_index];
-                                if (!(table_entry & (0x1 << 9) && (table_entry & PT_PR))) {
-                                    table_entry = (uint64_t )remove_flag(table_entry);
+                                if (!(table_entry & (0x1 << 9)) && (table_entry & PT_PR)&& (table_entry < 0x989680)) {
+                                   table_entry = (uint64_t )remove_flag(table_entry);
 				    if (table_entry != 0) {
                                         set_bit(free_map, table_entry/PAGE_SIZE);
-                                        //pt[pt_index] = 0;
+                                        pt[pt_index] = 0;
                                         table_entry = (uint64_t)(KERNEL_ADDR | table_entry);
                                         memset((void *)table_entry, 0, PAGE_SIZE);
 				    }
