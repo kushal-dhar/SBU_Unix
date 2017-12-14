@@ -30,7 +30,7 @@ while(1){
          // check the current ditectory 
          if (strcmp(str, "pwd\0\0\0") ==0){
             cwd2(temp);
-            printf("%s",temp);
+            printf("%s\n",temp);
         }
         // Export
         else if (*str == 'e' && *(str+1) == 'x' && *(str+2) == 'p' ){
@@ -46,6 +46,13 @@ while(1){
               chdir(temp);
          }
 /*        else if (*str =='e' && *(str+1) == 'c' && *(str+2) == 'h' && *(str+3) =='o' && *(str+4) == ' '){
+=======
+        // check echo $PATH
+        else if (strcmp(str, "echo $PATH\0\0\0")== 0){
+               printf("%s\n",path);
+        }
+        else if (*str =='e' && *(str+1) == 'c' && *(str+2) == 'h' && *(str+3) =='o' && *(str+4) == ' '){
+>>>>>>> Stashed changes
                   int len = strlen(str);
                   for(int i =0; i <100;i++)   *(temp+i) = '\0';
                   if(*(str+5) == '"'){
@@ -54,6 +61,7 @@ while(1){
                   }else {
                       strcpy(temp,str+5);
                   }
+<<<<<<< Updated upstream
                   printf("%s",temp);
         }*/
         // check for sleep
@@ -181,7 +189,7 @@ while(1){
           clear();
         }
         else{
-             printf(":sbush : %s --command not found", str);
+             printf("-sbush : %s: command not found\n", str);
         }
 
 }

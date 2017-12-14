@@ -828,7 +828,7 @@ void kill(uint64_t pid) {
 		stopped_process = iterator->next_proc;
 		iterator->next_proc = stopped_process->next_proc;
 		stopped_process->next_proc = NULL;
-		kprintf("Killed %d",pid);
+		kprintf("Killed %d\n",pid);
 		deleted = 1;
 	    }
 	    else {
@@ -840,14 +840,14 @@ void kill(uint64_t pid) {
 		prev_task->next_proc = iterator->next_proc;
 		iterator->next_proc = prev_task->next_proc->next_proc;
 		prev_task->next_proc->next_proc = NULL;
-		kprintf("Killed %d",pid);
+		kprintf("Killed %d\n",pid);
 		deleted = 1;
 	    }
 	}
 	
 	/* Process to be deleted is not in ready process */
 	if (deleted == 0) {
-	    kprintf("kill: (%d) - No such process",pid);
+	    kprintf("kill: (%d) - No such process\n",pid);
 	}
     }
     return;

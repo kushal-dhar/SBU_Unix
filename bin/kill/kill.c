@@ -10,7 +10,7 @@ int main(int argc, char *argv[], char *envp[]) {
     uint64_t pid     = 0;
 
     if (argc == 0) {
-	printf("kill: Invalid arguments  <usage: kill -9 pid>");
+	printf("kill: Invalid arguments  <usage: kill -9 pid>\n");
 	return 0;
     }
 

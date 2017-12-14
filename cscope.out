@@ -1,8 +1,12 @@
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 cscope 15 $HOME/final_sahil3/os-project               0000265351
 =======
 cscope 15 $HOME/update_course/os-project               0000263719
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+cscope 15 $HOME/update_course/os-project               0000263876
+>>>>>>> Stashed changes
 	@bin/cat/cat.c
 
 1 
@@ -565,7 +569,7 @@ pid
 
 13 
 	`´štf
-("kill: Invalid‡rguments <usage: kill -9…id>");
+("kill: Invalid‡rguments <usage: kill -9…id>\n");
 
 17 
 pid
@@ -755,7 +759,7 @@ sysÿÎ
 
 11 
 	`´štf
-("\nSomething is fishy");
+("Something is fishy\n");
 
 15 
 	}
@@ -1559,7 +1563,7 @@ pid
 
 33 
 	`´štf
-("%s",
+("%s\n",
 ‹mp
 );
 
@@ -1587,7 +1591,73 @@ i
 ‹mp
 );
 
+<<<<<<< Updated upstream
 53 ià(*
+=======
+42 ià(
+	`¡rcmp
+(
+¡r
+, "echo $PATH\0\0\0")== 0){
+
+43 
+	`´štf
+("%s\n",
+·th
+);
+
+45 ià(*
+¡r
+ =='e' && *(str+1) == 'c' && *(str+2) == 'h' && *(str+3) =='o' && *(str+4) == ' '){
+
+46 
+Ën
+ = 
+	`¡¾’
+(
+¡r
+);
+
+47 
+i
+ =0; i <100;i++è*(
+‹mp
++i) = '\0';
+
+48 if(*(
+¡r
++5) == '"'){
+
+49 
+	`¡rıy
+(
+‹mp
+,
+¡r
++6);
+
+50 
+‹mp
+[
+Ën
+-2] = '\0';
+
+52 
+	`¡rıy
+(
+‹mp
+,
+¡r
++5);
+
+54 
+	`´štf
+("%s\n",
+‹mp
+);
+
+57 ià(*
+>>>>>>> Stashed changes
 ¡r
  =='s' && *(str+1) == 'l' && *(str+2) == 'e' && *(str+3) =='e' &&
 
@@ -1997,7 +2067,7 @@ pid
 
 177 
 	`´štf
-(":sbush : % --commªd‚Ù found", 
+("-sbush : %s: commªd‚Ù found\n", 
 ¡r
 );
 
@@ -2295,7 +2365,7 @@ du¿tiÚ
 
 14 
 	`´štf
-("Something is fishy!! Not‡bleo sleep");
+("Something is fishy!! Not‡bleo sleep\n");
 
 18 
 	}
@@ -11573,6 +11643,7 @@ fd
 	}
 }
 
+<<<<<<< Updated upstream
 253 
 	$kl
 (
@@ -11709,6 +11780,8 @@ s
 	}
 }
 
+=======
+>>>>>>> Stashed changes
 	@sys/elf64.c
 
 1 
@@ -16059,7 +16132,7 @@ x_pos
 y_pos
  = 0;
 
-615 
+616 
 	}
 }
 
@@ -20441,7 +20514,7 @@ KERNEL_ADDR
 bË_’Œy
  & (0x1 << 9)è&& (bË_’Œy & 
 PT_PR
-)) {
+) && (table_entry < 0x989680)) {
 
 715 
 bË_’Œy
@@ -20831,7 +20904,7 @@ pml4_šdex
 bË_’Œy
  & (0x1 << 9)è&& (bË_’Œy & 
 PT_PR
-)) {
+) && (table_entry < 0x989680)) {
 
 786 
 bË_’Œy
@@ -20871,7 +20944,7 @@ pd±_šdex
 bË_’Œy
  & (0x1 << 9)è&& (bË_’Œy & 
 PT_PR
-)) {
+)&& (table_entry < 0x989680)) {
 
 792 
 bË_’Œy
@@ -20911,7 +20984,7 @@ pd_šdex
 bË_’Œy
  & (0x1 << 9)è&& (bË_’Œy & 
 PT_PR
-)) {
+)&& (table_entry < 0x989680)) {
 
 798 
 bË_’Œy
@@ -20947,7 +21020,7 @@ KERNEL_ADDR
 bË_’Œy
  & (0x1 << 9)è&& (bË_’Œy & 
 PT_PR
-)) {
+)&& (table_entry < 0x989680)) {
 
 804 
 bË_’Œy
@@ -25072,7 +25145,17 @@ pcb_t
 ¡İ³d_li¡
 ;
 
+<<<<<<< Updated upstream
 748 
+=======
+737 
+ušt64_t
+ 
+Ãw_·ge
+;
+
+739 
+>>>>>>> Stashed changes
 ´ev_sk
  = 
 cu¼_´oûss
@@ -25086,7 +25169,11 @@ cu¼_´oûss
 TASK_STOPPED
 ;
 
+<<<<<<< Updated upstream
 753 
+=======
+742 
+>>>>>>> Stashed changes
 ´ev_sk
 ->
 Ãxt_´oc
@@ -25096,13 +25183,21 @@ pid
 cu¼_´oûss
 ->pid) {
 
+<<<<<<< Updated upstream
 754 
+=======
+743 
+>>>>>>> Stashed changes
 ´ev_sk
  =…»v_sk->
 Ãxt_´oc
 ;
 
+<<<<<<< Updated upstream
 756 
+=======
+745 
+>>>>>>> Stashed changes
 ´ev_sk
 ->
 Ãxt_´oc
@@ -25110,18 +25205,27 @@ cu¼_´oûss
 fœ¡_´oûss
 ;
 
+<<<<<<< Updated upstream
 759 
+=======
+747 
+>>>>>>> Stashed changes
 ¡İ³d_li¡
  = 
 ¡İ³d_´oûss
 ;
 
+<<<<<<< Updated upstream
 760 ià(
+=======
+748 
+>>>>>>> Stashed changes
 ¡İ³d_li¡
- =ğ
+ !ğ
 NULL
 ) {
 
+<<<<<<< Updated upstream
 761 
 ¡İ³d_´oûss
  = 
@@ -25130,41 +25234,85 @@ cu¼_´oûss
 
 762 
 cu¼_´oûss
-->
-Ãxt_´oc
- = 
-NULL
-;
-
-765 
-¡İ³d_li¡
-->
-Ãxt_´oc
- !ğ
-NULL
-) {
-
-766 
+=======
+749 
 ™”©Ü
  = 
 ¡İ³d_li¡
-;
-
-767 
-¡İ³d_li¡
- = stİ³d_li¡->
-Ãxt_´oc
-;
-
-774 
-¡İ³d_li¡
+>>>>>>> Stashed changes
 ->
 Ãxt_´oc
+;
+
+<<<<<<< Updated upstream
+765 
+=======
+750 
+	`ä“_vma
+(
+>>>>>>> Stashed changes
+¡İ³d_li¡
+->
+mm
+, stİ³d_li¡->
+ü3
+);
+
+<<<<<<< Updated upstream
+766 
+™”©Ü
+ = 
+=======
+751 
+	`ä“_·ge
+(
+>>>>>>> Stashed changes
+¡İ³d_li¡
+->
+u£r_¡ack
+, stİ³d_li¡->
+ü3
+);
+
+<<<<<<< Updated upstream
+767 
+=======
+752 
+	`d–‘e_·g‘abË
+(
+>>>>>>> Stashed changes
+¡İ³d_li¡
+->
+ü3
+);
+
+<<<<<<< Updated upstream
+774 
+=======
+754 
+>>>>>>> Stashed changes
+¡İ³d_li¡
+ = 
+™”©Ü
+;
+
+756 
+¡İ³d_´oûss
+ = 
+NULL
+;
+
+757 
+¡İ³d_´oûss
  = 
 cu¼_´oûss
 ;
 
+<<<<<<< Updated upstream
 775 
+=======
+758 
+>>>>>>> Stashed changes
 cu¼_´oûss
 ->
 Ãxt_´oc
@@ -25172,34 +25320,54 @@ cu¼_´oûss
 NULL
 ;
 
+<<<<<<< Updated upstream
 778 
+=======
+760 
+>>>>>>> Stashed changes
 ™”©Ü
  = 
 fÜked_´oûss
 ;
 
+<<<<<<< Updated upstream
 779 
+=======
+761 
+>>>>>>> Stashed changes
 ™”©Ü
  !ğ
 NULL
 ) {
 
+<<<<<<< Updated upstream
 780 
+=======
+762 
+>>>>>>> Stashed changes
 ¡İ³d_li¡
  = 
 ™”©Ü
 ;
 
+<<<<<<< Updated upstream
 781 
+=======
+763 
+>>>>>>> Stashed changes
 ™”©Ü
  = i‹¿tÜ->
 Ãxt_´oc
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 788 
 =======
 773 
+=======
+764 
+>>>>>>> Stashed changes
 	`ä“_vma
 (
 ¡İ³d_li¡
@@ -25209,7 +25377,7 @@ mm
 ü3
 );
 
-774 
+765 
 	`ä“_·ge
 (
 ¡İ³d_li¡
@@ -25219,14 +25387,26 @@ u£r_¡ack
 ü3
 );
 
-778 
+766 
+	`d–‘e_·g‘abË
+(
+¡İ³d_li¡
+->
+ü3
+);
+
+769 
 fÜked_´oûss
  = 
 NULL
 ;
 
+<<<<<<< Updated upstream
 780 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+771 
+>>>>>>> Stashed changes
 	`£t_CR3
 (
 cu¼_´oûss
@@ -25234,31 +25414,59 @@ cu¼_´oûss
 ü3
 );
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 793 
 =======
 785 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+772 
+Ãw_·ge
+ = (
+ušt64_t
+)
+	`®loÿ‹_vœt_·ge
+();
+
+773 ià(
+Ãw_·ge
+ != 0x0) {
+
+774 
+	`k´štf
+("%s","");
+
+778 
+>>>>>>> Stashed changes
 cu¼_´oûss
  = 
 ´ev_sk
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 803 ià(
 =======
 795 ià(
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+784 ià(
+>>>>>>> Stashed changes
 cu¼_´oûss
 ->
 pid
  == 1) {
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 804 
 =======
 796 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+785 
+>>>>>>> Stashed changes
 ´ev_sk
 ->
 š™_k”Ãl
@@ -25270,11 +25478,15 @@ ušt64_t
 PAGE_SIZE
  - 8;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 805 
 =======
 797 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+786 
+>>>>>>> Stashed changes
 	`mem£t
 ((*)
 ´ev_sk
@@ -25284,6 +25496,7 @@ ušt32_t
 PAGE_SIZE
 );
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 806 
 	`k´štf
@@ -25296,15 +25509,22 @@ PAGE_SIZE
 808 *(
 =======
 798 
+=======
+787 
+>>>>>>> Stashed changes
 	`k´štf
 ("\n\n\n******************Terminalerminated******************\n\n\n");
 
-799 
+788 
 	`ş—r_cÚsŞe
 ();
 
+<<<<<<< Updated upstream
 800 *(
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+789 *(
+>>>>>>> Stashed changes
 ušt64_t
  *)(
 ´ev_sk
@@ -25314,21 +25534,29 @@ k”n_r¥
 scheduË_sbush
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 809 
 =======
 801 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+790 
+>>>>>>> Stashed changes
 	`u£r_sw™chBack
 (
 ´ev_sk
 );
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 813 
 =======
 805 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+794 
+>>>>>>> Stashed changes
 	`u£r_sw™chTask
 (
 ´ev_sk
@@ -25338,6 +25566,7 @@ scheduË_sbush
 cu¼_´oûss
 );
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 814 
 	}
@@ -25351,6 +25580,13 @@ cu¼_´oûss
 
 811 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+795 
+	}
+}
+
+800 
+>>>>>>> Stashed changes
 	$kl
 (
 ušt64_t
@@ -25358,21 +25594,29 @@ ušt64_t
 pid
 ) {
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 820 
 =======
 812 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+801 
+>>>>>>> Stashed changes
 pcb_t
  *
 ™”©Ü
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 821 
 =======
 813 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+802 
+>>>>>>> Stashed changes
 pcb_t
  *
 ´ev_sk
@@ -25380,36 +25624,49 @@ pcb_t
 NULL
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 822 
 =======
 814 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+803 
+>>>>>>> Stashed changes
 pcb_t
  *
 ¡İ³d_li¡
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 823 
 =======
 815 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+804 
+>>>>>>> Stashed changes
 ušt64_t
  
 d–‘ed
  = 0;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 825 ià(
 =======
 817 ià(
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+806 ià(
+>>>>>>> Stashed changes
 pid
  =ğ
 cu¼_´oûss
 ->pid) {
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 826 
 	`sys_ex™
@@ -25423,16 +25680,27 @@ cu¼_´oûss
 
 821 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+807 
+	`sys_ex™
+();
+
+810 
+>>>>>>> Stashed changes
 ™”©Ü
  = 
 fœ¡_´oûss
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 830 
 =======
 822 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+811 
+>>>>>>> Stashed changes
 ™”©Ü
 ->
 pid
@@ -25442,41 +25710,57 @@ pid
 fœ¡_´oûss
 ) {
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 831 
 =======
 823 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+812 
+>>>>>>> Stashed changes
 ´ev_sk
  = 
 ™”©Ü
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 832 
 =======
 824 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+813 
+>>>>>>> Stashed changes
 ™”©Ü
  = i‹¿tÜ->
 Ãxt_´oc
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 834 
 =======
 826 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+815 
+>>>>>>> Stashed changes
 ™”©Ü
  = 
 ´ev_sk
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 835 ià(
 =======
 827 ià(
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+816 ià(
+>>>>>>> Stashed changes
 ™”©Ü
 ->
 Ãxt_´oc
@@ -25484,31 +25768,43 @@ fœ¡_´oûss
 pid
  ==…id) {
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 836 
 =======
 828 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+817 
+>>>>>>> Stashed changes
 ¡İ³d_li¡
  = 
 ¡İ³d_´oûss
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 837 ià(
 =======
 829 ià(
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+818 ià(
+>>>>>>> Stashed changes
 ¡İ³d_li¡
  =ğ
 NULL
 ) {
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 838 
 =======
 830 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+819 
+>>>>>>> Stashed changes
 ¡İ³d_´oûss
  = 
 ™”©Ü
@@ -25516,11 +25812,15 @@ NULL
 Ãxt_´oc
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 839 
 =======
 831 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+820 
+>>>>>>> Stashed changes
 ™”©Ü
 ->
 Ãxt_´oc
@@ -25528,11 +25828,15 @@ NULL
 ¡İ³d_´oûss
 ->next_proc;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 840 
 =======
 832 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+821 
+>>>>>>> Stashed changes
 ¡İ³d_´oûss
 ->
 Ãxt_´oc
@@ -25540,16 +25844,21 @@ NULL
 NULL
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 841 
 =======
 833 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+822 
+>>>>>>> Stashed changes
 	`k´štf
 ("KËd %d",
 pid
 );
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 842 
 d–‘ed
@@ -25563,46 +25872,69 @@ d–‘ed
 
 837 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+823 
+d–‘ed
+ = 1;
+
+826 
+>>>>>>> Stashed changes
 ´ev_sk
  = 
 ¡İ³d_li¡
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 846 
 =======
 838 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+827 
+>>>>>>> Stashed changes
 ¡İ³d_li¡
  !ğ
 NULL
 ) {
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 847 
 =======
 839 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+828 
+>>>>>>> Stashed changes
 ´ev_sk
  = 
 ¡İ³d_li¡
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 848 
 =======
 840 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+829 
+>>>>>>> Stashed changes
 ¡İ³d_li¡
  = stİ³d_li¡->
 Ãxt_´oc
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 850 
 =======
 842 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+831 
+>>>>>>> Stashed changes
 ´ev_sk
 ->
 Ãxt_´oc
@@ -25610,11 +25942,15 @@ NULL
 ™”©Ü
 ->next_proc;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 851 
 =======
 843 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+832 
+>>>>>>> Stashed changes
 ™”©Ü
 ->
 Ãxt_´oc
@@ -25622,11 +25958,15 @@ NULL
 ´ev_sk
 ->next_proc->next_proc;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 852 
 =======
 844 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+833 
+>>>>>>> Stashed changes
 ´ev_sk
 ->
 Ãxt_´oc
@@ -25634,16 +25974,21 @@ NULL
 NULL
 ;
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 853 
 =======
 845 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+834 
+>>>>>>> Stashed changes
 	`k´štf
 ("KËd %d",
 pid
 );
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 854 
 d–‘ed
@@ -25656,20 +26001,28 @@ d–‘ed
 860 
 =======
 846 
+=======
+835 
+>>>>>>> Stashed changes
 d–‘ed
  = 1;
 
-851 ià(
+840 ià(
 d–‘ed
  == 0) {
 
+<<<<<<< Updated upstream
 852 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+841 
+>>>>>>> Stashed changes
 	`k´štf
 ("kl: (%dè- NØsuch…roûss",
 pid
 );
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 865 
 	}
@@ -25781,6 +26134,9 @@ buf
 =======
 857 
 >>>>>>> b2eb906904a6901f0e9e6221ec291ce349393524
+=======
+846 
+>>>>>>> Stashed changes
 	}
 }
 
@@ -27992,7 +28348,7 @@ cu¼_dœ
 
 400 
 	`k´štf
-("\n<%s>",
+("<%s>",
 cu¼_´oûss
 ->
 cu¼_dœ
