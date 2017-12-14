@@ -625,6 +625,7 @@ void execve(char *filename, char *argv) {
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
     user_pcb->state = TASK_RUNNING;
+    user_pcb->n_child = 0;
     strcpy(curr_process->curr_dir, user_pcb->curr_dir);
     strcpy(curr_process->temp_curr_dir, user_pcb->temp_curr_dir);
     user_pcb->echo_count = curr_process-> echo_count;;
@@ -704,10 +705,10 @@ void execve(char *filename, char *argv) {
 }
 
 void print_allPID(){
-    kprintf("PID           Process\tStatus\n");
+    kprintf("PID\tPPID\tProcess\tStatus\n");
     pcb_t *proc=  first_process;
     while(proc->next_proc != first_process){
-        kprintf("%d             %s",proc->pid,proc->p_name);
+        kprintf("%d\t\t%d\t%s",proc->pid,proc->ppid,proc->p_name);
 	if (proc->state == TASK_READY) {
 	    kprintf("\t%s\n","Ready");
 	}
@@ -716,7 +717,7 @@ void print_allPID(){
 	}
 	proc = proc->next_proc;
 	if (proc->next_proc == first_process) {
-            kprintf("%d             %s",proc->pid,proc->p_name);
+            kprintf("%d\t\t%d\t%s",proc->pid,proc->ppid,proc->p_name);
     	    if (proc->state == TASK_READY) {
                 kprintf("\t%s\n","Ready");
             }
@@ -808,6 +809,7 @@ void sys_exit() {
  */
 void kill(uint64_t pid) {
     pcb_t     *iterator;
+    pcb_t     *pointer;
     pcb_t     *prev_task      = NULL;
     pcb_t     *stopped_list;
     uint64_t   deleted        = 0;
@@ -823,6 +825,15 @@ void kill(uint64_t pid) {
 	}
 	iterator = prev_task;
  	if (iterator->next_proc->pid == pid) {
+            /* Remove all child process from the ready queue */
+            pointer = iterator->next_proc->next_proc;
+            while(pointer->next_proc != iterator->next_proc) {
+	        if (pointer->ppid == pid) {
+		    pointer->ppid = 1;
+		}
+		pointer = pointer->next_proc;
+	    }
+
 	    stopped_list = stopped_process;
 	    if (stopped_list == NULL) {
 		stopped_process = iterator->next_proc;
