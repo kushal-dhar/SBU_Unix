@@ -239,20 +239,71 @@ uint64_t opendir(char *filename) {
 
 }
 
+uint64_t countslash(char *s, int i){
+char *temp = s;
+uint64_t  count =0;
+
+if( i == 1){
+	while(*temp != '\0'){
+		if (*temp == '/')
+		{   
+		 if(*(temp+1) == '\0'){
+        	 count =1; 
+                 return count;
+     		} else{
+                  return 999;
+                }  
+	}
+	temp++;
+	}
+
+}
+else if (i ==2){
+	while(*temp != '\0'){
+                if (*temp == '/')
+                {
+                     return 999;    
+                }
+        temp++;
+        }
+
+}
+return 1;
+}
+
+
 /*
  * Stub to read file contents
  */
 void read_dir(int fd) {
     int      iterator    = 3;
 
+    
     iterator = 3;
 //    kprintf("List of files: \n");
+    
+    if (fd == 0){
+      while (iterator < file_count) {
+        uint64_t count =0;
+        if (global_tarfs[iterator-3].type == DIRECTORY){
+         count = countslash(global_tarfs[iterator-3].name, 1);
+        }else{
+         count = countslash(global_tarfs[iterator-3].name, 2);
+        } 
+        if (count == 1) {
+            kprintf("%s     \n",global_tarfs[iterator-3].name);
+        }
+        iterator++;
+    } 
+   }
+   else{
     while (iterator < file_count) {
 	if (global_tarfs[iterator-3].p_inode == fd) {
 	    kprintf("%s     \n",global_tarfs[iterator-3].name);
 	}
 	iterator++;
     }
+   }
 
     return;
 }
