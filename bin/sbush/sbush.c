@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <sys/defs.h>
 #include <unistd.h>
-#include <cd.h>
 #include <string.h>
-#include <scripts.h>
-#include <get_cmd.h>
 #include <libc.h>
 
 char str[100];
@@ -23,8 +20,8 @@ while(1);
    
         str[0] = '\0';
         temp[0] ='\0';
-        cwd();
-        scan("%s",(void *)str);
+        getcwd();
+        scanf("%s",(void *)str);
         int slen = strlen(str);
         removespace(str); 
 	if (slen == 0) {
@@ -55,7 +52,7 @@ while(1);
              if(pid != 0){
                 wait_pid(pid);
              }else{
-                   execve("bin/sleep\0\0",str+6);
+                   execvpe("bin/sleep\0\0",str+6);
              }
 
         }
@@ -72,7 +69,7 @@ while(1);
                         tp=tp+3;
                   	addParent(temp,tp);
  			strcpy(str,tp); 
-                        execve("bin/ls\0\0",str);
+                        execvpe("bin/ls\0\0",str);
                     } else {
                          tp=tp+2;
                          addParent(temp,tp);
@@ -80,7 +77,7 @@ while(1);
                          if (strlen(str) == 0){
                                str[0]= '\0';
                          }
-                         execve("bin/ls\0\0",str);
+                         execvpe("bin/ls\0\0",str);
                     }
               }
         } 
@@ -91,7 +88,7 @@ while(1);
                    wait_pid(pid);
                }
                else{
-                    execve("bin/ps\0\0",str);
+                    execvpe("bin/ps\0\0",str);
               } 
        }
 	// Check for kill -9
@@ -101,7 +98,7 @@ while(1);
                    wait_pid(pid);
                }
                else{
-                    execve("bin/kill\0\0",str+7);
+                    execvpe("bin/kill\0\0",str+7);
               }
         }
 
@@ -118,7 +115,7 @@ while(1);
                     if(*(str+2) == ' ' && len > 2){
                            addDelimiter(str+7);
                     }
-                    execve("bin/sbush\0\0",str+7);
+                    execvpe("bin/sbush\0\0",str+7);
               }
 	}
         // Check for sbang
@@ -142,7 +139,7 @@ while(1);
                }
                else{
 
-                    execve("bin/echo\0\0",str+5);
+                    execvpe("bin/echo\0\0",str+5);
               }
         }
          // check for Cat
@@ -156,7 +153,7 @@ while(1);
                    tp = tp + 4;
                    addParent(temp,tp);
                    strcpy(str,tp);
-                   execve("bin/cat\0\0",str);
+                   execvpe("bin/cat\0\0",str);
              }
         }
 	// Incase of exit command, just exit from here

@@ -24,7 +24,7 @@ void strtoint (int num, char str[]);
 void printf(char *s, ...);
 extern void printInt(int i );
 extern long list_dir(long syscall, long fd, char  *buf ,long count);
-extern void scan(char *str, void *buf);
+extern void scanf(char *str, void *buf);
 extern void clear();
 
 #endif

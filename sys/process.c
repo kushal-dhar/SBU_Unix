@@ -21,6 +21,7 @@ uint64_t *old_rsp;
 uint64_t *rsp_addr;
 uint64_t processID = 0;
 uint64_t rsp_pointer = 0;
+uint64_t zombie      = 0;
 //uint64_t *user_virtual_address = (uint64_t*)0x88888fff80000000UL;
 pcb_t *first_process;
 pcb_t *curr_process;
@@ -583,7 +584,18 @@ void execve(char *filename, char *argv) {
     int          argc        = 0;
     int          j           = 0;
     int	         k           = 0;
+    int          len         = 0;
     mm_struct_t *mm;
+
+    zombie = 0;
+
+    len = strlen(argv);
+    if (argv[len-2] == '&') {
+        zombie = 1;
+        argv[len-3] = '/';
+        argv[len-2] = '\0';
+        len -= 2;
+    }
 
     while (*filename != '\0') {
         file[i++] = *filename;
@@ -611,15 +623,13 @@ void execve(char *filename, char *argv) {
 	argc++;
 	k++;
     }
-  
-    /* Incase of empty string, populate with space */
-//    if (argc == 0) {
-//        strcpy(" ", kernel_args[0]);
-//	kernel_args[0][0] = " ";
-//	kernel_args[0][1] = "\0";
-//    }
 
-    argc = i;
+    if (zombie == 1) {
+        argc = i - 1;
+    } 
+    else {
+	argc = i;
+    }
 
     strcpy(file, user_pcb->p_name);
 //    strcpy(ROOT, user_pcb->curr_dir);

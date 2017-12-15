@@ -29,10 +29,8 @@ int mkdir(const char *pathname, mode_t mode);
 // OPTIONAL: implement for ``signals and pipes (+10 pts)''
 int pipe(int pipefd[2]);
 */
-char *getcwd(char *buf, long  size);
+//char *getcwd(char *buf, long  size);
 extern int waitpid(int pid, int *wstatus, int options);
-extern int execvp(char *file, char *argv[]);
-//extern pid_t fork();
 extern void chdir( char *path);
 extern int open(char *pathname, int flags);
 extern int pipe(int fd[]);
@@ -42,12 +40,12 @@ extern int get_pid();
 extern uint64_t open_dir(char *filename);
 extern void read_dir(uint64_t fd);
 extern void read(uint64_t fd, char *buf, int size);
-extern void  cwd();
+extern void  getcwd();
 extern void*  mallocc(int size);
 extern uint64_t getpid();
 extern int fork();
 extern void wait_pid(uint64_t pid);
-extern void execve(char *filename, char *ex_argv);
+extern void execvpe(char *filename, char *ex_argv);
 extern void  cwd2(char * buf);
 extern void  printAllProcess();
 extern void exit();

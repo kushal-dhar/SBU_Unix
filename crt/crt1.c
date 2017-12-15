@@ -41,9 +41,9 @@ void  _start(){
       }
   }
   
-  char **str2 = (char **)mallocc(sizeof(char *) * 5);
+  char **str2 = (char **)malloc(sizeof(char *) * 5);
   for (i = 0 ; i < *argc; i++) {
-    str2[i] = (char *)mallocc(sizeof(char) * 50);
+    str2[i] = (char *)malloc(sizeof(char) * 50);
     strcpy(str2[i], str[i]);
   }
 

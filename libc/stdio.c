@@ -207,7 +207,7 @@ void printf(char *string, ...) {
     }
 }
 
-void scan(char *str, void *buf) {
+void scanf(char *str, void *buf) {
     char        temp_buf[100];
     uint64_t    syscall         = 4;
     uint64_t    i               = 0;

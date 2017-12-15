@@ -13,7 +13,7 @@ int main(int argc, char *argv[], char *envp[]) {
         wait_pid(pid);
     }
     else{
-         execve("bin/sbush\0\0",str);
+         execvpe("bin/sbush\0\0",str);
     }
     return 0;
 }

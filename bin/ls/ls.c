@@ -7,7 +7,7 @@
 
 void ls(int argc, char *argv[]) {
   int     j          = 0;
-  char   *text       =  (char *) mallocc(sizeof(char)*1000);
+  char   *text       =  (char *) malloc(sizeof(char)*1000);
   uint64_t     fd;
 
   /* Loops through all files and displays them one by one */

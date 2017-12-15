@@ -6,22 +6,6 @@
 #define ROOT 'rootfs/'
 extern uint64_t global_val;
 extern int temp_val;
-char* getcwd(char * str, long size){
-long syscall = 79;
-long ret ;
-__asm__ volatile (
-    "mov %1, %%rax\n\t"
-    "mov %2, %%rdi\n\t"
-    "mov %3, %%rsi\n\t"
-    "syscall\n\t"
-    "mov %%rax, %0\n\t"
-    : "=r"(ret)
-    : "a"(syscall), "b"(str), "c" (size)
-    : "rdi", "rsi"
-
-); 
-return(char *) ret;
-}
 
 int waitpid(int pid, int *wstatus, int options) {
 
@@ -86,7 +70,7 @@ uint64_t open_dir(char *filename) {
     //Syscall number for open_dir
     ret_val = syscall_2((uint64_t)i, (uint64_t)temp_buf); 
     if(ret_val== 999){
-     printf("\n%s","-sbush: cd:  No such file or directory");
+     printf("\n%s","-sbush: cd:  No such file or directory\n");
     }
 
     return ret_val;
@@ -141,7 +125,7 @@ void chdir(char * dir) {
    }
 }
 
-void  cwd() {
+void  getcwd() {
   /* System call for pipe is 79 */
   uint64_t  ret =0;
 
@@ -152,12 +136,13 @@ void  cwd() {
   return;
 }
 
-void* mallocc(int size){
+/*
+void* malloc(int size){
   uint64_t  ch;
   ch = syscall_2(9,(uint64_t) size);
   return (void *)ch;
 }
-
+*/
 
 uint64_t getpid(){
  uint64_t pid=0;
@@ -184,7 +169,7 @@ void wait_pid(uint64_t pid) {
     return;
 }
 
-void execve(char *filename, char *ex_argv) {
+void execvpe(char *filename, char *ex_argv) {
     int syscall = 59;
     int ret = 0;
 
@@ -240,7 +225,7 @@ void executeSbang(char * str){
   }    
  }
  else{
-	printf("-sbush:  No such file or directory");
+	printf("-sbush:  No such file or directory\n");
  }
 }
 

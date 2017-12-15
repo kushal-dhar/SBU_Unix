@@ -14,7 +14,7 @@ uint64_t checkingForBinary(char *s){
         	 if(pid != 0){
                		wait_pid(pid);
         	 }else{
-               		execve("bin/sleep\0\0",str+6);
+               		execvpe("bin/sleep\0\0",str+6);
               }	
         }	
   	// check for Cat
@@ -28,7 +28,7 @@ uint64_t checkingForBinary(char *s){
                    tp = tp + 4;
                    addParent(temp,tp);
                    strcpy(str,tp);
-                   execve("bin/cat\0\0",str);
+                   execvpe("bin/cat\0\0",str);
              }
         }
        // Check for ECHO
@@ -41,7 +41,7 @@ uint64_t checkingForBinary(char *s){
                }
                else{
 
-                    execve("bin/echo\0\0",str+5);
+                    execvpe("bin/echo\0\0",str+5);
               }
         }
         // check for ls
@@ -57,7 +57,7 @@ uint64_t checkingForBinary(char *s){
                         tp=tp+3;
                         addParent(temp,tp);
                         strcpy(str,tp);
-                        execve("bin/ls\0\0",str);
+                        execvpe("bin/ls\0\0",str);
                     } else {
                          tp=tp+2;
                          addParent(temp,tp);
@@ -65,7 +65,7 @@ uint64_t checkingForBinary(char *s){
                          if (strlen(str) == 0){
                                str[0]= '\0';
                          }
-                         execve("bin/ls\0\0",str);
+                         execvpe("bin/ls\0\0",str);
 		}
               }
               
@@ -77,7 +77,7 @@ uint64_t checkingForBinary(char *s){
                    wait_pid(pid);
                }
                else{
-                    execve("bin/kill\0\0",str+7);
+                    execvpe("bin/kill\0\0",str+7);
               }
         }
 
@@ -88,7 +88,7 @@ uint64_t checkingForBinary(char *s){
                    wait_pid(pid);
                }
                else{
-                   execve("bin/ps\0\0",str);
+                   execvpe("bin/ps\0\0",str);
               }
         }
 return 0;

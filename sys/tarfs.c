@@ -180,7 +180,7 @@ int read(int fd, char *buf, int size) {
     }
 
     if (found == 0) {
-kprintf("File not opened for reading\n");
+        kprintf("File not opened for reading\n");
 	return 0;
     }
     length = curr_process->fd[i].size;
@@ -365,7 +365,7 @@ if(len > 0){
    	    }  
             int ret = changedir(dirname);
             if(ret == 999){
-   	        kprintf("-sbush: cd: %s: No such file or directory",dir);
+   	        kprintf("-sbush: cd: %s: No such file or directory\n",dir);
             }
         }
    }
