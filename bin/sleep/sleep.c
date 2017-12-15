@@ -11,7 +11,7 @@ int main(int argc, char *argv[], char *envp[]) {
     /* System call for nano sleep is 35 */
     ret = syscall_2(syscall,(uint64_t) duration);
     if (ret != 0) {
-    	printf("Something is fishy!! Not able to sleep");
+    	printf("Something is fishy!! Not able to sleep\n");
     }
 
     return 0;

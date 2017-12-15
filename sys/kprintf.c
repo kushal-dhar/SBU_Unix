@@ -305,12 +305,6 @@ void kprintf(char *string, ...)
 	    update_screen();
 	    y_pos --;
 	}
-#if 0
-        video[x_pos++ + (y_pos * 160)] = '^';
-        video[x_pos++ + (y_pos * 160)] = colour;
-        video[x_pos++ + (y_pos * 160)] = 'M';
-        video[x_pos++ + (y_pos * 160)] = colour;
-#endif
     }
     else if (control == 1) { 
 
@@ -319,88 +313,31 @@ void kprintf(char *string, ...)
             if (x_pos - 2 >= global_x) {
                 x_pos =x_pos-2;
                 video[x_pos++ + (y_pos * 160)] = ' ';
-                video[x_pos++ + (y_pos * 160)] = colour;
+                video[x_pos++ + (y_pos * 160)] = colour+1;
                 x_pos =x_pos-2;
             }
        }
 
-#if 0
-	if (ch == 0x48 && shift == 1) {
-	/* Up arrow has been pressed, display '^[[A' */
-            video[x_pos++ + (y_pos * 160)] = '^';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = 'A';
-            video[x_pos++ + (y_pos * 160)] = colour;
-	}
-	else if(ch == 0x4B && shift == 1) {
-	   /* Left arrow has been pressed, display '^[[D' */
-            video[x_pos++ + (y_pos * 160)] = '^';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = 'D';
-            video[x_pos++ + (y_pos * 160)] = colour;
-	}
-	else if (ch == 0x4D && shift == 1) {
-	    /* Right arrow has been pressed, display '^[[C' */
-            video[x_pos++ + (y_pos * 160)] = '^';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = 'C';
-            video[x_pos++ + (y_pos * 160)] = colour;
-	}
-	else if (ch == 0x50 && shift == 1) {
-	    /* Down arrow has been pressed, display '^[[B' */
-            video[x_pos++ + (y_pos * 160)] = '^';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = '[';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = 'B';
-            video[x_pos++ + (y_pos * 160)] = colour;
-	}
-	else if (ch == 0x68) {
-	    /* Backspace has been pressed, go back */
-	    if (x_pos - 2 >= global_x) {
-                x_pos =x_pos-2;
-                video[x_pos++ + (y_pos * 160)] = ' ';
-                video[x_pos++ + (y_pos * 160)] = colour;
-                x_pos =x_pos-2; 
-	    }
-       }
-	else {
-	    /* For all other control characters, display their Ctrl-characters */
-            video[x_pos++ + (y_pos * 160)] = '^';
-            video[x_pos++ + (y_pos * 160)] = colour;
-            video[x_pos++ + (y_pos * 160)] = ch;
-            video[x_pos++ + (y_pos * 160)] = colour;	
-	}
-#endif
     }
-#if 0
+    else if (shift == 1) {
+	if (ch == 16) {
+            video[x_pos++ + (24 * 160)] = '"';
+            video[x_pos++ + (24 * 160)] = colour;
+	}
+    }
     else if (ch == 30) {
-        video[x++ + (24 * 160)] = '^';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = 'C';
-        video[x++ + (24 * 160)] = colour;
+        video[x_pos++ + (24 * 160)] = '^';
+        video[x_pos++ + (24 * 160)] = colour;
+        video[x_pos++ + (24 * 160)] = 'C';
+        video[x_pos++ + (24 * 160)] = colour;
     } 
     else if (ch == 31) {
-        video[x++ + (24 * 160)] = '^';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = 'Z';
-        video[x++ + (24 * 160)] = colour;
+        video[x_pos++ + (24 * 160)] = '^';
+        video[x_pos++ + (24 * 160)] = colour;
+        video[x_pos++ + (24 * 160)] = 'Z';
+        video[x_pos++ + (24 * 160)] = colour;
+	sys_exit();
     }
-#endif
     else {
         video[x_pos++ + (y_pos * 160)] = ch;
         video[x_pos++ + (y_pos * 160)] = colour;
@@ -410,121 +347,6 @@ void kprintf(char *string, ...)
 }
 
        
-#if 0
-void kprintf_kb(char ch) {
-   volatile  int  x = x_pos;
-   volatile  int  y = y_pos;
-  // int x= 80;
-
-    if (ch == '\n') {
-        video[x++ + (24 * 160)] = '^';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = 'M';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = ' ';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = ' ';
-        video[x++ + (24 * 160)] = colour;
-    }
-    else if (control == 1) {
-	if (ch == 0x48 && shift == 1) {
-	/* Up arrow has been pressed, display '^[[A' */
-            video[x++ + (24 * 160)] = '^';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = 'A';
-            video[x++ + (24 * 160)] = colour;
-	}
-	else if(ch == 0x4B && shift == 1) {
-	   /* Left arrow has been pressed, display '^[[D' */
-            video[x++ + (24 * 160)] = '^';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = 'D';
-            video[x++ + (24 * 160)] = colour;
-	}
-	else if (ch == 0x4D && shift == 1) {
-	    /* Right arrow has been pressed, display '^[[C' */
-            video[x++ + (24 * 160)] = '^';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = 'C';
-            video[x++ + (24 * 160)] = colour;
-	}
-	else if (ch == 0x50 && shift == 1) {
-	    /* Down arrow has been pressed, display '^[[B' */
-            video[x++ + (24 * 160)] = '^';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = '[';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = 'B';
-            video[x++ + (24 * 160)] = colour;
-	}
-	else if (ch == 0x68) {
-	    /* Backspace has been pressed, display ^H */
-            video[x++ + (24 * 160)] = '^';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = 'H';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = ' ';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = ' ';
-            video[x++ + (24 * 160)] = colour;
-        }
-	else {
-	    /* For all other control characters, display their Ctrl-characters */
-            video[x++ + (24 * 160)] = '^';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = ch;
-            video[x++ + (24 * 160)] = colour;	
-            video[x++ + (24 * 160)] = ' ';
-            video[x++ + (24 * 160)] = colour;
-            video[x++ + (24 * 160)] = ' ';
-            video[x++ + (24 * 160)] = colour;
-	}
-    }
-#if 0
-    else if (ch == 30) {
-        video[x++ + (24 * 160)] = '^';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = 'C';
-        video[x++ + (24 * 160)] = colour;
-    } 
-    else if (ch == 31) {
-        video[x++ + (24 * 160)] = '^';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = 'Z';
-        video[x++ + (24 * 160)] = colour;
-    }
-#endif
-    else {
-        video[x++ + (24 * 160)] = ch;
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = ' ';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = ' ';
-        video[x++ + (24 * 160)] = colour;
-        video[x++ + (24 * 160)] = ' ';
-        video[x++ + (24 * 160)] = colour;
-    }
-
-    return;
-}
-
-#endif
-
-
 void kprintf_timer(int time) {
     int    hr    = 0;
     int    mins  = 0;

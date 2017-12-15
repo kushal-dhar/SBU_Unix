@@ -55,7 +55,7 @@ int get_next_processID() {
 void create_kernel_thread() {
     pcb_t *k_pcb = (pcb_t *)kmalloc((int)6000);
     
-    strcpy("init", k_pcb->p_name);
+    strcpy("init/kernel", k_pcb->p_name);
     k_pcb->pid = get_next_processID();
     k_pcb->ppid = 0;
     k_pcb->cr3 = (uint64_t)get_CR3_address();
@@ -216,7 +216,7 @@ void initial_ret_function() {
 
     init_syscalls();
     
-    pcb_t *user_process = create_user_process("bin/sbush");
+    pcb_t *user_process = create_user_process("bin/init");
     enable_page_fault();
 //    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);
@@ -625,6 +625,7 @@ void execve(char *filename, char *argv) {
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
     user_pcb->state = TASK_RUNNING;
+    user_pcb->n_child = 0;
     strcpy(curr_process->curr_dir, user_pcb->curr_dir);
     strcpy(curr_process->temp_curr_dir, user_pcb->temp_curr_dir);
     user_pcb->echo_count = curr_process-> echo_count;;
@@ -704,10 +705,10 @@ void execve(char *filename, char *argv) {
 }
 
 void print_allPID(){
-    kprintf("PID           Process\tStatus\n");
+    kprintf("PID\tPPID\tProcess\tStatus\n");
     pcb_t *proc=  first_process;
     while(proc->next_proc != first_process){
-        kprintf("%d             %s",proc->pid,proc->p_name);
+        kprintf("%d\t\t%d\t%s",proc->pid,proc->ppid,proc->p_name);
 	if (proc->state == TASK_READY) {
 	    kprintf("\t%s\n","Ready");
 	}
@@ -716,7 +717,7 @@ void print_allPID(){
 	}
 	proc = proc->next_proc;
 	if (proc->next_proc == first_process) {
-            kprintf("%d             %s",proc->pid,proc->p_name);
+            kprintf("%d\t\t%d\t%s",proc->pid,proc->ppid,proc->p_name);
     	    if (proc->state == TASK_READY) {
                 kprintf("\t%s\n","Ready");
             }
@@ -758,7 +759,7 @@ void sys_exit() {
 	iterator = stopped_list->next_proc;
         free_vma(stopped_list->mm, stopped_list->cr3);
         free_page(stopped_list->user_stack, stopped_list->cr3);
-   //     delete_pagetable(stopped_list->cr3);
+//        delete_pagetable(stopped_list->cr3);
 //        free_page((uint64_t)stopped_list, curr_process->cr3);
 	stopped_list = iterator;
     }
@@ -772,7 +773,7 @@ void sys_exit() {
 	iterator = iterator->next_proc;
         free_vma(stopped_list->mm, stopped_list->cr3);
         free_page(stopped_list->user_stack, stopped_list->cr3);
- //       delete_pagetable(stopped_list->cr3);
+//        delete_pagetable(stopped_list->cr3);
 //        free_kernel_page((uint64_t)stopped_list);
     }
     forked_process = NULL;
@@ -808,6 +809,7 @@ void sys_exit() {
  */
 void kill(uint64_t pid) {
     pcb_t     *iterator;
+    pcb_t     *pointer;
     pcb_t     *prev_task      = NULL;
     pcb_t     *stopped_list;
     uint64_t   deleted        = 0;
@@ -823,12 +825,21 @@ void kill(uint64_t pid) {
 	}
 	iterator = prev_task;
  	if (iterator->next_proc->pid == pid) {
+            /* Remove all child process from the ready queue */
+            pointer = iterator->next_proc->next_proc;
+            while(pointer->next_proc != iterator->next_proc) {
+	        if (pointer->ppid == pid) {
+		    pointer->ppid = 1;
+		}
+		pointer = pointer->next_proc;
+	    }
+
 	    stopped_list = stopped_process;
 	    if (stopped_list == NULL) {
 		stopped_process = iterator->next_proc;
 		iterator->next_proc = stopped_process->next_proc;
 		stopped_process->next_proc = NULL;
-		kprintf("Killed %d",pid);
+		kprintf("Killed %d\n",pid);
 		deleted = 1;
 	    }
 	    else {
@@ -840,14 +851,14 @@ void kill(uint64_t pid) {
 		prev_task->next_proc = iterator->next_proc;
 		iterator->next_proc = prev_task->next_proc->next_proc;
 		prev_task->next_proc->next_proc = NULL;
-		kprintf("Killed %d",pid);
+		kprintf("Killed %d\n",pid);
 		deleted = 1;
 	    }
 	}
 	
 	/* Process to be deleted is not in ready process */
 	if (deleted == 0) {
-	    kprintf("kill: (%d) - No such process",pid);
+	    kprintf("kill: (%d) - No such process\n",pid);
 	}
     }
     return;

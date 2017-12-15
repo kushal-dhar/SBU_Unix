@@ -397,7 +397,7 @@ int  changedir( char* filename){
   return 999;
 }
 void  getcwd(){
-  kprintf("\n<%s>",curr_process->curr_dir);
+  kprintf("<%s>",curr_process->curr_dir);
   global_x = x_pos;
   global_y = y_pos;
 }
