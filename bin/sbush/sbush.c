@@ -76,7 +76,7 @@ while(1){
                }
                else{
                    char *tp = str;
-                    if (*(str+3) == ' '){
+                    if (*(str+2) == ' '){
                         tp=tp+3;
                   	addParent(temp,tp);
  			strcpy(str,tp); 
