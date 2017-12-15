@@ -6,14 +6,19 @@
 
 
 int main(int argc, char *argv[], char *envp[]) {
-    uint64_t pid = fork();
+    uint64_t pid;
     char str[10] = "    ";
 
-    if(pid != 0){
-        wait_pid(pid);
-    }
-    else{
-         execve("bin/sbush\0\0",str);
+    clear();
+    while (1) {
+        clear();
+	pid = fork();
+	if(pid != 0){
+            wait_pid(pid);
+        }
+        else{
+             execve("bin/sbush\0\0",str);
+        }
     }
     return 0;
 }

@@ -55,9 +55,9 @@ int get_next_processID() {
 void create_kernel_thread() {
     pcb_t *k_pcb = (pcb_t *)kmalloc((int)6000);
     
-    strcpy("init/kernel", k_pcb->p_name);
+    strcpy("kernel", k_pcb->p_name);
     k_pcb->pid = get_next_processID();
-    k_pcb->ppid = 0;
+    k_pcb->ppid = 1;
     k_pcb->cr3 = (uint64_t)get_CR3_address();
     k_pcb->state = TASK_RUNNING;
     k_pcb->next_proc = next_process;
@@ -72,6 +72,7 @@ void create_kernel_thread() {
     k_pcb->rsp -= 8;
     *(uint64_t *)(k_pcb->rsp) = (uint64_t)&initial_ret_function;
 
+#if 0
     create_new_thread();
 
     /* Load the current PCB and kernel stack and disable interrupt */
@@ -79,6 +80,7 @@ void create_kernel_thread() {
     __asm__ volatile ("movq %0, %%rsp;" :: "a"((k_pcb->init_kernel)));
 
     scheduler();
+#endif
 
     initial_ret_function();
 
@@ -95,7 +97,6 @@ void create_new_thread() {
 
     child_pcb->pid = get_next_processID();
     child_pcb->ppid = 0;
-//    strcpy(k_pcb->p_name, "main thread");
     child_pcb->cr3 = (uint64_t)get_CR3_address();
     child_pcb->state = TASK_READY;
     child_pcb->next_proc = curr_process;
@@ -105,7 +106,6 @@ void create_new_thread() {
     child_pcb->rsp = child_pcb->init_kernel = ((uint64_t)child_pcb + PAGE_SIZE);
     child_pcb->rsp  -= 8;
     *(uint64_t *)(child_pcb->rsp) = (uint64_t)&test_function;
-//    *(uint64_t *)(child_pcb->rsp) |= KERNEL_ADDR;
     child_pcb->regs.rax = child_pcb->regs.rbx = child_pcb->regs.rdi = child_pcb->regs.rsi = child_pcb->regs.rbp = 0;
     curr_process->next_proc = child_pcb;
     child_pcb->next_proc = curr_process;
@@ -130,7 +130,7 @@ pcb_t* create_user_process(char *filename) {
     mm_struct_t *mm;
 
     user_pcb->pid = get_next_processID();
-    user_pcb->ppid = 0;
+    user_pcb->ppid = 1;
     user_pcb->cr3 = (uint64_t)create_user_address_space();
     strcpy(filename, user_pcb->p_name);
     strcpy(ROOT, user_pcb->curr_dir);
@@ -148,14 +148,6 @@ pcb_t* create_user_process(char *filename) {
     memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     set_CR3((uint64_t)first_process->cr3);
 
-//    mm = (mm_struct_t *)kmalloc(1000);
-/*    mm = (mm_struct_t *)allocate_virt_page();
-    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | (uint64_t)mm);
-    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)mm); 
-    map_phys_to_user_virt_addr((uint64_t)user_virt, (uint64_t)mm, (uint64_t *)user_pcb->cr3);
-    set_CR3((uint64_t)user_pcb->cr3);
-    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
-    user_pcb->mm = (mm_struct_t *)user_virt; */
     mm = (mm_struct_t *)kmalloc(PAGE_SIZE);
     user_pcb->mm = (mm_struct_t *)mm;
     set_CR3((uint64_t)user_pcb->cr3);
@@ -169,19 +161,12 @@ pcb_t* create_user_process(char *filename) {
 
     set_CR3(first_process->cr3);
 
-/*
-    user_pcb->rip = (uint64_t)&test_user_thread;
-    offset = user_pcb->rip & 0xfff;
-*/
     user_pcb->state = TASK_READY;
     user_pcb->next_proc = first_process;
-
-//    uint64_t *kstack = (uint64_t *)umalloc(4096, (uint64_t *)user_pcb->cr3);
 
     user_pcb->rsp = user_pcb->user_stack = ((uint64_t)user_virt + PAGE_SIZE - 8);
     user_pcb->init_kernel = (uint64_t)(user_pcb + PAGE_SIZE - 8);
 
-//    set_user_space(user_pcb, offset);
 
     curr_process->next_proc = user_pcb;
     user_pcb->next_proc = curr_process;
@@ -204,26 +189,21 @@ void initial_ret_function() {
     init_timer(1000);
     kb_init();
 
+#if 0
     int  i = 0;
     while (i < 4) {
         kprintf("I am in kernel thread again\n");
         switchTask(first_process, next_process);
         i ++;
-    } 
-//    init_picirr();
-
-//    init_timer(1000);
-//    kb_init();
+    }
+#endif 
 
     init_syscalls();
     
     pcb_t *user_process = create_user_process("bin/init");
     enable_page_fault();
-//    create_user_process("bin/hello");
     switch_to_ring3((pcb_t *)user_process);
 
-//    pcb_t *user_process = create_user_process();
-//    switch_to_ring3((pcb_t *)user_process);
     while(1);
 }
 
@@ -239,7 +219,6 @@ void test_function() {
 	switchTask(next_process, first_process);
 	i++;
     }
-//    while(1);
 }
 
 /* Dummy function to test user thread */
@@ -247,33 +226,17 @@ void test_user_thread() {
     uint64_t a = 2;
     uint64_t b = 3;
     uint64_t c = 5;
-//    uint64_t val;
     
 //    kprintf("Trying to print something\n");
-//    __asm__ volatile("int $0x80");
-//    __asm__ volatile("movq %%rax, %0;" : "=r"(b));
     __asm__ volatile("movq %0, %%rax;"::"a"(c));
     __asm__ volatile("movq %0, %%rbx;"::"a"(a));
     __asm__ volatile("movq %0, %%rcx;"::"a"(b));
-//    __asm__ volatile("movq %0, %%rsi;"::"r"(c));
     __asm__ volatile("int $0x80");
-/*    __asm__ volatile("movq %1, %%rax;"
-		     "movq %2, %%rbx;"
-		     "int $0x80;"
-		     "movq %%rax, %0;"
-		     : "=r" (val)
-		     : "r"(a), "r"(b)
-		     : "rbp", "rcx", "rdx", "rsi", "rdi"
-		     ); */
-//    kprintf("val is now: %d\n",val);
     while(1);
 }
 
 
 void scheduler() {
-//    first_process = curr_process;
-//    curr_process = next_process;
-//    rsp_addr = (uint64_t *)(next_process->init_kernel - 128);
     curr_process = curr_process->next_proc;
     next_process = curr_process->next_proc;
 
@@ -349,13 +312,9 @@ void user_switchBack(pcb_t *next) {
 
     set_tss_rsp((void *)next->init_kernel);
 
-//    __asm__ volatile ("movq %%rsp, %0;" : "=a"((current->kern_rsp)));
     __asm__ volatile ("movq %0, %%rsp;" :: "a"((next->kern_rsp)));
-//    __asm__ volatile ("addq $8, %rsp;");
     __asm__ volatile ("movq %0, %%cr3;" :: "a"(next->cr3));
 
-//    next->init_kernel = (uint64_t)next->init_kernel;
-//    set_tss_rsp((void *)next->init_kernel);
 
     __asm__ volatile ("ret");
 
@@ -411,7 +370,6 @@ void execve_switch_to_ring3(pcb_t *proc) {
 
     __asm__ volatile ("cli" ::);
     __asm__ volatile ("movq %0, %%cr3;" :: "a"(proc->cr3));
-//    __asm__ volatile ("movq %0, %%rsp;" :: "a"(proc->init_kernel));
     __asm__ volatile ("mov $0x23, %%ax" ::);
     __asm__ volatile ("mov %%ax, %%ds;" ::);
     __asm__ volatile ("mov %%ax, %%es;" ::);
@@ -437,7 +395,6 @@ void set_user_space(pcb_t *user_process, uint64_t offset) {
     uint64_t* user_page = (uint64_t *)user_process->rip;
     uint64_t* user_virtual_addr;
 
-//    user_virtual_address += 0x1000UL;
     user_page = (uint64_t *)(0x000000000FFFF000UL & (uint64_t)user_page);
     user_virtual_addr = (uint64_t *)((uint64_t)USER_VIRT_ADDR| (uint64_t)user_page);
     
@@ -449,12 +406,10 @@ void set_user_space(pcb_t *user_process, uint64_t offset) {
 
 pid_t fork_child() {
     pcb_t *c_pcb;
-//    pcb_t *next;
 
     /* Copy parents structure to child's structure */
     c_pcb = (pcb_t *)copy_parent_structure((pcb_t *)curr_process);
 
-//    next = curr_process->next_proc;
     c_pcb->next_proc = curr_process->next_proc;
     curr_process->next_proc = c_pcb;
     return c_pcb->pid;
@@ -462,9 +417,6 @@ pid_t fork_child() {
 
 
 pcb_t* copy_parent_structure(pcb_t *parent_proc) {
-    //uint64_t  *user_virt;
-    //uint64_t  *user_stack;
-    //uint64_t   current_rsp;
     volatile vma_t     *parent_vma     = NULL;
     vma_t     *child_vma      = NULL;
     uint64_t   count          = 0;
@@ -488,10 +440,6 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
 
     child_pcb->cr3 = (uint64_t)create_user_address_space();
     __asm__ volatile("mov %%cr3, %0" : "=a" (curr_process->cr3));
-//    child_pcb->cr3 = (uint64_t)allocate_virt_page();
-//    user_virt = (uint64_t *)((uint64_t)KERNEL_BASE | (uint64_t)child_pcb->cr3);
-//    map_phys_to_virt_addr((uint64_t)user_virt, (uint64_t)child_pcb->cr3);
-//    memset((void*)user_virt, 0, (uint32_t)PAGE_SIZE);
     copy_parent_tables((uint64_t *)child_pcb->cr3);
 
     child_pcb->init_kernel = (uint64_t)(child_pcb + PAGE_SIZE - 8);
@@ -592,14 +540,6 @@ void execve(char *filename, char *argv) {
     file[i] = '\0';
 
     i = 0;
-    /* Need this to figure out size of envp by sizeof */
-/*    while (i < 5) {
-	kernel_args[i][0] = '\0';
-  	kernel_args[i][1] = '\0';
-	i++;
-    } */
-    
-    i = 0;
     while(argv[k] != '\0') {
 	j = 0;
 	while (argv[k] != ' ' && argv[k] != '\0' && argv[k] != '\n') {
@@ -607,23 +547,13 @@ void execve(char *filename, char *argv) {
 	}
 	kernel_args[i][j] = '\0';
 	i++;
-//	strcpy(argv[i], kernel_args[i]);
 	argc++;
 	k++;
     }
   
-    /* Incase of empty string, populate with space */
-//    if (argc == 0) {
-//        strcpy(" ", kernel_args[0]);
-//	kernel_args[0][0] = " ";
-//	kernel_args[0][1] = "\0";
-//    }
-
     argc = i;
 
     strcpy(file, user_pcb->p_name);
-//    strcpy(ROOT, user_pcb->curr_dir);
-//    strcpy(ROOT, user_pcb->temp_curr_dir);
     user_pcb->pid = curr_process->pid;
     user_pcb->ppid = curr_process->ppid;
     user_pcb->state = TASK_RUNNING;
@@ -686,15 +616,7 @@ void execve(char *filename, char *argv) {
 	curr_process->next_proc = NULL;
     } 
 
-    /* Free the current user space */
-    //free_vma(curr_process->mm);
-
     set_CR3(user_pcb->cr3);
-
-//    free_vma(curr_process->mm, curr_process->cr3);
-//    free_page(curr_process->user_stack, curr_process->cr3);
-//    delete_pagetable(curr_process->cr3);
-//    free_page((uint64_t)curr_process, user_pcb->cr3);
 
     /*Set user stack to contain argc and argv values */
     i = sizeof(kernel_args);  
@@ -730,13 +652,6 @@ void print_allPID(){
 	}
 	
     } 
-#if 0
-    proc = stopped_process;
-    while(proc->next_proc != NULL) {
-	kprintf("%d             %s\t%s\n",proc->pid,proc->p_name, "Stopped");
-	proc = proc->next_proc;
-    }
-#endif
 }
 
 
@@ -789,11 +704,6 @@ void sys_exit() {
     
     
     curr_process = prev_task;
-/*
-    while (iterator->next_proc->pid != prev_task->pid) {
-	iterator = iterator->next_proc;
-    } 
-*/
     if (curr_process->pid == 1) {
 	prev_task->init_kernel = prev_task->kern_rsp = (uint64_t)prev_task + PAGE_SIZE - 8;
 	memset((void*)prev_task, 0, (uint32_t)PAGE_SIZE);
