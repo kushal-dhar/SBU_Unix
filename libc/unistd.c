@@ -215,22 +215,29 @@ void exit() {
     return;
 }
 void executeSbang(char * str){
+ char temp3[100];
+ char temp4[100];
  uint64_t  fd = open(str, 0);
  str[0] = '\0';
  read(fd,str, 1000) ;
  if ( str[0] == '#' && str[1] == '!'){
-      char *temp = str;
+      strcpy(temp3,str);
+      char *temp = temp3;
+      char *temp2;
       while(*temp != '\n') temp++;
       temp++;
       str = temp;
       while(*temp != '\0'){
-    	char *temp2 = temp;
+    	temp2 = temp;
         while(*temp != '\n') temp++;
         *temp = '\0';
         temp++;
-        checkingForBinary(temp2);  
-      }
-      
+       strcpy(temp4,temp2);
+       uint64_t r =  checkingForBinary(temp4);  
+       if (r != 0){
+        printf("Something went wrong"); 
+     }
+  }    
  }
  else{
 	printf("-sbush:  No such file or directory");

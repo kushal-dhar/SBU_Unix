@@ -69,6 +69,7 @@ struct process_ctrl_blk {
     int           n_child;
     char          curr_dir[50];
     char          temp_curr_dir[50];
+    char          echo_var_key[5][50];
     char          echo_var[5][50];
     int           echo_count;
     pcb_t        *next_proc;

@@ -1,6 +1,6 @@
 #ifndef _UNIBINARY_H_
 #define _UNIBINARY_H_ 1
 
-extern void checkingForBinary(char *s);
+extern uint64_t checkingForBinary(char *s);
 
 #endif

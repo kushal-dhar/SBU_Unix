@@ -135,7 +135,8 @@ pcb_t* create_user_process(char *filename) {
     strcpy(filename, user_pcb->p_name);
     strcpy(ROOT, user_pcb->curr_dir);
     strcpy(ROOT, user_pcb->temp_curr_dir);
-    strcpy("PATH=rootfs/bin/kachara", user_pcb->echo_var[0]);
+    strcpy("PATH", user_pcb->echo_var_key[0]);
+    strcpy("rootfs/bin/", user_pcb->echo_var[0]);
     user_pcb->echo_count =1;
 //    user_virt = (uint64_t *)((uint64_t)USER_VIRT_ADDR | user_pcb->cr3);
 
@@ -477,6 +478,7 @@ pcb_t* copy_parent_structure(pcb_t *parent_proc) {
     child_pcb->echo_count= curr_process-> echo_count;
     for (int i =0; i < 5 ;i++){
       strcpy(curr_process->echo_var[i], child_pcb->echo_var[i]);
+      strcpy(curr_process->echo_var_key[i], child_pcb->echo_var_key[i]);
     }   
     child_pcb->next_proc = NULL;
     child_pcb->mm = NULL;
@@ -631,6 +633,7 @@ void execve(char *filename, char *argv) {
     user_pcb->echo_count = curr_process-> echo_count;;
     for (int i =0; i <5 ;i++){
      strcpy(curr_process->echo_var[i], user_pcb->echo_var[i]);
+     strcpy(curr_process->echo_var_key[i], user_pcb->echo_var_key[i]);
      }
     user_pcb->cr3 = (uint64_t)create_user_address_space();
 
@@ -854,6 +857,11 @@ void kill(uint64_t pid) {
 		kprintf("Killed %d\n",pid);
 		deleted = 1;
 	    }
+         
+         for(int i =0; i <200;i++)
+           kprintf("%s","******************************************************************************* ");
+         // clear_console();
+         
 	}
 	
 	/* Process to be deleted is not in ready process */
@@ -867,15 +875,40 @@ void kill(uint64_t pid) {
 
 /** Set ECHO environment" **/
 void setEnv(char *s){
- int index = curr_process-> echo_count;
-  strcpy(s,curr_process->echo_var[index-1]);
-  if (index > 4){
-        curr_process-> echo_count = 0;
+  char buf[100];
+  strcpy(s,buf);
+  char *temp = buf;
+  char *key = temp;
+  char *value;
+  while(*temp != '=') temp++;
+  *temp='\0';
+  temp++;
+  value = temp;
+  for(int i =0; i <5; i++)
+  {
+      if (strcmp(curr_process->echo_var_key[i],key) ==0){
+          strcpy(value,curr_process->echo_var[i] );
+          return;   
+      }
+  }   
+  int index = curr_process->echo_count;
+  strcpy(key, curr_process->echo_var_key[index]);
+  strcpy(value, curr_process->echo_var[index]);
+  curr_process->echo_count = index+1;
+  if ((index+1) == 5){
+    curr_process->echo_count =0;
   }
-  curr_process-> echo_count = index+1;
- }
-
+}
 void printEnv(char *s){
+ for(int i =0; i <5; i++){
+     if(strcmp(curr_process->echo_var_key[i],s)==0){
+        kprintf(curr_process->echo_var[i]); 
+        kprintf("\n");
+        return;
+     }	
+ }
+  kprintf("%s\n","sbush: No such environment variable");
+  #if 0
  for(int i =0; i <5; i++){
      char buf [100];
      strcpy(curr_process->echo_var[i], buf);
@@ -894,4 +927,5 @@ void printEnv(char *s){
         }
      }
  kprintf("%s","sbush: No such environment variable");
+#endif
 }

@@ -84,6 +84,7 @@ void clear_buffer() {
 }
 
 
+
 void kb_handler(regis reg) {
     unsigned char status;
     unsigned char scancode;

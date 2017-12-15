@@ -122,6 +122,15 @@ void  convertPointerAddress2String(unsigned long long n, char * str){
     return;
 }
 
+void full_clean() {
+     for (int y = 0; y < 23; y++) {
+        for (int x = 0; x <160; x++){
+            video[x++ + (y*160)] = ' ';
+      }
+    }
+    x_pos = 0;
+    y_pos = 0;
+}
 
 void update_screen() {
      volatile     int y =0;
@@ -324,6 +333,10 @@ void kprintf(char *string, ...)
             video[x_pos++ + (24 * 160)] = '"';
             video[x_pos++ + (24 * 160)] = colour;
 	}
+        else {
+        video[x_pos++ + (y_pos * 160)] = ch;
+        video[x_pos++ + (y_pos * 160)] = colour;
+    }
     }
     else if (ch == 30) {
         video[x_pos++ + (24 * 160)] = '^';

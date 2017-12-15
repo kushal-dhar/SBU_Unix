@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include <string.h>
-void checkingForBinary(char *s){
+uint64_t checkingForBinary(char *s){
         char str[100];
         char temp[100];
        str[0]='\0';
@@ -15,7 +15,7 @@ void checkingForBinary(char *s){
                		wait_pid(pid);
         	 }else{
                		execve("bin/sleep\0\0",str+6);
-        	 }	
+              }	
         }	
   	// check for Cat
         else if (*str == 'c' && *(str+1) == 'a' && *(str+2) == 't' && *(str+3) == ' ') {
@@ -31,6 +31,19 @@ void checkingForBinary(char *s){
                    execve("bin/cat\0\0",str);
              }
         }
+       // Check for ECHO
+        else if (*str == 'e' && *(str+1) == 'c' && *(str+2) == 'h'
+                 && *(str+3) == 'o' && *(str+4) == ' ')
+              {
+               uint64_t pid = fork();
+               if(pid != 0){
+                   wait_pid(pid);
+               }
+               else{
+
+                    execve("bin/echo\0\0",str+5);
+              }
+        }
         // check for ls
         else if (*str == 'l' && *(str+1) == 's'){
 	   cwd2(temp);
@@ -40,7 +53,7 @@ void checkingForBinary(char *s){
                }
                else{
                    char *tp = str;
-                    if (*(str+3) == ' '){
+                    if (*(str+2) == ' '){
                         tp=tp+3;
                         addParent(temp,tp);
                         strcpy(str,tp);
@@ -53,23 +66,30 @@ void checkingForBinary(char *s){
                                str[0]= '\0';
                          }
                          execve("bin/ls\0\0",str);
-                    }
+		}
               }
               
        }
-        // Check for ps
-        else if (*str=='p' && *(str+1) == 's'){
-//              printAllProcess();
-//               int len = strlen(str);
+          // Check for kill -9
+        else if (*str=='k' && *(str+1) == 'i' && *(str+2) == 'l' && *(str+3) == 'l' && *(str+5) == '-' && *(str+6) == '9' ){
                uint64_t pid = fork();
                if(pid != 0){
                    wait_pid(pid);
                }
                else{
-/*                    if(*(str+2) == ' ' && len > 2){
-                           addDelimiter(str+3);
-                    } */
-                    execve("bin/ps\0\0",str);
+                    execve("bin/kill\0\0",str+7);
               }
         }
+
+        // Check for ps
+        else if (*str=='p' && *(str+1) == 's'){
+               uint64_t pid = fork();
+               if(pid != 0){
+                   wait_pid(pid);
+               }
+               else{
+                   execve("bin/ps\0\0",str);
+              }
+        }
+return 0;
 }

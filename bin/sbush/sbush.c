@@ -92,8 +92,8 @@ while(1);
                }
                else{
                     execve("bin/ps\0\0",str);
-              }
-        }
+              } 
+       }
 	// Check for kill -9
         else if (*str=='k' && *(str+1) == 'i' && *(str+2) == 'l' && *(str+3) == 'l' && *(str+5) == '-' && *(str+6) == '9' ){
                uint64_t pid = fork();
