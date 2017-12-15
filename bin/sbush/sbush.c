@@ -17,18 +17,21 @@ while(1);
 */
 //char path[100] = "rootfs/bin/\0\0\0";
 //char *str =  (char *) mallocc(100);
-char temp[100];
-clear();
-while(1){
+    char temp[100];
+    clear();
+    while(1){
    
-          str[0] = '\0';
-          temp[0] ='\0';
-          cwd();
-          scan("%s",(void *)str);
-         int slen = strlen(str);
-         removespace(str); 
-         // check the current ditectory 
-         if (strcmp(str, "pwd\0\0\0") ==0){
+        str[0] = '\0';
+        temp[0] ='\0';
+        cwd();
+        scan("%s",(void *)str);
+        int slen = strlen(str);
+        removespace(str); 
+	if (slen == 0) {
+	    continue;
+	}
+        // check the current ditectory 
+        if (strcmp(str, "pwd\0\0\0") ==0){
             cwd2(temp);
             printf("%s\n",temp);
         }
@@ -45,7 +48,7 @@ while(1){
              strcpy(temp,str+3);
               chdir(temp);
          }
-       // check for sleep
+        // check for sleep
         else if (*str =='s' && *(str+1) == 'l' && *(str+2) == 'e' && *(str+3) =='e' &&
 		 *(str+4) == 'p'&& *(str+5) == ' '){
              uint64_t pid = fork();
@@ -83,16 +86,11 @@ while(1){
         } 
         // Check for ps
         else if (*str=='p' && *(str+1) == 's'){
-//              printAllProcess();
-//               int len = strlen(str);
                uint64_t pid = fork();
                if(pid != 0){
                    wait_pid(pid);
                }
                else{
-/*                    if(*(str+2) == ' ' && len > 2){
-                           addDelimiter(str+3);
-                    } */
                     execve("bin/ps\0\0",str);
               }
         }
