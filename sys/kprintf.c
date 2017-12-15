@@ -432,7 +432,8 @@ void clear_console() {
     int y_axis = 0;
 
     set_CR3(curr_process->cr3);
-
+    for(int i =0; i <100;i++)
+           kprintf("%s","------------------------------------------------------------------------------------");
     for (y_axis = 0; y_axis < 24; y_axis++) {
 	for (x_axis = 0; x_axis < 160; ) {
             video[x_axis++ + (y_axis * 160)] = ' ';

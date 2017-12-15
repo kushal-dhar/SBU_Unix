@@ -6,14 +6,6 @@
 
 char str[100];
 int main(int argc, char *argv[], char *envp[]) {
-/*char ** str = (char **)mallocc(sizeof(char *) * 10);
-str[0] = (char*) mallocc(sizeof(char)*50);
-strcpy(str[0],"hello\0");
-printf("%s",str[0]);
-while(1);
-*/
-//char path[100] = "rootfs/bin/\0\0\0";
-//char *str =  (char *) mallocc(100);
     char temp[100];
     clear();
     while(1){
